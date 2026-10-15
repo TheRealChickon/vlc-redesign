@@ -1,0 +1,660 @@
+/*****************************************************************************
+ * Copyright (C) 2025 VLC authors and VideoLAN
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * ( at your option ) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+import QtQuick
+import QtQuick.Window
+
+import VLC.MainInterface
+import VLC.Util
+
+// This item provides the novel "Dual Kawase" effect [1], which offers a very ideal
+// balance of quality and performance. It has been used by many applications since
+// its introduction in 2015, including the KWin compositor. Qt 5's `FastBlur` from
+// 2011, and its Qt 6 port `MultiEffect` already offers a performant blur effect,
+// utilizing a similar down/up sampling trick, but it does not use the half-pixel
+// trick, and does not work for textures in the atlas, or sub-textures (detaching
+// or additional layer incurs an additional buffer).
+// [1] SIGGRAPH 2015, "Bandwidth Efficient Rendering", Marius Bjorge (ARM).
+Item {
+    id: root
+
+    implicitWidth: source ? Math.min(source.paintedWidth ?? Number.MAX_VALUE, source.width) : 0
+    implicitHeight: source ? Math.min(source.paintedHeight ?? Number.MAX_VALUE, source.height) : 0
+
+    readonly property bool available: (GraphicsInfo.shaderType === GraphicsInfo.RhiShader)
+
+    readonly property bool ready: us2.visible
+
+    enum Mode {
+        FourPass, // 2 downsample + 2 upsamples (3 layers/buffers)
+        TwoPass, // 1 downsample + 1 upsample (1 layer/buffer)
+        // NOTE: Due to high count of layers, it is recommended to use six pass only with
+        //       static sources with `live: false` to prevent consuming high video memory.
+        //       Note that in such a case, using six (or higher) passes will consume no
+        //       additional memory, which means it is effectively free:
+        SixPass // 3 downsample + 3 upsamples (5 layers/buffers)
+    }
+
+    property int mode: DualKawaseBlur.Mode.FourPass
+
+    /// <postprocess>
+    // The following property must be set in order to make other properties respected:
+    property bool postprocess: false
+
+    property color tint: "transparent"
+    property real tintStrength: 0.0
+    property real noiseStrength: 0.0
+    property real exclusionStrength: 0.0
+    property color backgroundColor: "transparent"
+    /// </postprocess>
+
+    // NOTE: This property is also an optimization hint. When it is false, the
+    //       intermediate buffers for the blur passes may be released (only
+    //       the two intermediate layers in four pass mode, we must have one
+    //       layer regardless of the mode, so optimization-wise it has no
+    //       benefit in two pass mode thus should be used solely as behavior
+    //       instead):
+    property bool live: true
+
+    // Do not hesitate to use an odd number for the radius, there is virtually
+    // no difference between odd or even numbers due to the halfpixel trick.
+    // The effective radius is always going to be a half-integer.
+    property int radius: 1
+
+    // NOTE: This property concerns the blending in the scene graph, not the internal
+    //       blending used with regard to background coloring. In that case blending
+    //       is always done.
+    // NOTE: It seems that if SG accumulated opacity is lower than 1.0, blending is
+    //       used even if it is set false here. For that reason, it should not be
+    //       necessary to check for opacity (well, accumulated opacity can not be
+    //       checked directly in QML anyway).
+    property bool blending: (postprocess &&
+                             backgroundColor.a > (1.0 - Number.EPSILON)) ? false // the result is opaque, no need for sg blending
+                                                                         : _sourceIsTranslucent
+
+    // WARNING: If texture is not valid/ready, Qt generates a transparent texture to use as source.
+    readonly property bool _sourceIsTranslucent: (!sourceTextureIsValid || sourceTextureProviderObserver.hasAlphaChannel)
+
+    // source must be a texture provider item. Some items such as `Image` and
+    // `ShaderEffectSource` are inherently texture provider. Other items needs
+    // layering with either `layer.enabled: true` or `ShaderEffectSource`.
+    // We purposefully are not going to create a layer on behalf of the source
+    // here, unlike `MultiEffect` (see `hasProxySource`), because it is impossible
+    // to determine whether the new layer is actually wanted (when the source is
+    // already a texture provider), and it is very trivial to have a layer when
+    // it is wanted or necessary anyway.
+    property Item source
+
+    readonly property real eDPR: _eDPR
+    property real _eDPR: MainCtx.effectiveDevicePixelRatio(Window.window) || 1.0
+
+    Connections {
+        target: MainCtx
+
+        function onIntfDevicePixelRatioChanged() {
+            root._eDPR = MainCtx.effectiveDevicePixelRatio(root.Window.window) || 1.0
+        }
+    }
+
+    /// <debug>
+    readonly property QtObject _sourceWindow: (source?.Window.window ?? null)
+    function _onWindowChanged() {
+        console.assert((_sourceWindow && root.Window.window) ? (_sourceWindow === root.Window.window) : true)
+    }
+    on_SourceWindowChanged: {
+        _onWindowChanged()
+    }
+    Window.onWindowChanged: {
+        _onWindowChanged()
+    }
+    /// </debug>
+
+    // Arbitrary sub-texturing (no need to be set for atlas textures):
+    // `QSGTextureView` can also be used instead of sub-texturing here.
+    // NOTE: `sourceRect` is expected to be in item coordinates, similar to
+    //       `ShaderEffectSource::sourceRect`.
+    property rect sourceRect
+
+    // Viewport rect allows to discard an unwanted area in effect's local coordinates.
+    // Since the discard occurs at layer level, using this saves video memory.
+    property rect viewportRect
+
+    // Visual rect allows to extend the visual (us2) in effect's local coordinates.
+    // Unlike viewport rect, visual rect is not relevant to the layers hence will
+    // not allow saving video memory. The reason for this to exist is that when
+    // viewport rect is used to save video memory, the effect may still need to
+    // cover a certain area without stretching the blurred result and to keep
+    // the postprocess coverage available beyond the blurred result but within
+    // the effect area. A particular use case is when blurred content has large
+    // margins that are empty, where in this case visual rect with clamp to edge
+    // wrap mode would make the effect look as if the whole source was blurred,
+    // but with the benefit of saving video memory, provided that the viewport
+    // rect is set to discard the empty margins. Another use case is freely
+    // adjusting the position of the visual when viewport rect is smaller than
+    // the effect size, since with only viewport rect the visual is always
+    // centered in the parent (effect). Note that the reference point used
+    // for sub-texturing is (visualRect.xy - viewportRect.xy), which makes the
+    // texture centered with `viewportRect.xy` acting as the margins, and
+    // the value can be both positive or negative.
+    // NOTE: `visualRect` is expected to be in item coordinates, similar to
+    //       `sourceRect`.
+    property rect visualRect
+    property int visualWrapMode: ShaderEffectSource.ClampToEdge
+
+    // Local viewport rect is viewport rect divided by two, because it is used as the source
+    // rect of last layer, which is 2x upsampled by the painter delegate (us2):
+    readonly property rect _localViewportRect: ((viewportRect.width > 0 && viewportRect.height > 0)) ? Qt.rect(viewportRect.x / 2,
+                                                                                                               viewportRect.y / 2,
+                                                                                                               viewportRect.width / 2,
+                                                                                                               viewportRect.height / 2)
+                                                                                                     : Qt.rect(0, 0, 0, 0)
+
+    // This is only supposed to be used in visual delegate (us2), maybe we move it there?
+    readonly property rect _localVisualRect: ((visualRect.width > 0 && visualRect.height > 0)) ? Qt.rect(visualRect.x / 2,
+                                                                                                         visualRect.y / 2,
+                                                                                                         visualRect.width / 2,
+                                                                                                         visualRect.height / 2)
+                                                                                               : Qt.rect(0, 0, 0, 0)
+
+    property alias sourceTextureProviderObserver: ds1.tpObserver // for accessory
+
+    readonly property bool sourceTextureIsValid: sourceTextureProviderObserver.isValid
+
+    onSourceTextureIsValidChanged: {
+        if (root.sourceTextureIsValid) {
+            if (root._queuedScheduledUpdate) {
+                root._queuedScheduledUpdate = false
+                root.scheduleUpdate()
+            }
+        }
+    }
+
+    property var /*QtWindow*/ _window: null // captured window used for chaining through `afterAnimating()`
+
+    property bool _queuedScheduledUpdate: false
+
+    // NOTE: You can use the `sourceTextureProviderObserver.textureChanged()` signal to schedule an update
+    //       on source texture change at appropriate time.
+    function scheduleUpdate() {
+        if (live)
+            return // no-op
+
+        if (!root.available)
+            return // not applicable
+
+        if (!root.sourceTextureIsValid) {
+            root._queuedScheduledUpdate = true // if source texture is not valid, delay the update until valid
+            return
+        }
+
+        if (root._window) {
+            // One possible case for this is that the mipmaps for the source texture were generated too fast, and
+            // the consumer wants to update the blur to make use of the mipmaps before the blur finished chained
+            // updates for the previous source texture which is the non-mipmapped version of the same texture.
+            console.debug(root, "scheduleUpdate(): There is an already ongoing chained update, re-scheduling...")
+            root._queuedScheduledUpdate = true
+            return
+        }
+
+        root._window = root.Window.window
+        ds1layer.scheduleChainedUpdate()
+    }
+
+    onLiveChanged: {
+        if (live) {
+            ds1layer.parent = root
+            ds2layer.inhibitParent = false
+            ds3layer.inhibitParent = false
+            us0layer.inhibitParent = false
+
+            if (root._queuedScheduledUpdate) {
+                console.debug(root, "scheduleUpdate(): `live` is turned on, canceling the scheduled update.")
+                root._queuedScheduledUpdate = false
+            }
+        } else {
+            root.scheduleUpdate() // this triggers releasing intermediate layers (when applicable)
+        }
+    }
+
+    component DefaultShaderEffect : ShaderEffect {
+        id: shaderEffect
+
+        required property Item source
+        readonly property int radius: root.radius
+
+        property rect subRect // may not be necessary, but still needed to prevent warning
+
+        property alias tpObserver: textureProviderObserver
+
+        // cullMode: ShaderEffect.BackFaceCulling // QTBUG-136611 (Layering breaks culling with OpenGL)
+
+        // Maybe we should have vertex shader unconditionally, and calculate the half pixel there instead of fragment shader?
+        vertexShader: (subRect.width > 0.0 && subRect.height > 0.0) ? "qrc:///shaders/SubTexture.vert.qsb"
+                                                                    : ""
+
+        supportsAtlasTextures: true
+
+        blending: root.blending
+
+        visible: false
+
+        TextureProviderObserver {
+            id: textureProviderObserver
+            source: shaderEffect.source
+            notifyAllChanges: (root.visible && root.live)
+        }
+    }
+
+    component DownsamplerShaderEffect : DefaultShaderEffect {
+        fragmentShader: source ? "qrc:///shaders/DualKawaseBlur_downsample.frag.qsb"
+                               : "" // to prevent warning if source becomes null
+    }
+
+    component UpsamplerShaderEffect : DefaultShaderEffect {
+        fragmentShader: source ? "qrc:///shaders/DualKawaseBlur_upsample.frag.qsb"
+                               : "" // to prevent warning if source becomes null
+    }
+
+    component DefaultShaderEffectSource : ShaderEffectSource {
+        // This is necessary to release resources even if `sourceItem` becomes null (non-live case):
+        parent: sourceItem ? root : null
+
+        visible: false
+        live: root.live
+        smooth: true
+    }
+
+    DownsamplerShaderEffect {
+        id: ds1
+
+        // When downsampled, we can decrease the size here so that the layer occupies less VRAM:
+        width: parent.width / 2
+        height: parent.height / 2
+
+        source: root.source
+
+        subRect: (root.sourceRect.width > 0.0 && root.sourceRect.height > 0.0) ? Qt.rect(root.sourceRect.x * root.eDPR,
+                                                                                         root.sourceRect.y * root.eDPR,
+                                                                                         root.sourceRect.width * root.eDPR,
+                                                                                         root.sourceRect.height * root.eDPR)
+                                                                               : Qt.rect(0.0, 0.0, 0.0, 0.0)
+    }
+
+    DefaultShaderEffectSource {
+        id: ds1layer
+
+        sourceItem: ds1
+
+        // Last layer for two pass mode, so use the viewport rect:
+        sourceRect: (root.mode === DualKawaseBlur.Mode.TwoPass) ? root._localViewportRect : Qt.rect(0, 0, 0, 0)
+        
+        wrapMode: (root.mode === DualKawaseBlur.Mode.TwoPass) ? root.visualWrapMode : ShaderEffectSource.ClampToEdge
+
+        function scheduleChainedUpdate() {
+            if (!ds1layer) // context is lost, Qt bug (reproduced with 6.2)
+                return
+
+            // Common for both four and two pass mode:
+            ds1layer.parent = root
+            ds1layer.scheduleUpdate()
+
+            if (root._window) {
+                // In four pass mode, we can release the two intermediate layers:
+                if (root.mode !== DualKawaseBlur.Mode.TwoPass) {
+                    // Scheduling update must be done sequentially for each layer in
+                    // a chain. It seems that each layer needs one frame for it to be
+                    // used as a source in another layer, so we can not schedule
+                    // update for each layer at the same time:
+                    root._window.afterAnimating.connect(ds2layer, ds2layer.scheduleChainedUpdate)
+                } else {
+                    root._window = null
+                }
+            }
+        }
+    }
+
+    DownsamplerShaderEffect {
+        id: ds2
+
+        // When downsampled, we can decrease the size here so that the layer occupies less VRAM:
+        width: ds1.width / 2
+        height: ds1.height / 2
+
+        Binding on tpObserver.notifyAllChanges {
+            when: (root.mode === DualKawaseBlur.Mode.TwoPass)
+            value: false
+        }
+
+        // Qt uses reference counting, otherwise ds1layer may not be released, even if it has no parent (see `QQuickItemPrivate::derefWindow()`):
+        source: ((root.mode === DualKawaseBlur.Mode.TwoPass) || !ds1layer.parent) ? null : ds1layer
+    }
+
+    DefaultShaderEffectSource {
+        id: ds2layer
+
+        // So that if the mode is two pass (this is not used), the buffer is released:
+        // This is mainly relevant for switching the mode case, as initially if this was
+        // never visible and was never used as texture provider, it should have never allocated
+        // resources to begin with.
+        sourceItem: (root.mode !== DualKawaseBlur.Mode.TwoPass) ? ds2 : null
+        parent: (!inhibitParent && sourceItem) ? root : null // necessary to release resources even if `sourceItem` becomes null (non-live case)
+
+        property bool inhibitParent: false
+
+        function scheduleChainedUpdate() {
+            if (!ds2layer) // context is lost, Qt bug (reproduced with 6.2)
+                return
+
+            if (root._window) {
+                root._window.afterAnimating.disconnect(ds2layer, ds2layer.scheduleChainedUpdate)
+            }
+
+            // If `live` is turned on during a chained update, we do not need to continue:
+            if (root.live) {
+                root._window = null
+                return
+            }
+
+            ds2layer.inhibitParent = false
+            ds2layer.scheduleUpdate()
+
+            if (root._window) {
+                if (root.mode === DualKawaseBlur.Mode.FourPass)
+                    root._window.afterAnimating.connect(us1layer, us1layer.scheduleChainedUpdate)
+                else if (root.mode === DualKawaseBlur.Mode.SixPass)
+                    root._window.afterAnimating.connect(ds3layer, ds3layer.scheduleChainedUpdate)
+            }
+        }
+    }
+
+    DownsamplerShaderEffect {
+        id: ds3
+
+        // When downsampled, we can decrease the size here so that the layer occupies less VRAM:
+        width: ds2.width / 2
+        height: ds2.height / 2
+
+        Binding on tpObserver.notifyAllChanges {
+            when: (root.mode !== DualKawaseBlur.Mode.SixPass)
+            value: false
+        }
+
+        // Qt uses reference counting, otherwise ds2layer may not be released, even if it has no parent (see `QQuickItemPrivate::derefWindow()`):
+        source: ((root.mode !== DualKawaseBlur.Mode.SixPass) || !ds2layer.parent) ? null : ds2layer
+    }
+
+    DefaultShaderEffectSource {
+        id: ds3layer
+
+        // So that if the mode is two pass (this is not used), the buffer is released:
+        // This is mainly relevant for switching the mode case, as initially if this was
+        // never visible and was never used as texture provider, it should have never allocated
+        // resources to begin with.
+        sourceItem: (root.mode === DualKawaseBlur.Mode.SixPass) ? ds3 : null
+        parent: (!inhibitParent && sourceItem) ? root : null // necessary to release resources even if `sourceItem` becomes null (non-live case)
+
+        property bool inhibitParent: false
+
+        function scheduleChainedUpdate() {
+            if (!ds3layer) // context is lost, Qt bug (reproduced with 6.2)
+                return
+
+            if (root._window) {
+                root._window.afterAnimating.disconnect(ds3layer, ds3layer.scheduleChainedUpdate)
+            }
+
+            // If `live` is turned on during a chained update, we do not need to continue:
+            if (root.live) {
+                root._window = null
+                return
+            }
+
+            ds3layer.inhibitParent = false
+            ds3layer.scheduleUpdate()
+
+            if (root._window) {
+                root._window.afterAnimating.connect(us0layer, us0layer.scheduleChainedUpdate)
+            }
+        }
+    }
+
+    UpsamplerShaderEffect {
+        id: us0
+
+        width: ds3.width * 2
+        height: ds3.height * 2
+
+        Binding on tpObserver.notifyAllChanges {
+            when: (root.mode !== DualKawaseBlur.Mode.SixPass)
+            value: false
+        }
+
+        // Qt uses reference counting, otherwise ds3layer may not be released, even if it has no parent (see `QQuickItemPrivate::derefWindow()`):
+        source: ((root.mode !== DualKawaseBlur.Mode.SixPass) || !ds3layer.parent) ? null : ds3layer
+    }
+
+    DefaultShaderEffectSource {
+        id: us0layer
+
+        // So that if the mode is two pass (this is not used), the buffer is released:
+        // This is mainly relevant for switching the mode case, as initially if this was
+        // never visible and was never used as texture provider, it should have never allocated
+        // resources to begin with.
+        sourceItem: (root.mode === DualKawaseBlur.Mode.SixPass) ? us0 : null
+        parent: (!inhibitParent && sourceItem) ? root : null // necessary to release resources even if `sourceItem` becomes null (non-live case)
+
+        property bool inhibitParent: false
+
+        function scheduleChainedUpdate() {
+            if (!us0layer) // context is lost, Qt bug (reproduced with 6.2)
+                return
+
+            if (root._window) {
+                root._window.afterAnimating.disconnect(us0layer, us0layer.scheduleChainedUpdate)
+            }
+
+            // If `live` is turned on during a chained update, we do not need to continue:
+            if (root.live) {
+                root._window = null
+                return
+            }
+
+            us0layer.inhibitParent = false
+            us0layer.scheduleUpdate()
+
+            if (root._window) {
+                root._window.afterAnimating.connect(us1layer, us1layer.scheduleChainedUpdate)
+            }
+        }
+    }
+
+    UpsamplerShaderEffect {
+        id: us1
+
+        width: ((sourceShaderEffect?.width ?? 0.0) * 2)
+        height: ((sourceShaderEffect?.height ?? 0.0) * 2)
+
+        readonly property ShaderEffect sourceShaderEffect: {
+            switch (root.mode) {
+            case DualKawaseBlur.Mode.FourPass:
+                return ds2
+            case DualKawaseBlur.Mode.SixPass:
+                return us0
+            case DualKawaseBlur.Mode.TwoPass:
+            default:
+                return null
+            }
+        }
+
+        Binding on tpObserver.notifyAllChanges {
+            when: (root.mode === DualKawaseBlur.Mode.TwoPass)
+            value: false
+        }
+
+        // Qt uses reference counting, otherwise ds2layer may not be released, even if it has no parent (see `QQuickItemPrivate::derefWindow()`):
+        source: {
+            switch (root.mode) {
+            case DualKawaseBlur.Mode.FourPass:
+                if (ds2layer.parent)
+                    return ds2layer
+                else
+                    return null
+            case DualKawaseBlur.Mode.SixPass:
+                if (us0layer.parent)
+                    return us0layer
+                else
+                    return null
+            case DualKawaseBlur.Mode.TwoPass:
+            default:
+                return null
+            }
+        }
+    }
+
+    DefaultShaderEffectSource {
+        id: us1layer
+
+        // So that if the mode is two pass (this is not used), the buffer is released:
+        // This is mainly relevant for switching the mode case, as initially if this was
+        // never visible and was never used as texture provider, it should have never allocated
+        // resources to begin with.
+        sourceItem: (root.mode !== DualKawaseBlur.Mode.TwoPass) ? us1 : null
+
+        // Last layer for four pass mode, so use the viewport rect:
+        // No need to check for the mode because this layer is not used in two pass mode anyway.
+        sourceRect: root._localViewportRect
+
+        wrapMode: (root.mode !== DualKawaseBlur.Mode.TwoPass) ? root.visualWrapMode : ShaderEffectSource.ClampToEdge
+
+        function scheduleChainedUpdate() {
+            if (!us1layer) // context is lost, Qt bug (reproduced with 6.2)
+                return
+
+            if (root._window) {
+                root._window.afterAnimating.disconnect(us1layer, us1layer.scheduleChainedUpdate)
+            }
+
+            // If `live` is turned on during a chained update, we do not need to continue:
+            if (root.live) {
+                root._window = null
+                return
+            }
+
+            us1layer.scheduleUpdate()
+
+            if (root._window) {
+                root._window.afterAnimating.connect(us1layer, us1layer.releaseResourcesOfIntermediateLayers)
+            }
+        }
+
+        function releaseResourcesOfIntermediateLayers() {
+            if (!ds1layer || !ds2layer) // context is lost, Qt bug (reproduced with 6.2)
+                return
+
+            if (root._window) {
+                root._window.afterAnimating.disconnect(us1layer, us1layer.releaseResourcesOfIntermediateLayers)
+                root._window = null
+            }
+
+            // If `live` is turned on during a chained update, we should not attempt to
+            // release resources by removing layers from the scene, because turning live
+            // on already brings the layer to the scene and doing so would make the
+            // last layer (`us1layer`) being live while having a `sourceItem` that is
+            // not in the scene anymore:
+            if (root.live)
+                return
+
+            // Last layer is updated, now it is time to release the intermediate buffers:
+            console.debug(root, ": releasing intermediate layers, expect the video memory consumption to drop.")
+
+            // https://doc.qt.io/qt-6/qquickitem.html#graphics-resource-handling
+            ds1layer.parent = null
+            ds2layer.inhibitParent = true
+            ds3layer.inhibitParent = true
+            us0layer.inhibitParent = true
+
+            if (root._queuedScheduledUpdate) {
+                // Tried calling `scheduleUpdate()` before the ongoing chained updates completed.
+                root._queuedScheduledUpdate = false
+                root.scheduleUpdate()
+            }
+        }
+    }
+
+    // This rectangle is going to be visible until the blur effect is ready, so that
+    // we don't expose what is beneath meanwhile.
+    Rectangle {
+        anchors.fill: us2
+
+        visible: !us2.visible && root.postprocess && (root.backgroundColor.a > 0.0)
+
+        color: root.backgroundColor
+    }
+
+    UpsamplerShaderEffect {
+        id: us2
+
+        // {us1/ds1}.size * 2, unless visual rect is used
+        anchors.centerIn: useSubTexture ? undefined : parent
+
+        x: useSubTexture ? root.visualRect.x : 0
+        y: useSubTexture ? root.visualRect.y : 0
+
+        width: {
+            if (useSubTexture)
+                return root.visualRect.width
+
+            if (root.viewportRect.width > 0)
+                return root.viewportRect.width
+
+            return parent.width
+        }
+
+        height: {
+            if (useSubTexture)
+                return root.visualRect.height
+
+            if (root.viewportRect.height > 0)
+                return root.viewportRect.height
+
+            return parent.height
+        }
+
+        readonly property bool useSubTexture: (root.visualRect.width > 0 && root.visualRect.height > 0)
+
+        visible: tpObserver.isValid && root.available
+
+        source: (root.mode === DualKawaseBlur.Mode.TwoPass) ? ds1layer : us1layer
+
+        property alias tint: root.tint
+        property alias tintStrength: root.tintStrength
+        property alias noiseStrength: root.noiseStrength
+        property alias exclusionStrength: root.exclusionStrength
+        property alias backgroundColor: root.backgroundColor
+
+        fragmentShader: root.postprocess ? "qrc:///shaders/DualKawaseBlur_upsample_postprocess.frag.qsb"
+                                         : "qrc:///shaders/DualKawaseBlur_upsample.frag.qsb"
+
+        // NOTE: Vertex shader is set in `DefaultShaderEffect` when `normalRect` is valid.
+
+        subRect: useSubTexture ? Qt.rect((root._localVisualRect.x - root._localViewportRect.x) * root.eDPR,
+                                         (root._localVisualRect.y - root._localViewportRect.y) * root.eDPR,
+                                         root._localVisualRect.width * root.eDPR,
+                                         root._localVisualRect.height * root.eDPR)
+                                  : Qt.rect(0,0,0,0)
+    }
+}

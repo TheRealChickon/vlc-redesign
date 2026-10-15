@@ -1,0 +1,81 @@
+From cc96b9f9597db8273acbe630af8aa228612987a5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?R=C3=A9mi=20Denis-Courmont?= <remi@remlab.net>
+Date: Tue, 5 Jul 2011 10:45:15 +0200
+Subject: [PATCH 1/8] fix win32 build
+
+---
+ src/export.c    | 20 ++++++++++++++++++++
+ src/inout.c     |  4 ++--
+ src/proxy-msg.c |  2 ++
+ 3 files changed, 24 insertions(+), 2 deletions(-)
+
+diff --git a/src/export.c b/src/export.c
+index 26ae63a..82fe9cf 100644
+--- a/src/export.c
++++ b/src/export.c
+@@ -44,6 +44,26 @@
+ #include "conv.h"
+ #include "vbi.h" /* asprintf */
+ 
++#ifndef EOVERFLOW
++ #define EOVERFLOW 75
++#endif
++
++#ifndef S_IRGRP
++#define S_IRGRP 0
++#endif
++
++#ifndef S_IWGRP
++#define S_IWGRP 0
++#endif
++
++#ifndef S_IROTH
++#define S_IROTH 0
++#endif
++
++#ifndef S_IWOTH
++#define S_IWOTH 0
++#endif
++
+ extern const char _zvbi_intl_domainname[];
+ 
+ /**
+diff --git a/src/inout.c b/src/inout.c
+index d27bb5d..eb3d663 100644
+--- a/src/inout.c
++++ b/src/inout.c
+@@ -521,7 +521,7 @@ vbi_capture_io_update_timeout	(struct timeval *	timeout,
+ 	}
+ }
+ 
+-
++#ifdef ENABLE_V4L2
+ /**
+  * @internal
+  *
+@@ -561,7 +561,7 @@ vbi_capture_io_select		(int			fd,
+ 		return ret;
+ 	}
+ }
+-
++#endif
+ /* Helper functions to log the communication between the library and drivers.
+    FIXME remove fp arg, call user log function instead (0.3). */
+ 
+diff --git a/src/proxy-msg.c b/src/proxy-msg.c
+index a9abdbd..254434a 100644
+--- a/src/proxy-msg.c
++++ b/src/proxy-msg.c
+@@ -129,7 +129,9 @@
+ #include <netinet/tcp.h>
+ #include <arpa/inet.h>
+ #include <netdb.h>
++#ifndef _WIN32
+ #include <syslog.h>
++#endif
+ #include <assert.h>
+ #ifdef HAVE_SYS_IOCTL_H
+ #include <sys/ioctl.h>
+-- 
+2.52.0.windows.1
+

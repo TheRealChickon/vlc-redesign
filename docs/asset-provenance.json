@@ -1,0 +1,1124 @@
+{
+  "creator": "Juxtopposed",
+  "title": "VLC Redesign",
+  "file": "https://www.figma.com/community/file/1691465999134370980/vlc-redesign",
+  "video": "https://www.youtube.com/watch?v=ERFeOgqk324",
+  "exports": [
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame.svg",
+      "sha256": "9c359ee2167b4a9d5af1149e5665a6f1bff3c14c797b2ff2d0a204109a8385c8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame1.svg",
+      "sha256": "bcf3dfcc00e219e04441b10a858de5543ac36b2aad3630f14d2f2a00a5c6c0c3"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame10.svg",
+      "sha256": "4eff18732e54bb2588b3013efa30380c475bcde7b6c41139b58a6130371989e4"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame11.svg",
+      "sha256": "09242e48dd7601fd0054e32a190d4ef0bf171a988d9e72f5d072893d3c72001e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame12.svg",
+      "sha256": "2529f9f3677d28344629769650c36a445b0eae6f63a1ea6f3228a291a33de297"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame13.svg",
+      "sha256": "7848b8707c85be33afdd8a9eb4ca40bf734b4a145fd9c7488e2639a545870f7f"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame14.svg",
+      "sha256": "fd2eb46f1e1081b85b92db3398d24b67027ca0cf75fbfb037efac72733fd4438"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame15.svg",
+      "sha256": "a698452dbfbdf4c977f84a2d67acacea3a16c81f0887e450331cb298bc47c764"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame16.svg",
+      "sha256": "ba043f8ad4123869b1c88862657d338fd85d169c928ee14e878ac2539a384392"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame17.svg",
+      "sha256": "79acbcb563c53a3c244d434a11821a085dbad6eb3b34af7d64441c67070816df"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame2.svg",
+      "sha256": "23fce6287122829f6006d1102145a49bc8bd7098e15a9b7defb68193002e4bca"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame3.svg",
+      "sha256": "5b16aa1711848d7218181cb22ff12695be6592d85d7609b34b54fc8225cf6d15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame4.svg",
+      "sha256": "8585e8b1a30dba9c441797e255d15f696f971aa63094f228840cc31e11d7a466"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame5.svg",
+      "sha256": "0bb8c4d213d9a873b932594fbe0dfe63b0103fa0ec15463496156deab8266e15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame6.svg",
+      "sha256": "c9b833efe92ee91a4c5b58132adebd5588649ad55bbc1fe15c37394a7b95fba7"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame7.svg",
+      "sha256": "54b34685ae5e3660176bf9ddf67f11679c41461176d6cd96d9c4bb37ea514c03"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame8.svg",
+      "sha256": "0117b4bab22256a5310ecda170274f5cf13ef1c022c7c607208d6a03ea04f7ea"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/controls-imgFrame9.svg",
+      "sha256": "0158c9ebc33807c18269d37e5451249cc009fc03ebe280794a3042c800518160"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame.svg",
+      "sha256": "1fbc77e07ddecd03e1b6d62d75b0d48e0000dfd08c155693d4c8a064361acb54"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame1.svg",
+      "sha256": "bcf3dfcc00e219e04441b10a858de5543ac36b2aad3630f14d2f2a00a5c6c0c3"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame10.svg",
+      "sha256": "89438e334ab0eea50ee88c00e0c0e911d666968cd1a205ce64c1f01d4770df32"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame11.svg",
+      "sha256": "c9b833efe92ee91a4c5b58132adebd5588649ad55bbc1fe15c37394a7b95fba7"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame12.svg",
+      "sha256": "372ae6acc727cc5a75c8d7705f604afe3fce45a2359051181003dcbd603433b8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame13.svg",
+      "sha256": "2529f9f3677d28344629769650c36a445b0eae6f63a1ea6f3228a291a33de297"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame14.svg",
+      "sha256": "7848b8707c85be33afdd8a9eb4ca40bf734b4a145fd9c7488e2639a545870f7f"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame15.svg",
+      "sha256": "456d37af09e1d6b968e87f7e9cd53ff45bf1a8de6765e9eccfc0a7c3aee20e20"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame16.svg",
+      "sha256": "ffaafbacfe785b0c9337f52ae4aded6cbc4d4c1bdf9ad9a601847be70875394e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame17.svg",
+      "sha256": "a4c9fc6995c57b2bd58ec7742231f76cac51bc0224a0141d97b095122719789a"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame18.svg",
+      "sha256": "85c1e56019dd75147fa0eacc59671c9e1ec78f45d35cd3b406d6fa16d1d11119"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame19.svg",
+      "sha256": "b92c9ac905d80a2b36076c39d70993287fbb0566c2452cc030c2aa0e47049133"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame2.svg",
+      "sha256": "ca0b31d936b91ceb05fad47e6edf5ce2538ca965b0d73e4f7f3a5071a7d02183"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame20.svg",
+      "sha256": "a698452dbfbdf4c977f84a2d67acacea3a16c81f0887e450331cb298bc47c764"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame21.svg",
+      "sha256": "486900819c6fd18670e4898215acce32e990887ecf8ddf01f192ceb0c8225c8d"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame22.svg",
+      "sha256": "e2d44d2f0fe7dad2a23cb0226ac748c20d6dc8e82ed835051a3e1f26f8e363fc"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame23.svg",
+      "sha256": "153af0590671ec1412b7046ae2c460836a9b8647d9db887b302b74f5fc6cb4d0"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame24.svg",
+      "sha256": "4f055e9be235d18bd1470a202d1c78d36409c71620338025ad7447a972cebccf"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame25.svg",
+      "sha256": "39ed7e664c24d3a33441500575b1b2a1056daeb1acc5110c812fdc41e59268c8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame26.svg",
+      "sha256": "c7775a73034be9d03706399ee890179ab0fb5bcf31aa9d0135a39f11203f04c2"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame27.svg",
+      "sha256": "0bb8c4d213d9a873b932594fbe0dfe63b0103fa0ec15463496156deab8266e15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame3.svg",
+      "sha256": "8dea52e8a5e430639e30580dc7c5073f9ad8c435e7dbab3f5d0129d763553d1e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame4.svg",
+      "sha256": "b28cdbc9bd29fbfb9259d7c635491b5ffdefe32b8df0d4156c7b400b86a7cff5"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame44.svg",
+      "sha256": "cfa69d47bfa126eb098b3163905634705f462be755285a465ee4633e89de1852"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame45.svg",
+      "sha256": "7935a27291329bca59d21a3051dc582997e6acdaba06e6560d7a55650f2f69e8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame46.svg",
+      "sha256": "80aa726afb5d6304c468698cd477680fecb921c843d34afb3252620ccec36386"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame47.svg",
+      "sha256": "6092ea03eb18c0c7a14fceaa3a77e4daa516a082ef5bdb544c77cd9a6797be64"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame48.svg",
+      "sha256": "ba043f8ad4123869b1c88862657d338fd85d169c928ee14e878ac2539a384392"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame49.svg",
+      "sha256": "f31551ed015cc8be030d9eaeddfc9854407e025ffd3d1bf473b8c8e2abe2f82e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame5.svg",
+      "sha256": "a255b7797ff3f59c0e788b1e042643b89c060c0a893d47533ed42a4cef6c95d9"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame50.svg",
+      "sha256": "c5713ee955f5fb3a7f8980a41d6bd056158df6072c5885c94d4b2aa61d00971b"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame51.svg",
+      "sha256": "270e16db39525420440c5dc0ed9f18bbcba0ce2cd01c1fecf581147f927e1793"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame52.svg",
+      "sha256": "890b4a9fad93c6696fadd3739a167a561ef811c8342c894e186df507bb20f115"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame53.svg",
+      "sha256": "18dda2504d5376dc06b496bd4eea3d544d7a50d2760b2cbd799f35f6ae4bb5c2"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame54.svg",
+      "sha256": "6769c8d5544f86bbce3e9bf87363f0a1b2ee72d48479b4bb9f8d7466cad5ec0c"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame55.svg",
+      "sha256": "27a902055682ab5eca29782dae70fbff5495a46b2bae32da7256f69e7f0e7aa9"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame56.svg",
+      "sha256": "3ec58ce2065040e5d80be84cde3b1670730bbd2214dceec25ba359cb078a7d74"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame57.svg",
+      "sha256": "49fced20e51e2dd7fb848de4c609f1cdcbaa2f59f8f5aef055ef8745d7b5c7ef"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame58.svg",
+      "sha256": "80501c06f439ad1f8d35346f43d2da3c21b06b0f7904309bd2172f5cb42073ea"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame59.svg",
+      "sha256": "934697aa359890645a9feeba97b655c76e515bf0195bc05ecf23740b85417033"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame6.svg",
+      "sha256": "0be8aecaa62e6836eaa4bfcb5c913be052bd2dfac3fd7088c327d17b336af05d"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame60.svg",
+      "sha256": "bc4477fa210d1793e07d04bee80fc16a05d17ffce0a642c575dcf26800953953"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame61.svg",
+      "sha256": "438cd0d87e14b05c0415cb8751221e27bb251aa8488cb1a41665b94dc1bdfd3f"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame7.svg",
+      "sha256": "fd2eb46f1e1081b85b92db3398d24b67027ca0cf75fbfb037efac72733fd4438"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame8.svg",
+      "sha256": "4a0735f6911decdbc34af47f3ddbc1faa6ccca1c33baeeacbbf7593b841f1684"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgFrame9.svg",
+      "sha256": "7f9dcefccf1e1c57093fd31e92980aaad71dacf7486eb2509579314db6d40e14"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgRectangle6.svg",
+      "sha256": "66ddd1f28b5719d24eb727be8e4374bd4df01bc55c5147b4418d50c2a7555cf8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgRectangle7.svg",
+      "sha256": "fd5d59a978656dbe48261e830eff0a33d32d87306174d70414fb9ab300300eaa"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgRectangle8.svg",
+      "sha256": "b2154b3ef1ae3ca8bff62999276e500a2107017033c6bbd3936d384f6b8ac880"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgVector.svg",
+      "sha256": "0458ce0fd52e592b81ad6c7133b5b55b7b9986033810de4bdd9b014670d23250"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/customize-imgVector19.svg",
+      "sha256": "03ad440b02eae9eb47419e5cfa8163a9dcb75d636ba0958cf9f33b16fa398e48"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame.svg",
+      "sha256": "fd2eb46f1e1081b85b92db3398d24b67027ca0cf75fbfb037efac72733fd4438"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame1.svg",
+      "sha256": "bcf3dfcc00e219e04441b10a858de5543ac36b2aad3630f14d2f2a00a5c6c0c3"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame10.svg",
+      "sha256": "ffaafbacfe785b0c9337f52ae4aded6cbc4d4c1bdf9ad9a601847be70875394e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame11.svg",
+      "sha256": "b92c9ac905d80a2b36076c39d70993287fbb0566c2452cc030c2aa0e47049133"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame12.svg",
+      "sha256": "a698452dbfbdf4c977f84a2d67acacea3a16c81f0887e450331cb298bc47c764"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame13.svg",
+      "sha256": "486900819c6fd18670e4898215acce32e990887ecf8ddf01f192ceb0c8225c8d"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame14.svg",
+      "sha256": "e2d44d2f0fe7dad2a23cb0226ac748c20d6dc8e82ed835051a3e1f26f8e363fc"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame15.svg",
+      "sha256": "153af0590671ec1412b7046ae2c460836a9b8647d9db887b302b74f5fc6cb4d0"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame16.svg",
+      "sha256": "39ed7e664c24d3a33441500575b1b2a1056daeb1acc5110c812fdc41e59268c8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame17.svg",
+      "sha256": "0bb8c4d213d9a873b932594fbe0dfe63b0103fa0ec15463496156deab8266e15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame18.svg",
+      "sha256": "a0d0c57a689492bcd809337e03a6d771f18a1b8a1c95bb32dd2be329cc671e59"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame19.svg",
+      "sha256": "456d37af09e1d6b968e87f7e9cd53ff45bf1a8de6765e9eccfc0a7c3aee20e20"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame2.svg",
+      "sha256": "1fbc77e07ddecd03e1b6d62d75b0d48e0000dfd08c155693d4c8a064361acb54"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame3.svg",
+      "sha256": "ca0b31d936b91ceb05fad47e6edf5ce2538ca965b0d73e4f7f3a5071a7d02183"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame4.svg",
+      "sha256": "c2a5dca8b580970a3d315fc075b0e2c69a588f91edab3a1eeb0cb5f7b4526168"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame49.svg",
+      "sha256": "f31551ed015cc8be030d9eaeddfc9854407e025ffd3d1bf473b8c8e2abe2f82e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame5.svg",
+      "sha256": "b28cdbc9bd29fbfb9259d7c635491b5ffdefe32b8df0d4156c7b400b86a7cff5"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame50.svg",
+      "sha256": "c5713ee955f5fb3a7f8980a41d6bd056158df6072c5885c94d4b2aa61d00971b"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame6.svg",
+      "sha256": "4a0735f6911decdbc34af47f3ddbc1faa6ccca1c33baeeacbbf7593b841f1684"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame7.svg",
+      "sha256": "7f9dcefccf1e1c57093fd31e92980aaad71dacf7486eb2509579314db6d40e14"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame8.svg",
+      "sha256": "89438e334ab0eea50ee88c00e0c0e911d666968cd1a205ce64c1f01d4770df32"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgFrame9.svg",
+      "sha256": "c9b833efe92ee91a4c5b58132adebd5588649ad55bbc1fe15c37394a7b95fba7"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/grid-imgVector.svg",
+      "sha256": "bbd58d1b6942dfef5965f39e9d7126440fbc8178569cfecd4ef576a180d14d78"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame.svg",
+      "sha256": "9c359ee2167b4a9d5af1149e5665a6f1bff3c14c797b2ff2d0a204109a8385c8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame1.svg",
+      "sha256": "bcf3dfcc00e219e04441b10a858de5543ac36b2aad3630f14d2f2a00a5c6c0c3"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame10.svg",
+      "sha256": "09242e48dd7601fd0054e32a190d4ef0bf171a988d9e72f5d072893d3c72001e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame11.svg",
+      "sha256": "2529f9f3677d28344629769650c36a445b0eae6f63a1ea6f3228a291a33de297"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame12.svg",
+      "sha256": "7848b8707c85be33afdd8a9eb4ca40bf734b4a145fd9c7488e2639a545870f7f"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame13.svg",
+      "sha256": "fd2eb46f1e1081b85b92db3398d24b67027ca0cf75fbfb037efac72733fd4438"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame14.svg",
+      "sha256": "a698452dbfbdf4c977f84a2d67acacea3a16c81f0887e450331cb298bc47c764"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame15.svg",
+      "sha256": "ba043f8ad4123869b1c88862657d338fd85d169c928ee14e878ac2539a384392"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame16.svg",
+      "sha256": "79acbcb563c53a3c244d434a11821a085dbad6eb3b34af7d64441c67070816df"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame17.svg",
+      "sha256": "978e7e98abf6b913e86d4dc87465fa98df80e540fa5fc4d9687cedaaf40884d5"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame2.svg",
+      "sha256": "5b16aa1711848d7218181cb22ff12695be6592d85d7609b34b54fc8225cf6d15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame3.svg",
+      "sha256": "8585e8b1a30dba9c441797e255d15f696f971aa63094f228840cc31e11d7a466"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame4.svg",
+      "sha256": "0bb8c4d213d9a873b932594fbe0dfe63b0103fa0ec15463496156deab8266e15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame5.svg",
+      "sha256": "c9b833efe92ee91a4c5b58132adebd5588649ad55bbc1fe15c37394a7b95fba7"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame6.svg",
+      "sha256": "54b34685ae5e3660176bf9ddf67f11679c41461176d6cd96d9c4bb37ea514c03"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame7.svg",
+      "sha256": "0117b4bab22256a5310ecda170274f5cf13ef1c022c7c607208d6a03ea04f7ea"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame8.svg",
+      "sha256": "a4a1a92e42de32ede08b21ace6cf3214a6edafd8bbcca28b03da34330761772b"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgFrame9.svg",
+      "sha256": "4eff18732e54bb2588b3013efa30380c475bcde7b6c41139b58a6130371989e4"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgVector58.svg",
+      "sha256": "f7f458d556413954f79c8dfdea7dca008a13218423f6613e22d90d7b108f9e07"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/interface-imgVector59.svg",
+      "sha256": "aca9bd8e0bf52644fc78a169c32dd055d5cfb8f1611a228ab8ae0e9818b2e4b5"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame.svg",
+      "sha256": "486900819c6fd18670e4898215acce32e990887ecf8ddf01f192ceb0c8225c8d"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame1.svg",
+      "sha256": "bcf3dfcc00e219e04441b10a858de5543ac36b2aad3630f14d2f2a00a5c6c0c3"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame10.svg",
+      "sha256": "e50cc9393ab309efe94b0f89f5059ebb8fbe393f38b87ea979042d81d405d6a9"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame11.svg",
+      "sha256": "ffaafbacfe785b0c9337f52ae4aded6cbc4d4c1bdf9ad9a601847be70875394e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame12.svg",
+      "sha256": "b92c9ac905d80a2b36076c39d70993287fbb0566c2452cc030c2aa0e47049133"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame13.svg",
+      "sha256": "e2d44d2f0fe7dad2a23cb0226ac748c20d6dc8e82ed835051a3e1f26f8e363fc"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame14.svg",
+      "sha256": "153af0590671ec1412b7046ae2c460836a9b8647d9db887b302b74f5fc6cb4d0"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame15.svg",
+      "sha256": "4f055e9be235d18bd1470a202d1c78d36409c71620338025ad7447a972cebccf"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame16.svg",
+      "sha256": "39ed7e664c24d3a33441500575b1b2a1056daeb1acc5110c812fdc41e59268c8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame17.svg",
+      "sha256": "a4c9fc6995c57b2bd58ec7742231f76cac51bc0224a0141d97b095122719789a"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame18.svg",
+      "sha256": "85c1e56019dd75147fa0eacc59671c9e1ec78f45d35cd3b406d6fa16d1d11119"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame19.svg",
+      "sha256": "c7775a73034be9d03706399ee890179ab0fb5bcf31aa9d0135a39f11203f04c2"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame2.svg",
+      "sha256": "fd2eb46f1e1081b85b92db3398d24b67027ca0cf75fbfb037efac72733fd4438"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame20.svg",
+      "sha256": "0bb8c4d213d9a873b932594fbe0dfe63b0103fa0ec15463496156deab8266e15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame21.svg",
+      "sha256": "ebb1eeb9d5821e82e992177558dd46b89fc8b69a1bfcfd5705649710d3a767ff"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame22.svg",
+      "sha256": "a1cd89f7069e82b127da78555b5e6af0d27744dd96d308eb7df1ff319d2f71b1"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame23.svg",
+      "sha256": "a0d0c57a689492bcd809337e03a6d771f18a1b8a1c95bb32dd2be329cc671e59"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame24.svg",
+      "sha256": "b28cdbc9bd29fbfb9259d7c635491b5ffdefe32b8df0d4156c7b400b86a7cff5"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame25.svg",
+      "sha256": "b6c1c19285e3b80cd553c625d3f80dbb7dca38db929693be8730a0c3e2b27f79"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame26.svg",
+      "sha256": "0be8aecaa62e6836eaa4bfcb5c913be052bd2dfac3fd7088c327d17b336af05d"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame27.svg",
+      "sha256": "4a0735f6911decdbc34af47f3ddbc1faa6ccca1c33baeeacbbf7593b841f1684"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame3.svg",
+      "sha256": "dd67ca894afec852c1ba9da30c37cc7b1a6f23669e9d5ca08a74d27f334f4430"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame4.svg",
+      "sha256": "b7e178a99f8427b290fd823183ccd296c3d1af29268788f38216328b7e1e4efb"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame44.svg",
+      "sha256": "7f9dcefccf1e1c57093fd31e92980aaad71dacf7486eb2509579314db6d40e14"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame45.svg",
+      "sha256": "89438e334ab0eea50ee88c00e0c0e911d666968cd1a205ce64c1f01d4770df32"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame46.svg",
+      "sha256": "c9b833efe92ee91a4c5b58132adebd5588649ad55bbc1fe15c37394a7b95fba7"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame47.svg",
+      "sha256": "8dea52e8a5e430639e30580dc7c5073f9ad8c435e7dbab3f5d0129d763553d1e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame48.svg",
+      "sha256": "372ae6acc727cc5a75c8d7705f604afe3fce45a2359051181003dcbd603433b8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame49.svg",
+      "sha256": "c5713ee955f5fb3a7f8980a41d6bd056158df6072c5885c94d4b2aa61d00971b"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame5.svg",
+      "sha256": "a698452dbfbdf4c977f84a2d67acacea3a16c81f0887e450331cb298bc47c764"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame50.svg",
+      "sha256": "f31551ed015cc8be030d9eaeddfc9854407e025ffd3d1bf473b8c8e2abe2f82e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame51.svg",
+      "sha256": "2529f9f3677d28344629769650c36a445b0eae6f63a1ea6f3228a291a33de297"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame52.svg",
+      "sha256": "7848b8707c85be33afdd8a9eb4ca40bf734b4a145fd9c7488e2639a545870f7f"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame53.svg",
+      "sha256": "247aa8b8faa8475fa70cd4be01fc5584113cb02270d0ad20472fc867cff29af8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame54.svg",
+      "sha256": "456d37af09e1d6b968e87f7e9cd53ff45bf1a8de6765e9eccfc0a7c3aee20e20"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame6.svg",
+      "sha256": "1fbc77e07ddecd03e1b6d62d75b0d48e0000dfd08c155693d4c8a064361acb54"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame7.svg",
+      "sha256": "ca0b31d936b91ceb05fad47e6edf5ce2538ca965b0d73e4f7f3a5071a7d02183"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame8.svg",
+      "sha256": "23fce6287122829f6006d1102145a49bc8bd7098e15a9b7defb68193002e4bca"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgFrame9.svg",
+      "sha256": "c2a5dca8b580970a3d315fc075b0e2c69a588f91edab3a1eeb0cb5f7b4526168"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgRectangle6.svg",
+      "sha256": "66ddd1f28b5719d24eb727be8e4374bd4df01bc55c5147b4418d50c2a7555cf8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgRectangle7.svg",
+      "sha256": "fd5d59a978656dbe48261e830eff0a33d32d87306174d70414fb9ab300300eaa"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgRectangle8.svg",
+      "sha256": "c10db43b935701e6b37762a4af99367703e137cb5e92d90b9301298f4b8c756e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/library-imgVector.svg",
+      "sha256": "0458ce0fd52e592b81ad6c7133b5b55b7b9986033810de4bdd9b014670d23250"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame.svg",
+      "sha256": "1fbc77e07ddecd03e1b6d62d75b0d48e0000dfd08c155693d4c8a064361acb54"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame1.svg",
+      "sha256": "bcf3dfcc00e219e04441b10a858de5543ac36b2aad3630f14d2f2a00a5c6c0c3"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame10.svg",
+      "sha256": "89438e334ab0eea50ee88c00e0c0e911d666968cd1a205ce64c1f01d4770df32"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame11.svg",
+      "sha256": "c9b833efe92ee91a4c5b58132adebd5588649ad55bbc1fe15c37394a7b95fba7"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame12.svg",
+      "sha256": "372ae6acc727cc5a75c8d7705f604afe3fce45a2359051181003dcbd603433b8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame13.svg",
+      "sha256": "2529f9f3677d28344629769650c36a445b0eae6f63a1ea6f3228a291a33de297"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame14.svg",
+      "sha256": "456d37af09e1d6b968e87f7e9cd53ff45bf1a8de6765e9eccfc0a7c3aee20e20"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame15.svg",
+      "sha256": "ffaafbacfe785b0c9337f52ae4aded6cbc4d4c1bdf9ad9a601847be70875394e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame16.svg",
+      "sha256": "b92c9ac905d80a2b36076c39d70993287fbb0566c2452cc030c2aa0e47049133"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame17.svg",
+      "sha256": "a4c9fc6995c57b2bd58ec7742231f76cac51bc0224a0141d97b095122719789a"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame18.svg",
+      "sha256": "85c1e56019dd75147fa0eacc59671c9e1ec78f45d35cd3b406d6fa16d1d11119"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame19.svg",
+      "sha256": "a698452dbfbdf4c977f84a2d67acacea3a16c81f0887e450331cb298bc47c764"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame2.svg",
+      "sha256": "ca0b31d936b91ceb05fad47e6edf5ce2538ca965b0d73e4f7f3a5071a7d02183"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame20.svg",
+      "sha256": "486900819c6fd18670e4898215acce32e990887ecf8ddf01f192ceb0c8225c8d"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame21.svg",
+      "sha256": "e2d44d2f0fe7dad2a23cb0226ac748c20d6dc8e82ed835051a3e1f26f8e363fc"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame22.svg",
+      "sha256": "153af0590671ec1412b7046ae2c460836a9b8647d9db887b302b74f5fc6cb4d0"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame23.svg",
+      "sha256": "4f055e9be235d18bd1470a202d1c78d36409c71620338025ad7447a972cebccf"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame24.svg",
+      "sha256": "39ed7e664c24d3a33441500575b1b2a1056daeb1acc5110c812fdc41e59268c8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame25.svg",
+      "sha256": "c7775a73034be9d03706399ee890179ab0fb5bcf31aa9d0135a39f11203f04c2"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame26.svg",
+      "sha256": "0bb8c4d213d9a873b932594fbe0dfe63b0103fa0ec15463496156deab8266e15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame3.svg",
+      "sha256": "8dea52e8a5e430639e30580dc7c5073f9ad8c435e7dbab3f5d0129d763553d1e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame4.svg",
+      "sha256": "b28cdbc9bd29fbfb9259d7c635491b5ffdefe32b8df0d4156c7b400b86a7cff5"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame49.svg",
+      "sha256": "f31551ed015cc8be030d9eaeddfc9854407e025ffd3d1bf473b8c8e2abe2f82e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame5.svg",
+      "sha256": "a255b7797ff3f59c0e788b1e042643b89c060c0a893d47533ed42a4cef6c95d9"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame50.svg",
+      "sha256": "c5713ee955f5fb3a7f8980a41d6bd056158df6072c5885c94d4b2aa61d00971b"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame6.svg",
+      "sha256": "0be8aecaa62e6836eaa4bfcb5c913be052bd2dfac3fd7088c327d17b336af05d"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame7.svg",
+      "sha256": "fd2eb46f1e1081b85b92db3398d24b67027ca0cf75fbfb037efac72733fd4438"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame8.svg",
+      "sha256": "4a0735f6911decdbc34af47f3ddbc1faa6ccca1c33baeeacbbf7593b841f1684"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgFrame9.svg",
+      "sha256": "7f9dcefccf1e1c57093fd31e92980aaad71dacf7486eb2509579314db6d40e14"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgRectangle6.svg",
+      "sha256": "66ddd1f28b5719d24eb727be8e4374bd4df01bc55c5147b4418d50c2a7555cf8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgRectangle7.svg",
+      "sha256": "fd5d59a978656dbe48261e830eff0a33d32d87306174d70414fb9ab300300eaa"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgRectangle8.svg",
+      "sha256": "3f72b14f919624aa37b2db728920ddd27874c123137f646eadb0d454d679809e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgVector.svg",
+      "sha256": "0458ce0fd52e592b81ad6c7133b5b55b7b9986033810de4bdd9b014670d23250"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/music-imgVector19.svg",
+      "sha256": "03ad440b02eae9eb47419e5cfa8163a9dcb75d636ba0958cf9f33b16fa398e48"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/onboarding-imgFrame4.svg",
+      "sha256": "52ec7e7b36ddb69a3962faa08437f54df9018381e8f5b3b11eb2637cbc592317"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame.svg",
+      "sha256": "9c359ee2167b4a9d5af1149e5665a6f1bff3c14c797b2ff2d0a204109a8385c8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame1.svg",
+      "sha256": "bcf3dfcc00e219e04441b10a858de5543ac36b2aad3630f14d2f2a00a5c6c0c3"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame10.svg",
+      "sha256": "09242e48dd7601fd0054e32a190d4ef0bf171a988d9e72f5d072893d3c72001e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame11.svg",
+      "sha256": "2529f9f3677d28344629769650c36a445b0eae6f63a1ea6f3228a291a33de297"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame12.svg",
+      "sha256": "7848b8707c85be33afdd8a9eb4ca40bf734b4a145fd9c7488e2639a545870f7f"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame13.svg",
+      "sha256": "fd2eb46f1e1081b85b92db3398d24b67027ca0cf75fbfb037efac72733fd4438"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame14.svg",
+      "sha256": "a698452dbfbdf4c977f84a2d67acacea3a16c81f0887e450331cb298bc47c764"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame15.svg",
+      "sha256": "ba043f8ad4123869b1c88862657d338fd85d169c928ee14e878ac2539a384392"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame16.svg",
+      "sha256": "79acbcb563c53a3c244d434a11821a085dbad6eb3b34af7d64441c67070816df"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame17.svg",
+      "sha256": "978e7e98abf6b913e86d4dc87465fa98df80e540fa5fc4d9687cedaaf40884d5"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame2.svg",
+      "sha256": "5b16aa1711848d7218181cb22ff12695be6592d85d7609b34b54fc8225cf6d15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame3.svg",
+      "sha256": "8585e8b1a30dba9c441797e255d15f696f971aa63094f228840cc31e11d7a466"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame4.svg",
+      "sha256": "0bb8c4d213d9a873b932594fbe0dfe63b0103fa0ec15463496156deab8266e15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame5.svg",
+      "sha256": "c9b833efe92ee91a4c5b58132adebd5588649ad55bbc1fe15c37394a7b95fba7"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame6.svg",
+      "sha256": "54b34685ae5e3660176bf9ddf67f11679c41461176d6cd96d9c4bb37ea514c03"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame7.svg",
+      "sha256": "0117b4bab22256a5310ecda170274f5cf13ef1c022c7c607208d6a03ea04f7ea"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame8.svg",
+      "sha256": "a4a1a92e42de32ede08b21ace6cf3214a6edafd8bbcca28b03da34330761772b"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgFrame9.svg",
+      "sha256": "cebeb2ed96e4b48a50e126199e1170d5ce49d8736e2fbf7f7de85d9150a84cd9"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgVector59.svg",
+      "sha256": "aca9bd8e0bf52644fc78a169c32dd055d5cfb8f1611a228ab8ae0e9818b2e4b5"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/playback-imgVector60.svg",
+      "sha256": "3cf3160528eb73307730b0d64a01cbc8e50812336d1bd4761f37bddb11c26c4c"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame.svg",
+      "sha256": "1fbc77e07ddecd03e1b6d62d75b0d48e0000dfd08c155693d4c8a064361acb54"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame1.svg",
+      "sha256": "bcf3dfcc00e219e04441b10a858de5543ac36b2aad3630f14d2f2a00a5c6c0c3"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame10.svg",
+      "sha256": "c9b833efe92ee91a4c5b58132adebd5588649ad55bbc1fe15c37394a7b95fba7"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame11.svg",
+      "sha256": "8dea52e8a5e430639e30580dc7c5073f9ad8c435e7dbab3f5d0129d763553d1e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame12.svg",
+      "sha256": "372ae6acc727cc5a75c8d7705f604afe3fce45a2359051181003dcbd603433b8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame13.svg",
+      "sha256": "2529f9f3677d28344629769650c36a445b0eae6f63a1ea6f3228a291a33de297"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame14.svg",
+      "sha256": "7848b8707c85be33afdd8a9eb4ca40bf734b4a145fd9c7488e2639a545870f7f"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame15.svg",
+      "sha256": "247aa8b8faa8475fa70cd4be01fc5584113cb02270d0ad20472fc867cff29af8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame16.svg",
+      "sha256": "456d37af09e1d6b968e87f7e9cd53ff45bf1a8de6765e9eccfc0a7c3aee20e20"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame17.svg",
+      "sha256": "a4c9fc6995c57b2bd58ec7742231f76cac51bc0224a0141d97b095122719789a"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame18.svg",
+      "sha256": "85c1e56019dd75147fa0eacc59671c9e1ec78f45d35cd3b406d6fa16d1d11119"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame19.svg",
+      "sha256": "ffaafbacfe785b0c9337f52ae4aded6cbc4d4c1bdf9ad9a601847be70875394e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame2.svg",
+      "sha256": "ca0b31d936b91ceb05fad47e6edf5ce2538ca965b0d73e4f7f3a5071a7d02183"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame20.svg",
+      "sha256": "b92c9ac905d80a2b36076c39d70993287fbb0566c2452cc030c2aa0e47049133"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame21.svg",
+      "sha256": "a698452dbfbdf4c977f84a2d67acacea3a16c81f0887e450331cb298bc47c764"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame22.svg",
+      "sha256": "486900819c6fd18670e4898215acce32e990887ecf8ddf01f192ceb0c8225c8d"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame23.svg",
+      "sha256": "e2d44d2f0fe7dad2a23cb0226ac748c20d6dc8e82ed835051a3e1f26f8e363fc"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame24.svg",
+      "sha256": "153af0590671ec1412b7046ae2c460836a9b8647d9db887b302b74f5fc6cb4d0"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame25.svg",
+      "sha256": "4f055e9be235d18bd1470a202d1c78d36409c71620338025ad7447a972cebccf"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame26.svg",
+      "sha256": "39ed7e664c24d3a33441500575b1b2a1056daeb1acc5110c812fdc41e59268c8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame27.svg",
+      "sha256": "c7775a73034be9d03706399ee890179ab0fb5bcf31aa9d0135a39f11203f04c2"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame28.svg",
+      "sha256": "0bb8c4d213d9a873b932594fbe0dfe63b0103fa0ec15463496156deab8266e15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame3.svg",
+      "sha256": "a255b7797ff3f59c0e788b1e042643b89c060c0a893d47533ed42a4cef6c95d9"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame4.svg",
+      "sha256": "b28cdbc9bd29fbfb9259d7c635491b5ffdefe32b8df0d4156c7b400b86a7cff5"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame49.svg",
+      "sha256": "f31551ed015cc8be030d9eaeddfc9854407e025ffd3d1bf473b8c8e2abe2f82e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame5.svg",
+      "sha256": "0be8aecaa62e6836eaa4bfcb5c913be052bd2dfac3fd7088c327d17b336af05d"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame50.svg",
+      "sha256": "c5713ee955f5fb3a7f8980a41d6bd056158df6072c5885c94d4b2aa61d00971b"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame6.svg",
+      "sha256": "fd2eb46f1e1081b85b92db3398d24b67027ca0cf75fbfb037efac72733fd4438"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame7.svg",
+      "sha256": "4a0735f6911decdbc34af47f3ddbc1faa6ccca1c33baeeacbbf7593b841f1684"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame8.svg",
+      "sha256": "7f9dcefccf1e1c57093fd31e92980aaad71dacf7486eb2509579314db6d40e14"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgFrame9.svg",
+      "sha256": "89438e334ab0eea50ee88c00e0c0e911d666968cd1a205ce64c1f01d4770df32"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgRectangle6.svg",
+      "sha256": "66ddd1f28b5719d24eb727be8e4374bd4df01bc55c5147b4418d50c2a7555cf8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgRectangle7.svg",
+      "sha256": "fd5d59a978656dbe48261e830eff0a33d32d87306174d70414fb9ab300300eaa"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgRectangle8.svg",
+      "sha256": "4dc5d8c02f09b7380ecaa2c90affbee2353dcc3b3a7ebf0baad3dcbacd1045c7"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/player-imgVector.svg",
+      "sha256": "0458ce0fd52e592b81ad6c7133b5b55b7b9986033810de4bdd9b014670d23250"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame.svg",
+      "sha256": "9c359ee2167b4a9d5af1149e5665a6f1bff3c14c797b2ff2d0a204109a8385c8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame1.svg",
+      "sha256": "bcf3dfcc00e219e04441b10a858de5543ac36b2aad3630f14d2f2a00a5c6c0c3"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame10.svg",
+      "sha256": "4eff18732e54bb2588b3013efa30380c475bcde7b6c41139b58a6130371989e4"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame11.svg",
+      "sha256": "09242e48dd7601fd0054e32a190d4ef0bf171a988d9e72f5d072893d3c72001e"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame12.svg",
+      "sha256": "2529f9f3677d28344629769650c36a445b0eae6f63a1ea6f3228a291a33de297"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame13.svg",
+      "sha256": "7848b8707c85be33afdd8a9eb4ca40bf734b4a145fd9c7488e2639a545870f7f"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame14.svg",
+      "sha256": "fd2eb46f1e1081b85b92db3398d24b67027ca0cf75fbfb037efac72733fd4438"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame15.svg",
+      "sha256": "a698452dbfbdf4c977f84a2d67acacea3a16c81f0887e450331cb298bc47c764"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame16.svg",
+      "sha256": "54b34685ae5e3660176bf9ddf67f11679c41461176d6cd96d9c4bb37ea514c03"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame17.svg",
+      "sha256": "ba043f8ad4123869b1c88862657d338fd85d169c928ee14e878ac2539a384392"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame18.svg",
+      "sha256": "79acbcb563c53a3c244d434a11821a085dbad6eb3b34af7d64441c67070816df"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame19.svg",
+      "sha256": "978e7e98abf6b913e86d4dc87465fa98df80e540fa5fc4d9687cedaaf40884d5"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame2.svg",
+      "sha256": "23fce6287122829f6006d1102145a49bc8bd7098e15a9b7defb68193002e4bca"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame3.svg",
+      "sha256": "5b16aa1711848d7218181cb22ff12695be6592d85d7609b34b54fc8225cf6d15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame4.svg",
+      "sha256": "8585e8b1a30dba9c441797e255d15f696f971aa63094f228840cc31e11d7a466"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame5.svg",
+      "sha256": "0bb8c4d213d9a873b932594fbe0dfe63b0103fa0ec15463496156deab8266e15"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame6.svg",
+      "sha256": "c9b833efe92ee91a4c5b58132adebd5588649ad55bbc1fe15c37394a7b95fba7"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame7.svg",
+      "sha256": "07911a2eb7daf400ddeeb9b4257ce26b3632587f147350db8f9e029981239e23"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame8.svg",
+      "sha256": "0117b4bab22256a5310ecda170274f5cf13ef1c022c7c607208d6a03ea04f7ea"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/settings-imgFrame9.svg",
+      "sha256": "a4a1a92e42de32ede08b21ace6cf3214a6edafd8bbcca28b03da34330761772b"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame.svg",
+      "sha256": "125b3e6ed9714f5e97fdf6910280a8e054a7eb54f4da1cba98bbb0098138d925"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame1.svg",
+      "sha256": "0f62fca1c0dbdd0b8ade96ff5568e0e3eb763bebbd6ba22966db2b380651e1bf"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame10.svg",
+      "sha256": "77e8679371a34b2cb87c05802de1062225b5993181ed4ba8761a80b73ca88dd8"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame11.svg",
+      "sha256": "0cb902a2d340a62c5fc6fe2d1aedb0b59a3a18091e56e88e8e617ad071d2e690"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame12.svg",
+      "sha256": "26d60b12fa4d141de6cc853dfd2212fee81cd79669bd97689f3949bbc4f5db5b"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame2.svg",
+      "sha256": "219c16cd27dbbf0e643bfc3c4f7dd4de0c88700f51b1a93f7d412201d70dbcc9"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame3.svg",
+      "sha256": "c3b137a74540db2f745014fef04217ac689d80d5466c34de26f206bc8085b76f"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame4.svg",
+      "sha256": "ec0b5d6ae49319a636c571fcac255c91dd83d68294c7cbff6169e58d82e2b42b"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame5.svg",
+      "sha256": "23fce6287122829f6006d1102145a49bc8bd7098e15a9b7defb68193002e4bca"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame6.svg",
+      "sha256": "0b8737f98f2c1a10b398c0b3d5bdf44a5f860fe1c32eeee21f9d010d2f6303a3"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame7.svg",
+      "sha256": "df27e8efb14570eea049046601b892cc39c4ae480bd1f6d01d61aaa43a44c800"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame8.svg",
+      "sha256": "8bc1fba690b6e91c50100fc8b7cd8576e828453945037c2b2e5b009947f6eab2"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgFrame9.svg",
+      "sha256": "daf413abfe9f7cfc600b25af09d629255c5ebe49c60377de930b7627a23b43b2"
+    },
+    {
+      "file": "modules/gui/qt/pixmaps/redesign/topbar-imgVector104.svg",
+      "sha256": "c7d9955d3600a0b4afe14f88e7bc6877d2309b8a52ba090e380ccf4fe09c1103"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+From 2a425593750d2056fb45ee452835cbebb0c060a9 Mon Sep 17 00:00:00 2001
+From: Steve Lhomme <robux4@ycbcr.xyz>
+Date: Mon, 12 Feb 2024 20:39:05 +0100
+Subject: [PATCH] CMakeList.txt: force static library name to `z`
+
+Otherwise it doesn't match the name in the pkg-config file.
+---
+ CMakeLists.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e103c40..438ec64 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -149,10 +149,10 @@ set(ZLIB_SRCS
+     uncompr.c
+     zutil.c)
+ 
+-if(WIN32)
+-    set(zlib_static_suffix "s")
+-    set(CMAKE_DEBUG_POSTFIX "d")
+-endif(WIN32)
++# if(WIN32)
++#     set(zlib_static_suffix "s")
++#     set(CMAKE_DEBUG_POSTFIX "d")
++# endif(WIN32)
+ 
+ if(ZLIB_BUILD_SHARED)
+     add_library(
+-- 
+2.52.0.windows.1
+

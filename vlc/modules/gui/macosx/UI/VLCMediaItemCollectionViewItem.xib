@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21701"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="VLCMediaItemCollectionViewItem">
+            <connections>
+                <outlet property="addToPlayQueueButton" destination="Ubz-8I-W2F" id="k0q-b1-PZi"/>
+                <outlet property="annotationTextField" destination="tm2-NW-WsZ" id="Miy-RS-Rol"/>
+                <outlet property="highlightBox" destination="Vwd-1n-Sbd" id="h1g-hL-1gh"/>
+                <outlet property="imageViewAspectRatioConstraint" destination="f7c-vp-30m" id="2As-9A-WOn"/>
+                <outlet property="mediaImageView" destination="2aB-sB-hfY" id="Sv0-G1-KNm"/>
+                <outlet property="mediaTitleTextField" destination="OBS-Eh-1mT" id="h1n-PU-IAx"/>
+                <outlet property="playInstantlyButton" destination="S3I-5Z-qgS" id="JlC-bE-i5Y"/>
+                <outlet property="progressIndicator" destination="dFt-oZ-h9P" id="JC6-gk-Mid"/>
+                <outlet property="secondaryInfoTextField" destination="VAn-gF-QiZ" id="U8T-Cs-HaL"/>
+                <outlet property="trailingSecondaryTextToLeadingUnplayedIndicatorConstraint" destination="IXL-bv-5zP" id="V4J-bi-UQB"/>
+                <outlet property="trailingSecondaryTextToTrailingSuperviewConstraint" destination="Zci-25-m59" id="czo-El-QT8"/>
+                <outlet property="unplayedIndicatorTextField" destination="u2r-zy-XEW" id="56s-K4-Kxr"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY" customClass="VLCTrackingView">
+            <rect key="frame" x="0.0" y="0.0" width="207" height="243"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="2aB-sB-hfY" customClass="VLCImageView">
+                    <rect key="frame" x="0.0" y="36" width="207" height="207"/>
+                    <subviews>
+                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="dFt-oZ-h9P" customClass="VLCLinearProgressIndicator">
+                            <rect key="frame" x="0.0" y="0.0" width="207" height="4"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="4" id="lyQ-kl-gVk"/>
+                            </constraints>
+                        </customView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="dFt-oZ-h9P" secondAttribute="bottom" id="4q3-3S-7PA"/>
+                        <constraint firstAttribute="width" secondItem="2aB-sB-hfY" secondAttribute="height" multiplier="1:1" id="f7c-vp-30m"/>
+                        <constraint firstItem="dFt-oZ-h9P" firstAttribute="leading" secondItem="2aB-sB-hfY" secondAttribute="leading" id="gTe-sx-hdP"/>
+                        <constraint firstAttribute="trailing" secondItem="dFt-oZ-h9P" secondAttribute="trailing" id="kBI-UU-vnc"/>
+                    </constraints>
+                </customView>
+                <box boxType="custom" borderType="line" borderWidth="3" cornerRadius="4" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="Vwd-1n-Sbd">
+                    <rect key="frame" x="0.0" y="36" width="207" height="207"/>
+                    <view key="contentView" id="HJG-tt-Xh8">
+                        <rect key="frame" x="3" y="3" width="201" height="201"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <color key="borderColor" red="1" green="0.38123786450000002" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </box>
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OBS-Eh-1mT">
+                    <rect key="frame" x="-2" y="16" width="37" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" title="Label" usesSingleLineMode="YES" id="7Hy-o3-LvX">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="u2r-zy-XEW">
+                    <rect key="frame" x="174" y="0.0" width="35" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="NEW" id="NeT-5U-eZn">
+                        <font key="font" metaFont="systemBold"/>
+                        <color key="textColor" name="VLCAccentColor"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ubz-8I-W2F">
+                    <rect key="frame" x="170" y="206" width="32" height="32"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="ellipsis" imagePosition="only" alignment="center" inset="2" id="6ko-MM-ds0">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="32" id="XhX-7U-Nxj"/>
+                        <constraint firstAttribute="height" constant="32" id="ZDT-YM-Cbr"/>
+                    </constraints>
+                    <connections>
+                        <action selector="addToPlayQueue:" target="-2" id="2C9-Rn-VAb"/>
+                    </connections>
+                </button>
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tm2-NW-WsZ" customClass="VLCRoundedCornerTextField">
+                    <rect key="frame" x="3" y="222" width="37" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="tyb-Ur-7J9">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="S3I-5Z-qgS">
+                    <rect key="frame" x="170" y="41" width="32" height="32"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="libraryPlay" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="IHP-p1-d0R">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="playInstantly:" target="-2" id="E2B-oj-rx3"/>
+                    </connections>
+                </button>
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VAn-gF-QiZ">
+                    <rect key="frame" x="-2" y="0.0" width="175" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" title="Label" id="LSS-jh-llZ">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="2aB-sB-hfY" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="3Ah-0T-rA9"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="OBS-Eh-1mT" secondAttribute="trailing" id="457-oy-EbD"/>
+                <constraint firstItem="S3I-5Z-qgS" firstAttribute="centerX" secondItem="Ubz-8I-W2F" secondAttribute="centerX" id="68y-W7-440"/>
+                <constraint firstItem="Ubz-8I-W2F" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="4" id="8Qf-Un-Gdl" customClass="VLCSpacingConstraint">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="VAn-gF-QiZ" firstAttribute="top" secondItem="OBS-Eh-1mT" secondAttribute="bottom" id="ALi-0z-Mza"/>
+                <constraint firstAttribute="trailing" secondItem="u2r-zy-XEW" secondAttribute="trailing" id="Dd7-va-0UJ"/>
+                <constraint firstItem="u2r-zy-XEW" firstAttribute="centerY" secondItem="VAn-gF-QiZ" secondAttribute="centerY" id="H5N-j9-THf"/>
+                <constraint firstItem="u2r-zy-XEW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="VAn-gF-QiZ" secondAttribute="trailing" constant="4" id="IXL-bv-5zP" customClass="VLCSpacingConstraint">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="VAn-gF-QiZ" secondAttribute="bottom" id="Kp0-Hx-3Ek"/>
+                <constraint firstItem="VAn-gF-QiZ" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="QUW-dn-Fbc"/>
+                <constraint firstItem="Vwd-1n-Sbd" firstAttribute="top" secondItem="2aB-sB-hfY" secondAttribute="top" id="Qpt-yS-z2k"/>
+                <constraint firstItem="Vwd-1n-Sbd" firstAttribute="leading" secondItem="2aB-sB-hfY" secondAttribute="leading" id="Yqz-VL-Ul7"/>
+                <constraint firstAttribute="trailing" secondItem="Ubz-8I-W2F" secondAttribute="trailing" constant="4" id="ZVz-SL-rxZ" customClass="VLCSpacingConstraint">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstAttribute="trailing" secondItem="VAn-gF-QiZ" secondAttribute="trailing" priority="750" id="Zci-25-m59"/>
+                <constraint firstItem="S3I-5Z-qgS" firstAttribute="height" secondItem="Ubz-8I-W2F" secondAttribute="height" id="ebY-C1-rqR"/>
+                <constraint firstItem="tm2-NW-WsZ" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="4" id="fH0-Om-7gV" customClass="VLCSpacingConstraint">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="Vwd-1n-Sbd" firstAttribute="trailing" secondItem="2aB-sB-hfY" secondAttribute="trailing" id="fag-50-6qS"/>
+                <constraint firstItem="S3I-5Z-qgS" firstAttribute="bottom" secondItem="2aB-sB-hfY" secondAttribute="bottom" constant="-4" id="h4v-EY-DXJ" customClass="VLCSpacingConstraint">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="tm2-NW-WsZ" firstAttribute="top" secondItem="Ubz-8I-W2F" secondAttribute="top" id="ijs-lM-2TM"/>
+                <constraint firstItem="S3I-5Z-qgS" firstAttribute="width" secondItem="Ubz-8I-W2F" secondAttribute="width" id="nec-vk-CLK"/>
+                <constraint firstAttribute="trailing" secondItem="2aB-sB-hfY" secondAttribute="trailing" id="oZw-Ab-83p"/>
+                <constraint firstItem="Vwd-1n-Sbd" firstAttribute="bottom" secondItem="2aB-sB-hfY" secondAttribute="bottom" id="sIE-go-0nP"/>
+                <constraint firstItem="2aB-sB-hfY" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="t9g-tX-AQX"/>
+                <constraint firstItem="OBS-Eh-1mT" firstAttribute="top" secondItem="2aB-sB-hfY" secondAttribute="bottom" constant="4" id="vJy-Kf-4Jh" customClass="VLCSpacingConstraint">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="OBS-Eh-1mT" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="yvp-xr-geN"/>
+            </constraints>
+            <point key="canvasLocation" x="118" y="135.5"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="ellipsis" width="17" height="3"/>
+        <image name="libraryPlay" width="64" height="64"/>
+        <namedColor name="VLCAccentColor">
+            <color red="1" green="0.37999999523162842" blue="0.039999999105930328" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

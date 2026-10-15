@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22690"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="VLCLibraryCollectionViewMediaItemListSupplementaryDetailView"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <view id="HAc-or-XD8" customClass="VLCLibraryCollectionViewMediaItemListSupplementaryDetailView">
+            <rect key="frame" x="0.0" y="0.0" width="1071" height="312"/>
+            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FWp-yd-2Pm" customClass="VLCStackView">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="3"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <rect key="frame" x="10" y="0.0" width="1051" height="282"/>
+                    <subviews>
+                        <stackView distribution="equalCentering" orientation="vertical" alignment="leading" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TOx-1e-6D9" customClass="VLCStackView">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                    <integer value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <rect key="frame" x="0.0" y="10" width="237" height="272"/>
+                            <subviews>
+                                <imageView translatesAutoresizingMaskIntoConstraints="NO" id="xZd-Hk-h2M" customClass="VLCImageView">
+                                    <rect key="frame" x="0.0" y="35" width="237" height="237"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="xZd-Hk-h2M" secondAttribute="height" multiplier="1:1" priority="750" id="TIK-Ez-QbE"/>
+                                    </constraints>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="noart" id="6X6-Og-u8A"/>
+                                </imageView>
+                                <stackView distribution="fillEqually" orientation="horizontal" alignment="top" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Nc-Mb-wDa" customClass="VLCStackView">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                            <integer value="1"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <rect key="frame" x="0.0" y="0.0" width="237" height="28"/>
+                                    <subviews>
+                                        <button imageHugsTitle="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ntd-VT-2KS">
+                                            <rect key="frame" x="-6" y="-6" width="128" height="40"/>
+                                            <buttonCell key="cell" type="push" title=" Play" bezelStyle="rounded" image="play.fill" catalog="system" imagePosition="left" alignment="center" controlSize="large" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Rgc-Uk-A3h">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <color key="bezelColor" name="VLCAccentColor"/>
+                                            <connections>
+                                                <action selector="playAction:" target="HAc-or-XD8" id="edJ-21-Ej1"/>
+                                            </connections>
+                                        </button>
+                                        <button imageHugsTitle="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="idL-3a-QaA">
+                                            <rect key="frame" x="115" y="-6" width="128" height="40"/>
+                                            <buttonCell key="cell" type="push" title=" Enqueue" bezelStyle="rounded" image="plus" catalog="system" imagePosition="left" alignment="center" controlSize="large" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="igY-iu-P0N">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="enqueueAction:" target="HAc-or-XD8" id="jkL-Pm-24a"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <visibilityPriorities>
+                                        <integer value="1000"/>
+                                        <integer value="1000"/>
+                                    </visibilityPriorities>
+                                    <customSpacing>
+                                        <real value="3.4028234663852886e+38"/>
+                                        <real value="3.4028234663852886e+38"/>
+                                    </customSpacing>
+                                </stackView>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="xZd-Hk-h2M" secondAttribute="width" id="466-0J-pp1"/>
+                                <constraint firstAttribute="bottom" secondItem="6Nc-Mb-wDa" secondAttribute="bottom" id="9VU-I8-ob5"/>
+                                <constraint firstItem="6Nc-Mb-wDa" firstAttribute="trailing" secondItem="xZd-Hk-h2M" secondAttribute="trailing" id="Jhf-x2-2Yy"/>
+                                <constraint firstItem="6Nc-Mb-wDa" firstAttribute="leading" secondItem="xZd-Hk-h2M" secondAttribute="leading" id="Sbf-QC-G2i"/>
+                                <constraint firstAttribute="height" secondItem="xZd-Hk-h2M" secondAttribute="height" constant="35" id="X7x-82-PMa"/>
+                                <constraint firstItem="xZd-Hk-h2M" firstAttribute="top" secondItem="TOx-1e-6D9" secondAttribute="top" id="b2u-ln-Wf4"/>
+                            </constraints>
+                            <visibilityPriorities>
+                                <integer value="1000"/>
+                                <integer value="1000"/>
+                            </visibilityPriorities>
+                            <customSpacing>
+                                <real value="3.4028234663852886e+38"/>
+                                <real value="3.4028234663852886e+38"/>
+                            </customSpacing>
+                        </stackView>
+                        <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bw7-QB-Ssc" customClass="VLCStackView">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                    <integer value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <rect key="frame" x="257" y="0.0" width="794" height="282"/>
+                            <subviews>
+                                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="nCe-dY-YMM">
+                                    <rect key="frame" x="-2" y="256" width="124" height="26"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" title="Album name" id="6RM-x8-Y4y">
+                                        <font key="font" textStyle="title1" name=".SFNS-Regular"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <customView id="SvO-zd-2zo">
+                                    <rect key="frame" x="0.0" y="203" width="794" height="48"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                    <subviews>
+                                        <button clipsToBounds="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="o9Q-0s-xRU">
+                                            <rect key="frame" x="0.0" y="0.0" width="220" height="48"/>
+                                            <buttonCell key="cell" type="bevel" title="Album primary detail string" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" truncatesLastVisibleLine="YES" imageScaling="proportionallyDown" inset="2" id="SqJ-99-uiI">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="systemSemibold" size="17"/>
+                                            </buttonCell>
+                                            <color key="contentTintColor" name="VLCAccentColor"/>
+                                            <connections>
+                                                <action selector="primaryDetailAction:" target="HAc-or-XD8" id="Afg-sr-HiT"/>
+                                            </connections>
+                                        </button>
+                                        <button verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="jNq-xn-yIp">
+                                            <rect key="frame" x="225" y="0.0" width="242" height="48"/>
+                                            <buttonCell key="cell" type="bevel" title="Album secondary detail string" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" truncatesLastVisibleLine="YES" imageScaling="proportionallyDown" inset="2" id="3xV-LQ-O7O">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="systemSemibold" size="17"/>
+                                            </buttonCell>
+                                            <color key="contentTintColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                            <connections>
+                                                <action selector="secondaryDetailAction:" target="HAc-or-XD8" id="cDV-Wr-lQD"/>
+                                            </connections>
+                                        </button>
+                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QuO-3G-BMT">
+                                            <rect key="frame" x="687" y="16" width="94" height="16"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Year · Duration" id="JBg-wo-ZeE">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="jNq-xn-yIp" firstAttribute="leading" secondItem="o9Q-0s-xRU" secondAttribute="trailing" constant="4" id="5IX-1t-Psn" customClass="VLCSpacingConstraint">
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                                    <integer value="1"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </constraint>
+                                        <constraint firstItem="jNq-xn-yIp" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="QuO-3G-BMT" secondAttribute="leading" constant="-4" id="88t-Jp-57R" customClass="VLCSpacingConstraint">
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                                    <integer value="1"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </constraint>
+                                        <constraint firstItem="o9Q-0s-xRU" firstAttribute="top" secondItem="SvO-zd-2zo" secondAttribute="top" id="QuO-Ev-i98"/>
+                                        <constraint firstItem="QuO-3G-BMT" firstAttribute="centerY" secondItem="SvO-zd-2zo" secondAttribute="centerY" id="TX6-cF-dnh"/>
+                                        <constraint firstAttribute="trailing" secondItem="QuO-3G-BMT" secondAttribute="trailing" constant="12" id="Wfo-47-OGd"/>
+                                        <constraint firstItem="jNq-xn-yIp" firstAttribute="top" secondItem="SvO-zd-2zo" secondAttribute="top" id="eBH-UW-wtK"/>
+                                        <constraint firstAttribute="bottom" secondItem="o9Q-0s-xRU" secondAttribute="bottom" id="lvh-r5-QzT"/>
+                                        <constraint firstAttribute="bottom" secondItem="jNq-xn-yIp" secondAttribute="bottom" id="msf-KD-aoJ"/>
+                                        <constraint firstItem="o9Q-0s-xRU" firstAttribute="leading" secondItem="SvO-zd-2zo" secondAttribute="leading" id="nYc-fo-IyN"/>
+                                    </constraints>
+                                </customView>
+                                <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="52" horizontalPageScroll="10" verticalLineScroll="52" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" id="9ZS-oy-iP9" customClass="VLCSubScrollView">
+                                    <rect key="frame" x="0.0" y="0.0" width="699" height="198"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                    <clipView key="contentView" drawsBackground="NO" id="3V4-tX-owM">
+                                        <rect key="frame" x="0.0" y="0.0" width="699" height="198"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <subviews>
+                                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" tableStyle="fullWidth" columnReordering="NO" autosaveColumns="NO" rowHeight="50" viewBased="YES" id="eEJ-WA-0aM" customClass="VLCLibraryTableView">
+                                                <rect key="frame" x="0.0" y="0.0" width="699" height="188"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <size key="intercellSpacing" width="3" height="2"/>
+                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <tableViewGridLines key="gridStyleMask" horizontal="YES"/>
+                                                <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                                <tableColumns>
+                                                    <tableColumn editable="NO" width="687" minWidth="10" maxWidth="1000000000000" id="tVn-dP-rPg">
+                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
+                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                        </tableHeaderCell>
+                                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="LqL-cf-UYG">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
+                                                        <prototypeCellViews>
+                                                            <tableCellView id="vmz-MH-Uum">
+                                                                <rect key="frame" x="1" y="1" width="696" height="36"/>
+                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            </tableCellView>
+                                                        </prototypeCellViews>
+                                                    </tableColumn>
+                                                </tableColumns>
+                                            </tableView>
+                                        </subviews>
+                                        <nil key="backgroundColor"/>
+                                    </clipView>
+                                    <constraints>
+                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="Hpe-5w-QJh"/>
+                                    </constraints>
+                                    <edgeInsets key="contentInsets" left="0.0" right="0.0" top="0.0" bottom="8"/>
+                                    <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="ZBY-pE-E7T">
+                                        <rect key="frame" x="-100" y="-100" width="701" height="15"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                    </scroller>
+                                    <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="WRE-VM-L7s">
+                                        <rect key="frame" x="224" y="17" width="15" height="102"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                    </scroller>
+                                </scrollView>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="SvO-zd-2zo" secondAttribute="trailing" id="hZf-vs-RlK"/>
+                            </constraints>
+                            <visibilityPriorities>
+                                <integer value="1000"/>
+                                <integer value="1000"/>
+                                <integer value="1000"/>
+                            </visibilityPriorities>
+                            <customSpacing>
+                                <real value="3.4028234663852886e+38"/>
+                                <real value="3.4028234663852886e+38"/>
+                                <real value="3.4028234663852886e+38"/>
+                            </customSpacing>
+                        </stackView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="TOx-1e-6D9" firstAttribute="top" secondItem="FWp-yd-2Pm" secondAttribute="top" id="7hM-jR-3N3"/>
+                        <constraint firstAttribute="bottom" secondItem="TOx-1e-6D9" secondAttribute="bottom" constant="8" id="bdR-rj-nKk" customClass="VLCSpacingConstraint">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                    <integer value="2"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
+                        <constraint firstAttribute="bottom" secondItem="bw7-QB-Ssc" secondAttribute="bottom" id="elF-5e-5LQ"/>
+                        <constraint firstAttribute="trailing" secondItem="bw7-QB-Ssc" secondAttribute="trailing" id="uvg-NE-l4m"/>
+                        <constraint firstItem="TOx-1e-6D9" firstAttribute="leading" secondItem="FWp-yd-2Pm" secondAttribute="leading" id="vAN-Ww-VKA"/>
+                        <constraint firstItem="bw7-QB-Ssc" firstAttribute="top" secondItem="FWp-yd-2Pm" secondAttribute="top" id="xYi-0p-Tii"/>
+                    </constraints>
+                    <visibilityPriorities>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                    </visibilityPriorities>
+                    <customSpacing>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                    </customSpacing>
+                </stackView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="FWp-yd-2Pm" firstAttribute="leading" secondItem="HAc-or-XD8" secondAttribute="leading" constant="8" id="D62-3E-aDO" customClass="VLCSpacingConstraint">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="2"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="FWp-yd-2Pm" firstAttribute="top" secondItem="HAc-or-XD8" secondAttribute="top" constant="28" id="Mr1-w0-CQK"/>
+                <constraint firstAttribute="bottom" secondItem="FWp-yd-2Pm" secondAttribute="bottom" priority="999" id="bUH-jE-TQQ"/>
+                <constraint firstAttribute="trailing" secondItem="FWp-yd-2Pm" secondAttribute="trailing" constant="8" id="cPm-6m-umY" customClass="VLCSpacingConstraint">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="2"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+            </constraints>
+            <connections>
+                <outlet property="artworkImageView" destination="xZd-Hk-h2M" id="J8l-V9-P06"/>
+                <outlet property="contentViewBottomConstraint" destination="bUH-jE-TQQ" id="T0p-C1-8jm"/>
+                <outlet property="contentViewLeftConstraint" destination="D62-3E-aDO" id="T0p-C1-a8j"/>
+                <outlet property="contentViewRightConstraint" destination="cPm-6m-umY" id="T0p-C1-a7l"/>
+                <outlet property="contentViewTopConstraint" destination="Mr1-w0-CQK" id="T0p-C1-1nv"/>
+                <outlet property="internalScrollView" destination="9ZS-oy-iP9" id="afa-6P-b12"/>
+                <outlet property="playButton" destination="ntd-VT-2KS" id="ah5-as-eqw"/>
+                <outlet property="primaryDetailTextButton" destination="o9Q-0s-xRU" id="At9-hH-CJa"/>
+                <outlet property="secondaryDetailTextButton" destination="jNq-xn-yIp" id="ESO-jC-EfW"/>
+                <outlet property="tableView" destination="eEJ-WA-0aM" id="l8k-M9-a8e"/>
+                <outlet property="titleTextField" destination="nCe-dY-YMM" id="h3l-p0-w3e"/>
+                <outlet property="yearAndDurationTextField" destination="QuO-3G-BMT" id="y34-rD-uR"/>
+            </connections>
+            <point key="canvasLocation" x="-237.5" y="-284"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="noart" width="128" height="128"/>
+        <image name="play.fill" catalog="system" width="12" height="13"/>
+        <image name="plus" catalog="system" width="14" height="13"/>
+        <namedColor name="VLCAccentColor">
+            <color red="1" green="0.37999999523162842" blue="0.039999999105930328" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

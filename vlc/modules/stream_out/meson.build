@@ -1,0 +1,231 @@
+# Stream output modules
+
+# dummy
+vlc_modules += {
+    'name' : 'stream_out_dummy',
+    'sources' : files('dummy.c'),
+    'shortname' : 's_o_dumm',
+    'plugin_dir' : 'stream_out',
+}
+
+# cycle
+vlc_modules += {
+    'name' : 'stream_out_cycle',
+    'sources' : files('cycle.c'),
+    'shortname' : 's_o_cycl',
+    'plugin_dir' : 'stream_out',
+}
+
+# delay
+vlc_modules += {
+    'name' : 'stream_out_delay',
+    'sources' : files('delay.c'),
+    'shortname' : 's_o_dela',
+    'plugin_dir' : 'stream_out',
+}
+
+# stats
+vlc_modules += {
+    'name' : 'stream_out_stats',
+    'sources' : files('stats.c'),
+    'shortname' : 's_o_stat',
+    'plugin_dir' : 'stream_out',
+}
+
+# standard
+vlc_modules += {
+    'name' : 'stream_out_standard',
+    'sources' : files(
+      'standard.c',
+      'sdp_helper.c'
+    ),
+    'dependencies' : [socket_libs],
+    'shortname' : 's_o_stan',
+    'plugin_dir' : 'stream_out',
+}
+
+# duplicate
+vlc_modules += {
+    'name' : 'stream_out_duplicate',
+    'sources' : files('duplicate.c'),
+    'shortname' : 's_o_dupl',
+    'plugin_dir' : 'stream_out',
+}
+
+# es
+vlc_modules += {
+    'name' : 'stream_out_es',
+    'sources' : files('es.c'),
+    'shortname' : 's_o_es',
+    'plugin_dir' : 'stream_out',
+}
+
+# display
+vlc_modules += {
+    'name' : 'stream_out_display',
+    'sources' : files('display.c'),
+    'shortname' : 's_o_disp',
+    'plugin_dir' : 'stream_out',
+}
+
+# gather
+vlc_modules += {
+    'name' : 'stream_out_gather',
+    'sources' : files('gather.c'),
+    'shortname' : 's_o_gath',
+    'plugin_dir' : 'stream_out',
+}
+
+# bridge
+vlc_modules += {
+    'name' : 'stream_out_bridge',
+    'sources' : files('bridge.c'),
+    'shortname' : 's_o_brid',
+    'plugin_dir' : 'stream_out',
+}
+
+# mosaic_bridge
+vlc_modules += {
+    'name' : 'stream_out_mosaic_bridge',
+    'sources' : files('mosaic_bridge.c'),
+    'shortname' : 's_o_mosa',
+    'plugin_dir' : 'stream_out',
+}
+
+# autodel
+vlc_modules += {
+    'name' : 'stream_out_autodel',
+    'sources' : files('autodel.c'),
+    'shortname' : 's_o_auto',
+    'plugin_dir' : 'stream_out',
+}
+
+# record
+vlc_modules += {
+    'name' : 'stream_out_record',
+    'sources' : files('record.c'),
+    'shortname' : 's_o_reco',
+    'plugin_dir' : 'stream_out',
+}
+
+# smem
+vlc_modules += {
+    'name' : 'stream_out_smem',
+    'sources' : files('smem.c'),
+    'shortname' : 's_o_smem',
+    'plugin_dir' : 'stream_out',
+}
+
+# setid
+vlc_modules += {
+    'name' : 'stream_out_setid',
+    'sources' : files('setid.c'),
+    'shortname' : 's_o_seti',
+    'plugin_dir' : 'stream_out',
+}
+
+# transcode
+vlc_modules += {
+    'name' : 'stream_out_transcode',
+    'sources' : files(
+        'transcode/transcode.c',
+        'transcode/encoder/encoder.c',
+        'transcode/encoder/audio.c',
+        'transcode/encoder/spu.c',
+        'transcode/encoder/video.c',
+        'transcode/pcr_sync.c',
+        'transcode/pcr_helper.c',
+        'transcode/spu.c',
+        'transcode/audio.c',
+        'transcode/video.c'
+    ),
+    'dependencies' : [m_lib],
+    'shortname' : 's_o_tran',
+    'plugin_dir' : 'stream_out',
+}
+
+# trace
+vlc_modules += {
+    'name' : 'stream_out_trace',
+    'sources' : files('trace.c'),
+    'shortname' : 's_o_trac',
+    'plugin_dir' : 'stream_out',
+}
+
+# UDP
+vlc_modules += {
+    'name' : 'stream_out_udp',
+    'sources' : files('sdp_helper.c', 'udp.c'),
+    'dependencies' : [socket_libs],
+    'shortname' : 's_o_udp',
+    'plugin_dir' : 'stream_out',
+}
+
+# RTP
+rtp_sout_deps = [socket_libs]
+if srtp_dep.found()
+    rtp_sout_deps += srtp_dep
+endif
+
+vlc_modules += {
+    'name' : 'stream_out_rtp',
+    'sources' : files(
+        'sdp_helper.c',
+        'rtp.c',
+        'rtpfmt.c',
+        'rtcp.c',
+        'rtsp.c',
+    ),
+    'dependencies' : rtp_sout_deps,
+    'shortname' : 's_o_rtp',
+    'plugin_dir' : 'stream_out',
+}
+
+# Chromaprint module
+libchromaprint_dep = dependency('libchromaprint', version: '>= 0.6.0', required: get_option('libchromaprint'))
+vlc_modules += {
+    'name' : 'stream_out_chromaprint',
+    'sources' : files('chromaprint.c'),
+    'dependencies' : [libchromaprint_dep],
+    'enabled' : libchromaprint_dep.found(),
+    'shortname' : 's_o_chro',
+    'plugin_dir' : 'stream_out',
+}
+
+
+vlc_modules += {
+    'name' : 'stream_out_sdi',
+    'sources' : files(
+        'sdi/sdiout.cpp',
+        'sdi/sdiout.hpp',
+        'sdi/Ancillary.cpp',
+        'sdi/Ancillary.hpp',
+        'sdi/AES3Audio.cpp',
+        'sdi/AES3Audio.hpp',
+        'sdi/DBMHelper.cpp',
+        'sdi/DBMHelper.hpp',
+        'sdi/DBMSDIOutput.cpp',
+        'sdi/DBMSDIOutput.hpp',
+        'sdi/SDIAudioMultiplex.cpp',
+        'sdi/SDIAudioMultiplex.hpp',
+        'sdi/SDIGenerator.cpp',
+        'sdi/SDIGenerator.hpp',
+        'sdi/SDIOutput.cpp',
+        'sdi/SDIOutput.hpp',
+        'sdi/SDIStream.cpp',
+        'sdi/SDIStream.hpp',
+        'sdi/V210.cpp',
+        'sdi/V210.hpp'
+    ),
+    'dependencies' : [dl_lib, decklink_dep],
+    'cpp_args' : decklink_cpp_args,
+    'enabled' : decklink_dep.found(),
+    'shortname' : 's_o_sdi',
+    'plugin_dir' : 'stream_out',
+}
+
+# Chromecast module
+subdir('chromecast')
+
+# HLS module
+subdir('hls')

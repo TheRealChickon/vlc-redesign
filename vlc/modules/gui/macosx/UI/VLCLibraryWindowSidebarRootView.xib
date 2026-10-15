@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23094" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23094"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="VLCLibraryWindowSidebarRootViewController">
+            <connections>
+                <outlet property="targetView" destination="mtn-R7-eBE" id="xPy-9k-VIg"/>
+                <outlet property="topInternalConstraint" destination="wLu-wg-aAu" id="5mi-fc-vAS"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+                <outlet property="viewSelector" destination="xML-YA-Xws" id="Ifc-Ns-N50"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="mtn-R7-eBE">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="242"/>
+                </customView>
+                <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xML-YA-Xws">
+                    <rect key="frame" x="135" y="245" width="211" height="23"/>
+                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="capsule" trackingMode="selectOne" id="F97-9E-PoR">
+                        <font key="font" metaFont="system"/>
+                        <segments>
+                            <segment label="Play Queue" width="100" selected="YES"/>
+                            <segment label="Chapters" width="100" tag="1"/>
+                        </segments>
+                    </segmentedCell>
+                    <connections>
+                        <action selector="viewSelectorAction:" target="-2" id="grl-ZG-Bjt"/>
+                    </connections>
+                </segmentedControl>
+            </subviews>
+            <constraints>
+                <constraint firstItem="mtn-R7-eBE" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="0DF-IW-9CH"/>
+                <constraint firstAttribute="bottom" secondItem="mtn-R7-eBE" secondAttribute="bottom" id="0It-tZ-dXV"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="xML-YA-Xws" secondAttribute="trailing" constant="4" id="Onj-RC-BsN" customClass="VLCSpacingConstraint">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstAttribute="trailing" secondItem="mtn-R7-eBE" secondAttribute="trailing" id="P9h-wK-iQQ"/>
+                <constraint firstItem="xML-YA-Xws" firstAttribute="centerX" secondItem="Hz6-mo-xeY" secondAttribute="centerX" id="POz-OG-DXB"/>
+                <constraint firstItem="mtn-R7-eBE" firstAttribute="top" secondItem="xML-YA-Xws" secondAttribute="bottom" constant="4" id="XVQ-AX-Soz" customClass="VLCSpacingConstraint">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="xML-YA-Xws" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="4" id="utW-fX-ack" customClass="VLCSpacingConstraint">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="xML-YA-Xws" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="4" id="wLu-wg-aAu" customClass="VLCSpacingConstraint">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                            <integer value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+            </constraints>
+            <point key="canvasLocation" x="132" y="-72"/>
+        </customView>
+    </objects>
+</document>

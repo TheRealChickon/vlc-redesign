@@ -1,0 +1,349 @@
+#!/bin/sh
+# Copyright © 2011 Rafaël Carré
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+
+MIN_AUTOCONF=2.71
+MIN_AUTOMAKE=1.15
+MIN_BISON=3.0.0
+MIN_CMAKE=3.21.0
+MIN_CONFIGGUESS=2025.07.10
+MIN_LIBTOOL=2.4
+MIN_M4=1.4.16
+MIN_MESON=1.10.0
+MIN_NASM=2.15
+MIN_NINJA=1.13.0
+MIN_ZSTD=1.2.0
+
+export LC_ALL=
+FOUND=
+
+usage()
+{
+    echo "Usage: $0 [--min-NAME=VERSION]"
+    echo "  --min-NAME=VERSION set NAME tool minimum version to VERSION"
+}
+
+check_version() {
+    gotver=$2
+    gotmajor=`echo $gotver|cut -d. -f1`
+    gotminor=`echo $gotver|cut -d. -f2`
+    gotmicro=`echo $gotver|cut -d. -f3|tr -c -d '[:digit:]'`
+    [ -z "$gotmicro" ] && gotmicro=0
+    needmajor=`echo $3|cut -d. -f1`
+    needminor=`echo $3|cut -d. -f2`
+    needmicro=`echo $3|cut -d. -f3`
+    [ -z "$needmicro" ] && needmicro=0
+    if [ "$needmajor" -gt "$gotmajor" ] ||
+       [ "$needmajor" -eq "$gotmajor" -a "$needminor" -gt "$gotminor" ] ||
+       [ "$needmajor" -eq "$gotmajor" -a "$needminor" -eq "$gotminor" -a "$needmicro" -gt "$gotmicro" ];
+    then
+        echo "$1 incompatible version (expected $3, got $2)"
+        NEEDED="$NEEDED $1"
+    else
+        FOUND="$FOUND $1"
+    fi
+
+}
+
+check_version_majmin() {
+    gotver=$2
+    gotmajor=`echo $gotver|cut -d. -f1`
+    gotminor=`echo $gotver|cut -d. -f2`
+    needmajor=`echo $3|cut -d. -f1`
+    needminor=`echo $3|cut -d. -f2`
+    if [ "$needmajor" -ne "$gotmajor" \
+         -o "$needminor" -ne "$gotminor" ]
+    then
+        echo "$1 not compatible"
+        NEEDED="$NEEDED $1"
+    else
+        FOUND="$FOUND $1"
+    fi
+
+}
+
+while test -n "$1"
+do
+    case "$1" in
+        --min-*=*)
+            NAMEVER="${1#--min-}"
+            TOOLNAME=$(echo "$NAMEVER" | cut -d "=" -f 1 | tr '[:lower:]' '[:upper:]')
+            TVERSION=$(echo "$NAMEVER" | cut -d "=" -f 2)
+            eval "MIN_ORIGINAL_=\$MIN_${TOOLNAME}"
+
+            gotmajor=$(echo $TVERSION|cut -d. -f1)
+            gotminor=$(echo $TVERSION|cut -d. -f2)
+            gotmicro=$(echo $TVERSION|cut -d. -f3|tr -c -d '[:digit:]')
+            [ -z "$gotmicro" ] && gotmicro=0
+            needmajor=$(echo $MIN_ORIGINAL_|cut -d. -f1)
+            needminor=$(echo $MIN_ORIGINAL_|cut -d. -f2)
+            needmicro=$(echo $MIN_ORIGINAL_|cut -d. -f3)
+            [ -z "$needmicro" ] && needmicro=0
+
+            if [ "$needmajor" -lt "$gotmajor" ] ||
+               [ "$needmajor" -eq "$gotmajor" -a "$needminor" -lt "$gotminor" ] ||
+               [ "$needmajor" -eq "$gotmajor" -a "$needminor" -eq "$gotminor" -a "$needmicro" -lt "$gotmicro" ];
+            then
+                # echo "using $TVERSION for $TOOLNAME"
+                eval "MIN_$TOOLNAME=${TVERSION}"
+            fi
+            ;;
+        --help|-h)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "Unrecognized options $1"
+            usage
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+check() {
+if ! $1 --version >/dev/null 2>&1 && ! $1 -version >/dev/null 2>&1
+then
+    echo "$1 not found"
+    NEEDED="$NEEDED $1"
+else
+    # found, need to check version ?
+    if [ -z "$2" ];then
+        FOUND="$FOUND $1"
+    else
+        gotver=`$1 --version | head -1 | grep -o '[0-9]\+\.[0-9]\+\(\.[0-9]\+\)\?' | head -1`
+        check_version $1 $gotver $2
+    fi
+fi
+}
+
+check_tar() {
+if ! { check_tar_autocompress && check_tar_xz && check_tar_zstd ; }
+then
+    NEEDED="$NEEDED tar"
+else
+    FOUND="$FOUND tar"
+fi
+}
+
+check_tar_autocompress() {
+tmp="check_tar"
+ret=0
+echo "Hello Cone" > "$tmp"
+if ! ( tar -caf "$tmp.tar.gz" "$tmp" && tar xfo "$tmp.tar.gz" )
+then
+    echo "tar can't auto-detect compression"
+    ret=1
+fi
+rm -f "$tmp" "$tmp.tar.gz" 2>/dev/null
+return "$ret"
+}
+
+check_tar_xz() {
+if ! tar PcJ /dev/null >/dev/null 2>&1 && ! tar PcJf /dev/null /dev/null 2>&1
+then
+    echo "tar doesn't support xz (J option)"
+    return 1
+fi
+return 0
+}
+
+check_tar_zstd() {
+output="$(tar Pc --zstd /dev/null 2>&1 >/dev/null)"
+ret="$?"
+case "$output" in
+    *"unrecognized option"*|*"not supported"*)
+        echo "tar doesn't support zstd"
+        return 1
+        ;;
+    *"not found"*|*"Can't launch external program"*)
+        echo "tar is new enough but zstd not installed"
+        NEEDED="$NEEDED zstd"
+        return 0
+        ;;
+    *)
+        if [ "$ret" -gt 0 ]; then
+            echo "tar has some unspecific error with zstd"
+            return 1
+        else
+            return 0
+        fi
+        ;;
+esac
+}
+
+check_sed() {
+tmp="`pwd`/check_sed"
+trap "rm \"$tmp\" \"$tmp-e\" 2>/dev/null" EXIT
+echo "test file for GNU sed" > $tmp
+if ! sed -i -e 's/sed//' $tmp >/dev/null 2>&1
+then
+    echo "sed doesn't do in-place editing (-i option)"
+    NEEDED="$NEEDED sed"
+else
+    FOUND="$FOUND sed"
+fi
+}
+
+check_nasm() {
+if ! nasm -v >/dev/null 2>&1
+then
+    echo "nasm not found"
+    NEEDED="$NEEDED nasm"
+else
+    # found, need to check version ?
+    if [ -z "$1" ];then
+        FOUND="$FOUND nasm"
+    else
+        gotver=`nasm -v | cut -d ' ' -f 3`
+        check_version nasm $gotver $1
+    fi
+fi
+}
+
+check_ninja() {
+# with GNU make 4.4 we should use ninja 1.13.x and above
+# otherwise we must use the patched version from kitware
+
+isgnu=$(make -v | head -1 | cut -d ' ' -f 1)
+if [ "$isgnu" = "GNU" ];
+then
+    gotver=$(make -v | head -1 | cut -d ' ' -f 3)
+    gotmajor=$(echo $gotver|cut -d. -f1)
+    gotminor=$(echo $gotver|cut -d. -f2)
+fi
+if [ 4 -lt $gotmajor ] ||
+   [ 4 -eq $gotmajor ] && [ 4 -le $gotminor ];
+then
+    # GNU Make 4.4+
+    check ninja $1
+else
+    if ! ninja --version >/dev/null 2>&1
+    then
+        echo "ninja not found"
+        NEEDED="$NEEDED ninja"
+    else
+        jobserver=$(ninja --version | head -1 | grep .jobserver)
+        if [ -z "$jobserver" ]; then
+            echo "ninja missing jobserver support"
+            NEEDED="$NEEDED ninja"
+        else
+            # check the known working jobserver kitware version
+            check ninja 1.11.1
+        fi
+    fi
+fi
+}
+
+check_config() {
+    # always install it for now as we need the arm64_32 patch
+    NEEDED="$NEEDED configguess"
+# # TODO find the relevant config.guess
+# AUTOMAKE_DATA_DIRS=$(foreach n,$(foreach n,$(subst :, ,$(shell echo $$PATH)),$(abspath $(n)/../share)),$(wildcard $(n)/automake*))
+# for dir in $AUTOMAKE_DATA_DIRS; do
+#     if test -f "$dir/config.sub" -a -f "$dir/config.guess"; then
+#         # check if it's recent enough
+#         DIR_VERSION=$("$dir/config.guess" --time-stamp | sed -e 's/-/./g')
+#         check_version "$dir/config.guess" $2 $DIR_VERSION
+#         # cp "$dir/config.sub" "$dir/config.guess" $(UNPACK_DIR);
+#         break
+#     fi
+# done
+}
+
+check_config $MIN_CONFIGGUESS
+check autoconf $MIN_AUTOCONF
+check automake $MIN_AUTOMAKE
+check m4 $MIN_M4
+check libtool $MIN_LIBTOOL
+check pkg-config
+check cmake $MIN_CMAKE
+check_tar
+check_sed
+check ant
+check xz
+check bison $MIN_BISON
+check flex
+check_nasm $MIN_NASM
+check gettext
+check help2man
+check meson $MIN_MESON
+check_ninja $MIN_NINJA
+check gperf
+check zstd $MIN_ZSTD
+
+DEPS_ONLY="help2man"
+
+CPUS=
+case `uname` in
+    Linux|MINGW32*|MINGW64*|*MSYS*)
+        CPUS=`getconf _NPROCESSORS_ONLN 2>&1`
+     ;;
+    Darwin|FreeBSD|NetBSD)
+        CPUS=`getconf NPROCESSORS_ONLN 2>&1`
+    ;;
+    OpenBSD)
+        CPUS=`sysctl -n hw.ncpu 2>&1`
+    ;;
+    SunOS)
+        CPUS=`psrinfo | wc -l 2>&1`
+    ;;
+    *)
+        CPUS=1  # default
+     ;;
+esac
+
+BOOTSTRAP_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
+
+for t in $FOUND; do
+    TARGET_FOUND=".$t $TARGET_FOUND"
+done
+
+for t in $NEEDED; do
+    TARGET_NEEDED=".$t $TARGET_NEEDED"
+    case "$t" in
+        *$DEPS_ONLY*)
+            ;; # Dependency only, not build by default
+        *)
+            TARGETS="$TARGETS .build$t"
+            ;;
+    esac
+done
+
+[ -n "$TARGETS" ] && mkdir -p build/bin && echo "To-be-built packages: $(echo $TARGETS | sed 's/.build//g')"
+
+cat > Makefile << EOF
+TOOLS = $BOOTSTRAP_PATH
+MAKEFLAGS += -j$CPUS
+CMAKEFLAGS += --parallel=$CPUS
+PREFIX=\$(abspath ./build)
+PATH=\${PREFIX}/bin:$PATH
+
+$TARGET_FOUND:
+	@echo "Available in the system"
+	touch \$@
+
+.SECONDEXPANSION:
+$TARGET_NEEDED: \$\$(subst .,.build,\$\$@)
+	touch \$@
+
+all: $TARGETS
+	@echo "You are ready to build VLC and its contribs"
+
+include \$(TOOLS)/tools.mak
+
+fetch: $(echo $TARGETS | sed 's/.build/.get/g')
+EOF

@@ -1,0 +1,89 @@
+From 0673f231f333179d4698877ec40cdf43bf5b77c1 Mon Sep 17 00:00:00 2001
+From: Steve Lhomme <robux4@ycbcr.xyz>
+Date: Fri, 19 Jun 2020 10:37:50 +0200
+Subject: [PATCH 5/5] random: only use wincrypt in UWP builds if WINSTORECOMPAT
+ is set
+
+This is a compatibility library to use older APIs that are forbidden in UWP apps.
+
+bcrypt is supposed to be used instead of wincrypt but is only available since
+Vista.
+---
+ random/rndw32.c | 22 ++++++++++++++++++++--
+ src/Makefile.am |  4 +++-
+ 2 files changed, 23 insertions(+), 3 deletions(-)
+
+diff --git a/random/rndw32.c b/random/rndw32.c
+index 02d20cc3..f1b559e9 100644
+--- a/random/rndw32.c
++++ b/random/rndw32.c
+@@ -97,7 +97,11 @@
+ #define SIZEOF_DISK_PERFORMANCE_STRUCT 256
+ 
+ /* We don't include wincrypt.h so define it here.  */
++#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) && defined(WINSTORECOMPAT)
++#include <wincrypt.h>
++#else
+ #define HCRYPTPROV  HANDLE
++#endif
+ 
+ 
+ /* When we query the performance counters, we allocate an initial buffer and
+@@ -114,7 +118,7 @@
+ 
+ /* Intel Chipset CSP type and name */
+ #define PROV_INTEL_SEC  22
+-#define INTEL_DEF_PROV  "Intel Hardware Cryptographic Service Provider"
++#define INTEL_DEF_PROV  TEXT("Intel Hardware Cryptographic Service Provider")
+ 
+ 
+ 
+@@ -258,8 +262,9 @@ static void
+ init_system_rng (void)
+ {
+   system_rng_available = 0;
+-  hRNGProv = NULL;
++  hRNGProv = (HCRYPTPROV)NULL;
+ 
++#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+   hAdvAPI32 = GetModuleHandle ("AdvAPI32.dll");
+   if (!hAdvAPI32)
+     return;
+@@ -275,6 +280,19 @@ init_system_rng (void)
+      This isn't exported by name, so we have to get it by ordinal.  */
+   pRtlGenRandom = (RTLGENRANDOM)
+     GetProcAddress (hAdvAPI32, "SystemFunction036");
++#elif defined(WINSTORECOMPAT)
++  hAdvAPI32 = NULL;
++  pCryptAcquireContext = CryptAcquireContextW;
++  pCryptGenRandom = CryptGenRandom;
++  pCryptReleaseContext = CryptReleaseContext;
++  pRtlGenRandom = NULL;
++#else /* !WINAPI_PARTITION_DESKTOP && !WINSTORECOMPAT */
++  hAdvAPI32 = NULL;
++  pCryptAcquireContext = NULL;
++  pCryptGenRandom = NULL;
++  pCryptReleaseContext = NULL;
++  pRtlGenRandom = NULL;
++#endif /* WINSTORECOMPAT */
+ 
+   /* Try and connect to the PIII RNG CSP.  The AMD 768 southbridge (from
+      the 760 MP chipset) also has a hardware RNG, but there doesn't appear
+diff --git a/src/Makefile.am b/src/Makefile.am
+index aa3548f6..154b35c7 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -126,7 +126,9 @@ libgcrypt_la_LIBADD = $(gcrypt_res) \
+ 	../random/librandom.la \
+ 	../mpi/libmpi.la \
+ 	../compat/libcompat.la $(DL_LIBS) $(GPG_ERROR_LIBS)
+-
++if HAVE_W32_SYSTEM
++libgcrypt_la_LIBADD += -lbcrypt
++endif
+ 
+ dumpsexp_SOURCES = dumpsexp.c
+ dumpsexp_CFLAGS = $(arch_gpg_error_cflags)
+-- 
+2.37.3.windows.1
+

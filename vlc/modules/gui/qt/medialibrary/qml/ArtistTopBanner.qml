@@ -1,0 +1,272 @@
+/*****************************************************************************
+ * Copyright (C) 2019 VLC authors and VideoLAN
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * ( at your option ) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Window
+import QtQml.Models
+
+import VLC.MainInterface
+import VLC.MediaLibrary
+
+import VLC.Widgets as Widgets
+import VLC.Style
+import VLC.Util
+
+FocusScope {
+    id: root
+
+    property int rightPadding: 0
+
+    required property var artist
+
+    implicitHeight: VLCStyle.artistBanner_height
+
+    Accessible.role: Accessible.Pane
+    Accessible.name: qsTr("Artist banner")
+    AccessibleCompat.id: "artistTopBanner"
+
+    function setCurrentItemFocus(reason) {
+        playActionBtn.forceActiveFocus(reason);
+    }
+
+    readonly property ColorContext colorContext: ColorContext {
+        id: theme
+        ////force the dark theme in the header
+        palette: VLCStyle.darkPalette
+        colorSet: ColorContext.View
+    }
+
+    Image {
+        id: background
+
+        // NOTE: We want the banner to ignore safe margins.
+        anchors.fill: parent
+
+        asynchronous: true
+        source: root.artist.id ? (root.artist.cover || VLCStyle.noArtArtist) : "" // do not load the fallback image during initialization
+        sourceSize: artist.cover ? Qt.size(Helpers.alignUp(Screen.desktopAvailableWidth / 2, 32), 0)
+                                 : undefined
+
+        onSourceChanged: {
+            // FIXME: Why are we doing this? Because Image texture provider
+            //        does not appear to invalidate its texture when source
+            //        changes in between, even though `retainWhileLoading`
+            //        is not used (not to mention it is debatable whether
+            //        it would be effective with regard to the texture
+            //        provider's texture).
+
+            // FIXME: I am not happy about breaking a potential binding,
+            //        when we could instead use `Binding` as an inhibitor.
+            //        Unfortunately `Binding` is broken in this case with
+            //        certain Qt versions (including 6.10.1), possibly the
+            //        same bug as described in QTBUG-140858.
+
+            const blurEffectSource = blurEffect.source
+            blurEffect.source = null
+            blurEffect.source = blurEffectSource
+        }
+
+        mipmap: !!artist.cover
+
+        fillMode: artist.cover ? Image.PreserveAspectCrop : Image.Tile
+
+        visible: !blurEffect.visible
+        cache: (source === VLCStyle.noArtArtist)
+
+        // In fact, since layering is not used blur effect
+        // would not care about the opacity here. Still,
+        // to show intention we can have a simple binding:
+        opacity: blurEffect.visible ? 1.0 : 0.5
+    }
+
+    Widgets.DualKawaseBlur {
+        id: blurEffect
+
+        anchors.verticalCenter: background.verticalCenter
+        anchors.left: background.left
+        anchors.right: background.right
+
+        visible: (available) && (root.artist.id) // do not display the effect during initialization
+
+        // NOTE: No need to disable `live`, as this uses two pass mode so there is no video memory saving benefit.
+
+        readonly property bool sourceNeedsTiling: (background.fillMode === Image.Tile)
+
+        readonly property real aspectRatio: (background.implicitHeight / background.implicitWidth)
+
+        height: sourceNeedsTiling ? background.height : (aspectRatio * width)
+
+        source: textureProviderIndirection
+
+        // Instead of clipping in the parent, denote the viewport here so we both
+        // do not need to clip the excess, and also save significant video memory:
+        viewportRect: !blurEffect.sourceNeedsLayering ? Qt.rect((width - background.width) / 2,
+                                                                (height - background.height) / 2,
+                                                                background.width,
+                                                                background.height)
+                                                      : Qt.rect(0, 0, 0, 0)
+
+        backgroundColor: theme.bg.primary
+        postprocess: sourceTextureProviderObserver.hasAlphaChannel
+
+        TextureProviderIndirection {
+            id: textureProviderIndirection
+
+            // Like in `Player.qml`, this is used because when the source is
+            // mipmapped, sometimes it can not be sampled. This is considered
+            // a Qt bug, but `QSGTextureView` has a workaround for that. So,
+            // we can have an indirection here through `TextureProviderIndirection`.
+            // This is totally acceptable as there is virtually no overhead.
+
+            source: background
+
+            detachAtlasTextures: blurEffect.sourceNeedsTiling
+
+            horizontalWrapMode: blurEffect.sourceNeedsTiling ? TextureProviderIndirection.Repeat : TextureProviderIndirection.ClampToEdge
+            verticalWrapMode: blurEffect.sourceNeedsTiling ? TextureProviderIndirection.Repeat : TextureProviderIndirection.ClampToEdge
+
+            textureSubRect: blurEffect.sourceNeedsTiling ? Qt.rect(blurEffect.width / 8,
+                                                                   blurEffect.height / 8,
+                                                                   blurEffect.width * 1.25,
+                                                                   blurEffect.height * 1.25) : undefined
+        }
+
+        // Strong blurring is not wanted here:
+        mode: Widgets.DualKawaseBlur.Mode.TwoPass
+        radius: 1
+    }
+
+    Rectangle {
+        anchors.fill: background
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: Qt.rgba(0, 0, 0, .5) }
+            GradientStop { position: 1.0; color: Qt.rgba(0, 0, 0, .7) }
+        }
+    }
+
+    RowLayout {
+        id: col
+
+        anchors.fill: parent
+        anchors.topMargin: VLCStyle.margin_xxlarge
+        anchors.bottomMargin: VLCStyle.margin_xxlarge
+        anchors.leftMargin: VLCStyle.margin_xlarge
+        anchors.rightMargin: root.rightPadding
+
+        spacing: VLCStyle.margin_normal
+
+        Item {
+            implicitHeight: VLCStyle.cover_normal
+            implicitWidth: VLCStyle.cover_normal
+
+            // Since the source image may be mip mapped, we need to use
+            // `TextureProviderIndirection` here which contains a fixup
+            // for a Qt bug where the texture would not be sampled and
+            // appears black. `EnhancedImageExt` manages an indirection
+            // implicitly, so we can simply use it here:
+            Widgets.EnhancedImageExt {
+                id: roundImage
+                source: root.artist.id ? (root.artist.cover || VLCStyle.noArtArtist) : "" // do not load the fallback image during initialization
+                targetTextureProvider: background
+                sourceSize: Qt.size(width * eDPR, height * eDPR)
+                anchors.fill: parent
+                radius: VLCStyle.cover_normal
+                borderColor: theme.border
+                borderWidth: VLCStyle.dp(1, VLCStyle.scale)
+                fillMode: Image.PreserveAspectCrop
+                readonly property real eDPR: MainCtx.effectiveDevicePixelRatio(Window.window)
+            }
+        }
+
+        ColumnLayout {
+            Layout.fillWidth: true
+
+            // NOTE: The layout can be resized to zero to hide the text entirely.
+            Layout.minimumWidth: 0
+
+            Layout.rightMargin: VLCStyle.margin_small
+
+            spacing: 0
+
+            Widgets.SubtitleLabel {
+                Layout.fillWidth: true
+
+                text: artist.name || qsTr("No artist")
+                color: theme.fg.primary
+
+                Layout.maximumWidth: parent.width
+            }
+
+            Widgets.MenuCaption {
+                Layout.fillWidth: true
+
+                Layout.topMargin: VLCStyle.margin_xxxsmall
+
+                text: qsTr("%1 Song", "%1 Songs", Number(artist.nb_tracks)).arg(artist.nb_tracks)
+                color: theme.fg.secondary
+            }
+
+            Widgets.NavigableRow {
+                id: actionButtons
+
+                focus: true
+                Navigation.parentItem: root
+                spacing: VLCStyle.margin_large
+
+                Layout.fillWidth: true
+                Layout.topMargin: VLCStyle.margin_large
+
+
+                Widgets.ActionButtonPrimary {
+                    id: playActionBtn
+
+                    AccessibleCompat.id: "artistPlayButton"
+
+                    iconTxt: VLCIcons.play
+                    text: qsTr("Play all")
+                    focus: true
+
+                    //we probably want to keep this button like the other action buttons
+                    colorContext.palette: VLCStyle.palette
+
+                    showText: actionButtons.width > VLCStyle.colWidth(2)
+
+                    onClicked: MediaLib.addAndPlay( artist.id )
+                }
+
+                Widgets.ActionButtonOverlay {
+                    id: enqueueActionBtn
+
+                    AccessibleCompat.id: "artistEnqueueButton"
+
+                    iconTxt: VLCIcons.enqueue
+                    text: qsTr("Enqueue all")
+                    onClicked: MediaLib.addToPlaylist( artist.id )
+
+                    showText: actionButtons.width > VLCStyle.colWidth(2)
+                }
+
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
+        }
+    }
+
+}

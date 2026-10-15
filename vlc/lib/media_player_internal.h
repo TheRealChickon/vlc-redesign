@@ -1,0 +1,86 @@
+/*****************************************************************************
+ * media_player_internal.h : Definition of opaque structures for libvlc exported API
+ * Also contains some internal utility functions
+ *****************************************************************************
+ * Copyright (C) 2005-2009 VLC authors and VideoLAN
+ *
+ * Authors: Clément Stenac <zorglub@videolan.org>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+
+#ifndef _LIBVLC_MEDIA_PLAYER_INTERNAL_H
+#define _LIBVLC_MEDIA_PLAYER_INTERNAL_H 1
+
+#include <vlc/vlc.h>
+#include <vlc/libvlc_media.h>
+#include <vlc_input.h>
+#include <vlc_player.h>
+#include <vlc_viewpoint.h>
+#include "media_internal.h"
+
+#include "../modules/audio_filter/equalizer_presets.h"
+
+typedef void (*libvlc_media_player_vout_detach_cb)(libvlc_media_player_t *player);
+struct libvlc_media_player_t
+{
+    struct vlc_object_t obj;
+    vlc_atomic_rc_t    rc;
+
+    const struct libvlc_media_player_cbs *cbs;
+    void *cbs_opaque;
+
+    vlc_player_t *player;
+    vlc_player_listener_id *listener;
+    vlc_player_aout_listener_id *aout_listener;
+    vlc_cond_t wait;
+
+    struct libvlc_instance_t * p_libvlc_instance; /* Parent instance */
+
+    struct {
+        vlc_player_timer_id *id;
+        const struct libvlc_media_player_watch_time_cbs *cbs;
+        void *cbs_data;
+        bool seeking;
+    } timer;
+
+    struct {
+        /*
+         * Tracks the active libvlc window/output integration and the default
+         * values to restore when switching integrations. Each setter installs
+         * a detach callback that resets the variables it touched (vout, gl,
+         * gles2, dec-dev, window, vmem-*, vout-cb-*). The next setter calls the
+         * current detach callback before configuring its own state, so callers
+         * can safely switch between window providers and output/video callbacks
+         * without leaving stale configuration behind.
+         */
+        libvlc_media_player_vout_detach_cb window_detach;
+        char *default_dec_dev;
+        char *default_vout;
+        char *default_gl;
+        char *default_gles2;
+    } vout;
+};
+
+/**
+ * Internal equalizer structure.
+ */
+struct libvlc_equalizer_t
+{
+    float f_preamp;
+    float f_amp[EQZ_BANDS_MAX];
+};
+
+#endif

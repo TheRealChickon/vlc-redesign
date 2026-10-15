@@ -1,0 +1,225 @@
+#version 440
+
+// TODO: Build system support for preprocessor defines, like CMake's `qt6_add_shaders()`.
+// NOTE: Currently the build system does not support defines for the shaders,
+//       So, the following is imported manually from SDFAARoundedTexture.frag.
+// FIXME: Remove this file when build system starts supporting defines for the
+//        shaders.
+
+#define CROP_SUPPORT
+#define BORDER_SUPPORT
+
+// WARNING: The contents of this file must be in sync with SDFAARoundedTexture.frag
+//          for maintenance purposes. IF YOU EDIT THIS FILE, MAKE SURE TO DO THE
+//          SAME IN SDFAARoundedTexture.frag.
+
+#define ANTIALIASING
+#define BACKGROUND_SUPPORT
+#define CUSTOM_SOFTEDGE
+
+/*****************************************************************************
+ * Copyright (C) 2024 VLC authors and VideoLAN
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * ( at your option ) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+
+/*****************************************************************************
+ * Copyright (C) 2015 Inigo Quilez
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the “Software”), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *****************************************************************************/
+
+layout(location = 0) in vec2 qt_TexCoord0;
+
+layout(location = 0) out vec4 fragColor;
+
+layout(std140, binding = 0) uniform buf {
+    mat4 qt_Matrix;
+    float qt_Opacity;
+    vec4 qt_SubRect_source;
+    vec2 size;
+#ifdef ANTIALIASING
+    int antialiasing; // WARNING: intentionally not a boolean
+#endif
+#ifdef CROP_SUPPORT
+    int shouldCrop; // WARNING: intentionally not a boolean
+#endif
+#ifdef BACKGROUND_SUPPORT
+    vec4 backgroundColor;
+#endif
+#ifdef BORDER_SUPPORT
+    vec4 borderColor;
+    float borderRange;
+#endif
+    float radiusTopRight;
+    float radiusBottomRight;
+    float radiusTopLeft;
+    float radiusBottomLeft;
+#ifdef CUSTOM_SOFTEDGE
+    float softEdgeMin;
+    float softEdgeMax;
+#endif
+};
+
+layout(binding = 1) uniform sampler2D source;
+
+// Signed distance function by Inigo Quilez (https://iquilezles.org/articles/distfunctions2d)
+// b.x = width
+// b.y = height
+// r.x = roundness top-right
+// r.y = roundness boottom-right
+// r.z = roundness top-left
+// r.w = roundness bottom-left
+float sdRoundBox( in vec2 p, in vec2 b, in vec4 r )
+{
+    r.xy = (p.x>0.0)?r.xy : r.zw;
+    r.x  = (p.y>0.0)?r.x  : r.y;
+    vec2 q = abs(p)-b+r.x;
+    return min(max(q.x,q.y),0.0) + length(max(q,0.0)) - r.x;
+}
+
+void main()
+{
+    // Depends on uniform values, this is considered acceptable:
+    bool rounding = (radiusTopLeft > 0.0 || radiusTopRight > 0.0 || radiusBottomLeft > 0.0 || radiusBottomRight > 0.0);
+
+    float dist;
+#ifdef BORDER_SUPPORT
+    if (rounding || borderRange > 0.0) // border requires sdf, even if there is no rounding wanted for the texture
+#else
+    if (rounding)
+#endif
+    {
+        // The signed distance function works when the primitive is centered.
+        // If the texture is in the atlas, this condition is not satisfied.
+        // Therefore, we have to normalize the coordinate for the distance
+        // function to [0, 1]:
+        vec2 normalCoord = vec2(1.0, 1.0) / (qt_SubRect_source.zw) * (qt_TexCoord0 - (qt_SubRect_source.zw + qt_SubRect_source.xy)) + vec2(1.0, 1.0);
+        normalCoord.y = (1.0 - normalCoord.y); // invert y-axis because texture coordinates have origin at the top
+
+        vec2 p = (size.xy * ((2.0 * normalCoord) - 1)) / size.y;
+        // Signed distance:
+        dist = sdRoundBox(p, vec2(size.x / size.y, 1.0), vec4(radiusTopRight, radiusBottomRight, radiusTopLeft, radiusBottomLeft));
+    }
+
+    vec4 texel;
+
+#ifdef CROP_SUPPORT
+    if (shouldCrop != 0)
+    {
+        vec2 texCoord;
+
+        vec2 texSize = textureSize(source, 0);
+        vec2 denormalSubTextureSize = vec2(texSize.x * qt_SubRect_source.z, texSize.y * qt_SubRect_source.w);
+
+        float implicitRatio = denormalSubTextureSize.x / denormalSubTextureSize.y;
+        float ratio = size.x / size.y;
+
+        if ((implicitRatio > 1.0) && (ratio < implicitRatio))
+        {
+            float cropRate = (denormalSubTextureSize.x - denormalSubTextureSize.y) / 2 / denormalSubTextureSize.x;
+            float normalCropRate = qt_SubRect_source.z * cropRate;
+
+            float k = qt_SubRect_source.z + qt_SubRect_source.x - normalCropRate;
+            float l = qt_SubRect_source.x + normalCropRate;
+
+            texCoord.x = (k - l) / (qt_SubRect_source.z) * (qt_TexCoord0.x - qt_SubRect_source.x) + l;
+            texCoord.y = qt_TexCoord0.y;
+        }
+        else if ((implicitRatio < 1.0) && (ratio > implicitRatio))
+        {
+            float cropRate = (denormalSubTextureSize.y - denormalSubTextureSize.x) / 2 / denormalSubTextureSize.y;
+            float normalCropRate = qt_SubRect_source.w * cropRate;
+
+            float k = qt_SubRect_source.w + qt_SubRect_source.y - normalCropRate;
+            float l = qt_SubRect_source.y + normalCropRate;
+
+            texCoord.y = (k - l) / (qt_SubRect_source.w) * (qt_TexCoord0.y - qt_SubRect_source.y) + l;
+            texCoord.x = qt_TexCoord0.x;
+        }
+        else
+        {
+            texCoord.x = qt_TexCoord0.x;
+            texCoord.y = qt_TexCoord0.y;
+        }
+
+        texel = texture(source, texCoord);
+    }
+    else
+#endif
+    {
+        texel = texture(source, qt_TexCoord0);
+    }
+
+#ifdef BACKGROUND_SUPPORT
+    // Source over blending (S + D * (1 - S.a)):
+    texel = texel + backgroundColor * (1.0 - texel.a);
+#endif
+
+#ifdef BORDER_SUPPORT
+    if (borderRange > 0.0)
+    {
+        // Solid border:
+        float borderStep = step(-borderRange, dist);
+        vec4 border = borderStep * borderColor;
+#ifdef ANTIALIASING
+        if (antialiasing != 0)
+        {
+            // Inner AA (Outer AA is handled below, regardless of the border):
+            // This is additive, solid and AA part do not intersect:
+            border += (smoothstep(-borderRange - fwidth(dist) * 1.5, -borderRange, dist)) * (1.0 - borderStep) * borderColor;
+        }
+#endif
+        // Source over blending (S + D * (1 - S.a)):
+        texel = border + texel * (1.0 - border.a);
+    }
+#endif
+
+    if (rounding)
+    {
+        float factor;
+#ifdef ANTIALIASING
+        if (antialiasing != 0)
+        {
+#ifndef CUSTOM_SOFTEDGE
+            float softEdgeMax = fwidth(dist) * 0.75;
+            float softEdgeMin = -softEdgeMax;
+#endif
+            // Breathing room (shrink):
+            dist += softEdgeMax;
+
+            // Soften the outline, as recommended by the Valve paper, using smoothstep:
+            // "Improved Alpha-Tested Magnification for Vector Textures and Special Effects"
+            // NOTE: The whole texel is multiplied, because of premultiplied alpha.
+            factor = smoothstep(softEdgeMin, softEdgeMax, dist);
+        }
+        else
+#endif
+        {
+            factor = step(0.0, dist);
+        }
+
+        texel *= 1.0 - factor;
+    }
+
+    fragColor = texel * qt_Opacity;
+}

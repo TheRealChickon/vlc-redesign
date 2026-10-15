@@ -1,0 +1,72 @@
+/*****************************************************************************
+ * Copyright (C) 2019 VLC authors and VideoLAN
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * ( at your option ) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+
+#ifndef AUDIO_DEVICE_MODEL_HPP
+#define AUDIO_DEVICE_MODEL_HPP
+
+#include <QAbstractListModel>
+
+#include "qt.hpp"
+
+extern "C" {
+    typedef struct vlc_player_aout_listener_id vlc_player_aout_listener_id;
+    typedef struct audio_output audio_output_t;
+    typedef struct vlc_player_t vlc_player_t;
+}
+
+class AudioDeviceModel : public QAbstractListModel
+{
+    Q_OBJECT
+
+public:
+    AudioDeviceModel(vlc_player_t *player, QObject *parent = nullptr);
+
+    ~AudioDeviceModel();
+
+    Q_PROPERTY(int currentRow READ currentRow NOTIFY currentChanged FINAL)
+    Q_PROPERTY(QString selectedId READ selectedId NOTIFY currentChanged FINAL)
+    int currentRow() const;
+    QString selectedId() const { return m_current; }
+    Q_INVOKABLE void toggleIndex(int row) { setData(index(row), true, Qt::CheckStateRole); }
+    Q_INVOKABLE bool selectById(const QString &id);
+    Qt::ItemFlags flags(const QModelIndex &) const  override;
+signals:
+    void currentChanged();
+public:
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+
+    void updateCurrent(QString current);
+
+    QHash<int, QByteArray> roleNames() const override;
+
+private:
+    int m_inputs = 0;
+    char **m_names = nullptr;
+    char **m_ids = nullptr;
+    QString m_current;
+    vlc_player_aout_listener_id* m_player_aout_listener = nullptr;
+    audio_output_t* m_aout = nullptr;
+    vlc_player_t *m_player;
+};
+
+#endif // AUDIO_DEVICE_MODEL_HPP

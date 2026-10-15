@@ -1,0 +1,175 @@
+name: VLC
+options:
+  bundleIdPrefix: org.videolan.vlc
+  supportedDestinations: [iOS, tvOS, visionOS, watchOS]
+  deploymentTarget:
+    iOS: 9.0
+    tvOS: 12.0
+    visionOS: 1.0
+    watchOS: 7.4
+configs:
+  Debug: debug
+  Release: release
+settings:
+  configs:
+fileGroups:
+  - "${VLC_SRC_DIR}/bin"
+  - "${VLC_SRC_DIR}/src"
+  - "${VLC_SRC_DIR}/include"
+  - "${VLC_SRC_DIR}/modules"
+  - "${VLC_SRC_DIR}/lib"
+  - "${VLC_SRC_DIR}/test"
+  - "${VLC_SRC_DIR}/contrib/src"
+  - "${VLC_SRC_DIR}/contrib/bootstrap"
+  - "${VLC_SRC_DIR}/doc"
+  - "${VLC_SRC_DIR}/extras/package/apple/"
+targets:
+  VLCAutomake:
+    type: ""
+    supportedDestinations: [iOS, tvOS, visionOS, watchOS]
+    legacy:
+      toolPath: ${VLC_SRC_DIR}/extras/package/apple/xcode.sh
+      passSettings: true
+      workingDirectory: ${VLC_SRC_DIR}
+
+  vlccoreios:
+    type: "application"
+    supportedDestinations: [iOS, tvOS, visionOS]
+    dependencies:
+      - target: VLCAutomake
+      - target: vlc
+      - target: vlccore
+    info:
+      path: "vlccoreios/Info.plist"
+      properties:
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: org.videolan.vlc.vlccoreios
+    postBuildScripts:
+      - script: ${VLC_SRC_DIR}/extras/package/apple/copy_plugins.sh
+        name: "Copy VLC plugins"
+
+      - name: Install VLC share data
+        shell: /bin/bash
+        script: |
+            set -e
+            archs=(${ARCHS})
+            arch="${archs[0]}"
+            build_root="${BUILT_PRODUCTS_DIR}/build-${PLATFORM_NAME}-${arch}${BUILD_SUFFIX}/build"
+            make -C "${build_root}/share" install-data \
+                DESTDIR="${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}" \
+                prefix=/ \
+                datadir=/share
+
+      - name: Copy vlccoreios binary
+        shell: /bin/bash
+        script: |
+            INPUT_FILES=()
+            for arch in ${ARCHS}; do
+                INPUT_FILES+=("${BUILT_PRODUCTS_DIR}/build-${PLATFORM_NAME}-${arch}${BUILD_SUFFIX}/build/test/.libs/vlccoreios")
+            done
+            lipo -create \
+                -output "${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}" \
+                "${INPUT_FILES[@]}"
+            install_name_tool -change "@rpath/libvlc.dylib" "@rpath/vlc.framework/vlc" \
+                "${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}"
+            install_name_tool -change "@rpath/libvlccore.dylib" "@rpath/vlccore.framework/vlccore" \
+                "${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}"
+            codesign --force --sign "${EXPANDED_CODE_SIGN_IDENTITY}" "${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}"
+
+  vlccorewatchos:
+    type: "application"
+    platform: [watchOS]
+    dependencies:
+      - target: VLCAutomake
+      - target: vlc
+      - target: vlccore
+    info:
+      path: "vlccorewatchos/Info.plist"
+      properties:
+        CFBundleIdentifier: org.videolan.vlc.vlccore.watchapp
+        WKCompanionAppBundleIdentifier: org.videolan.vlc.vlccore
+        WKRunsIndependentlyOfCompanionApp: true
+        WKApplication: true
+        UIBackgroundModes:
+          - audio
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: org.videolan.vlc.vlccoreios.watchapp
+    postBuildScripts:
+      - script: ${VLC_SRC_DIR}/extras/package/apple/copy_plugins.sh
+        name: "Copy VLC plugins"
+
+      - name: Copy vlccorewatchos binary
+        shell: /bin/bash
+        script: |
+            INPUT_FILES=()
+            for arch in ${ARCHS}; do
+                INPUT_FILES+=("${BUILT_PRODUCTS_DIR}/build-${PLATFORM_NAME}-${arch}${BUILD_SUFFIX}/build/test/.libs/vlccorewatchos")
+            done
+            lipo -create \
+                -output "${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}" \
+                "${INPUT_FILES[@]}"
+            install_name_tool -change "@rpath/libvlc.dylib" "@rpath/vlc.framework/vlc" \
+                "${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}"
+            install_name_tool -change "@rpath/libvlccore.dylib" "@rpath/vlccore.framework/vlccore" \
+                "${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}"
+            codesign --force --sign "${EXPANDED_CODE_SIGN_IDENTITY}" "${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}"
+
+  vlc:
+    type: "framework"
+    supportedDestinations: [iOS, tvOS, visionOS, watchOS]
+    dependencies:
+      - target: VLCAutomake
+    info:
+      path: "vlc/Info.plist"
+
+    postBuildScripts:
+      - name: Copy libvlc library
+        shell: /bin/bash
+        script: |
+            INPUT_FILES=()
+            for arch in ${ARCHS}; do
+                input_file="${BUILT_PRODUCTS_DIR}/build-${PLATFORM_NAME}-${arch}${BUILD_SUFFIX}/build/lib/.libs/libvlc.dylib"
+                echo " + Adding input $input_file"
+                INPUT_FILES+=( "$input_file" )
+            done
+            FRAMEWORK_DIR="${BUILT_PRODUCTS_DIR}/vlc.framework"
+            FRAMEWORK_BIN_PATH="${FRAMEWORK_DIR}/vlc"
+            lipo -create \
+                -output "${FRAMEWORK_BIN_PATH}" \
+                "${INPUT_FILES[@]}"
+            dsymutil -o "${FRAMEWORK_DIR}.dSYM" "${FRAMEWORK_BIN_PATH}"
+
+  vlccore:
+    type: "framework"
+    supportedDestinations: [iOS, tvOS, visionOS, watchOS]
+    dependencies:
+      - target: VLCAutomake
+    info:
+      path: "vlccore/Info.plist"
+    sources:
+      - path: ${VLC_SRC_DIR}/include/
+        includes: "vlc_*.h"
+        buildPhase: headers
+        headerVisibility: public
+    postBuildScripts:
+      - name: Copy vlccore library
+        shell: /bin/bash
+        buildRules:
+        script: |
+            INPUT_FILES=()
+            for arch in ${ARCHS}; do
+                input_file="${BUILT_PRODUCTS_DIR}/build-${PLATFORM_NAME}-${arch}/build/src/.libs/libvlccore.dylib"
+                echo " + Adding input $input_file"
+                INPUT_FILES+=( "$input_file" )
+            done
+            FRAMEWORK_DIR="${BUILT_PRODUCTS_DIR}/vlccore.framework"
+            FRAMEWORK_BIN_PATH="${FRAMEWORK_DIR}/vlccore"
+            lipo -create \
+                -output "${FRAMEWORK_BIN_PATH}" \
+                "${INPUT_FILES[@]}"
+            # We have to generate dSYM bundle here because Xcode might
+            # already have generated them before script execution
+            dsymutil -o "${FRAMEWORK_DIR}.dSYM" "${FRAMEWORK_BIN_PATH}"
+

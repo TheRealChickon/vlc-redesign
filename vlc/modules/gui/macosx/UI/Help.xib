@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="VLCHelpWindowController">
+            <connections>
+                <outlet property="backButton" destination="2257" id="c2X-ol-C9I"/>
+                <outlet property="forwardButton" destination="2258" id="iEY-oD-cv3"/>
+                <outlet property="homeButton" destination="2256" id="sWB-6l-roa"/>
+                <outlet property="progressIndicator" destination="d97-0g-MPE" id="abc-ol-def"/>
+                <outlet property="visualEffectView" destination="FtB-z3-gSh" id="1234"/>
+                <outlet property="window" destination="2239" id="2342"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Help" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="2239" userLabel="Help">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="336" y="164" width="480" height="400"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1178"/>
+            <value key="minSize" type="size" width="213" height="107"/>
+            <view key="contentView" id="2240">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="400"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <visualEffectView blendingMode="behindWindow" material="titlebar" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="FtB-z3-gSh">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="40"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2256">
+                                <rect key="frame" x="9" y="8" width="31" height="23"/>
+                                <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="house" catalog="system" imagePosition="overlaps" alignment="center" borderStyle="border" inset="2" id="2275">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="helpGoHome:" target="-2" id="2338"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2257">
+                                <rect key="frame" x="43" y="8" width="22" height="23"/>
+                                <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="chevron.left" catalog="system" imagePosition="only" alignment="center" borderStyle="border" inset="2" id="2276">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="helpGoBack:" target="-2" id="Jpt-6K-wje"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2258">
+                                <rect key="frame" x="68" y="8" width="22" height="23"/>
+                                <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="chevron.right" catalog="system" imagePosition="only" alignment="center" borderStyle="border" inset="2" id="2277">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="helpGoForward:" target="-2" id="olV-gO-PNO"/>
+                                </connections>
+                            </button>
+                            <progressIndicator wantsLayer="YES" maxValue="100" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="d97-0g-MPE">
+                                <rect key="frame" x="454" y="10" width="16" height="20"/>
+                            </progressIndicator>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="2258" secondAttribute="bottom" constant="8" id="FaY-hq-qr1" customClass="VLCSpacingConstraint">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                        <integer value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="2256" firstAttribute="top" secondItem="FtB-z3-gSh" secondAttribute="top" constant="8" id="Hoe-j8-9a3" customClass="VLCSpacingConstraint">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                        <integer value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="2257" firstAttribute="leading" secondItem="2256" secondAttribute="trailing" constant="4" id="Kcg-D1-gaL" customClass="VLCSpacingConstraint">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                        <integer value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="2257" firstAttribute="top" secondItem="FtB-z3-gSh" secondAttribute="top" constant="8" id="LxE-Q8-gUz" customClass="VLCSpacingConstraint">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                        <integer value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstAttribute="bottom" secondItem="d97-0g-MPE" secondAttribute="bottom" constant="8" id="QwV-el-tJ7" customClass="VLCSpacingConstraint">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                        <integer value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="d97-0g-MPE" firstAttribute="top" secondItem="FtB-z3-gSh" secondAttribute="top" constant="8" id="RZ2-3B-lrf" customClass="VLCSpacingConstraint">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                        <integer value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstAttribute="bottom" secondItem="2256" secondAttribute="bottom" constant="8" id="UD7-Co-ctx" customClass="VLCSpacingConstraint">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                        <integer value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstAttribute="trailing" secondItem="d97-0g-MPE" secondAttribute="trailing" constant="8" id="gWB-OK-EUY" customClass="VLCSpacingConstraint">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                        <integer value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstAttribute="bottom" secondItem="2257" secondAttribute="bottom" constant="8" id="ld4-Qs-QKq" customClass="VLCSpacingConstraint">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                        <integer value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="2258" firstAttribute="leading" secondItem="2257" secondAttribute="trailing" constant="4" id="ocS-aj-xnD" customClass="VLCSpacingConstraint">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                        <integer value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstAttribute="height" constant="40" id="ohq-yT-YZR"/>
+                            <constraint firstItem="2258" firstAttribute="top" secondItem="FtB-z3-gSh" secondAttribute="top" constant="8" id="wNK-tJ-Ti3" customClass="VLCSpacingConstraint">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                        <integer value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="2256" firstAttribute="leading" secondItem="FtB-z3-gSh" secondAttribute="leading" constant="8" id="ypi-IG-Txn" customClass="VLCSpacingConstraint">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="spacingToken">
+                                        <integer value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                        </constraints>
+                    </visualEffectView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="FtB-z3-gSh" firstAttribute="leading" secondItem="2240" secondAttribute="leading" id="2QX-pH-XaP"/>
+                    <constraint firstAttribute="trailing" secondItem="FtB-z3-gSh" secondAttribute="trailing" id="6pc-cs-Zwy"/>
+                    <constraint firstAttribute="bottom" secondItem="FtB-z3-gSh" secondAttribute="bottom" id="XNK-O0-XXZ"/>
+                </constraints>
+            </view>
+        </window>
+    </objects>
+    <resources>
+        <image name="chevron.left" catalog="system" width="10" height="14"/>
+        <image name="chevron.right" catalog="system" width="10" height="14"/>
+        <image name="house" catalog="system" width="19" height="16"/>
+    </resources>
+</document>

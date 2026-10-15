@@ -1,0 +1,16 @@
+bin
+include
+lib
+libexec
+share
+sbom
+doc
+metatypes
+mkspecs
+modules
+plugins
+python-venv
+vlc-contrib-*.tar.xz
+vlc-contrib-*.tar.bz2
+qml
+/*-*-*/

@@ -1,0 +1,39 @@
+From 2e74ca54c146bda95482900faba547e96ece24a1 Mon Sep 17 00:00:00 2001
+From: Fatih Uzunoglu <fuzun54@outlook.com>
+Date: Wed, 24 Jan 2024 16:31:06 +0200
+Subject: [PATCH] Try DCompositionCreateDevice3() first if available
+
+When the native acrylic effect is not available, the application uses
+effects that can be created through IDCompositionDevice3 with the
+Direct Composition integration.
+---
+ src/gui/rhi/qrhid3dhelpers.cpp | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/src/gui/rhi/qrhid3dhelpers.cpp b/src/gui/rhi/qrhid3dhelpers.cpp
+index 216c358cbe..79efb386eb 100644
+--- a/src/gui/rhi/qrhid3dhelpers.cpp
++++ b/src/gui/rhi/qrhid3dhelpers.cpp
+@@ -110,7 +110,18 @@ IDCompositionDevice *createDirectCompositionDevice()
+         _In_ REFIID iid,
+         _Outptr_ void **dcompositionDevice);
+     DCompositionCreateDeviceFuncPtr func = reinterpret_cast<DCompositionCreateDeviceFuncPtr>(
+-        dcomplib.resolve("DCompositionCreateDevice"));
++        dcomplib.resolve("DCompositionCreateDevice3"));
++
++    if (!func) {
++        qDebug("Could not resolve DCompositionCreateDevice3, dcomp.dll missing or old. Trying DCompositionCreateDevice2...");
++        func = reinterpret_cast<DCompositionCreateDeviceFuncPtr>(dcomplib.resolve("DCompositionCreateDevice2"));
++    }
++
++    if (!func) {
++        qDebug("Could not resolve DCompositionCreateDevice2, dcomp.dll missing or old. Trying DCompositionCreateDevice...");
++        func = reinterpret_cast<DCompositionCreateDeviceFuncPtr>(dcomplib.resolve("DCompositionCreateDevice"));
++    }
++
+     if (!func) {
+         qWarning("Unable to resolve DCompositionCreateDevice, perhaps dcomp.dll is missing?");
+         return nullptr;
+-- 
+2.44.0
+

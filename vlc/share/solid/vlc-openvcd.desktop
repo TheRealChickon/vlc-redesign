@@ -1,0 +1,11 @@
+[Desktop Entry]
+X-KDE-Solid-Predicate=[ StorageVolume.ignored == false AND OpticalDisc.availableContent & 'VideoCd|SuperVideoCd' ]
+Type=Service
+Actions=open;
+
+[Desktop Action open]
+Name=Open with VLC media player
+Name[fr]=Ouvrir avec Lecteur multimédia VLC
+Exec=vlc vcd://%d
+Icon=vlc
+

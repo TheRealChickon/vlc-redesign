@@ -1,0 +1,180 @@
+# Podcast
+vlc_modules += {
+    'name' : 'podcast',
+    'sources' : files('podcast.c'),
+    'dependencies' : [threads_dep],
+    'plugin_dir' : 'services_discovery',
+}
+
+# Radio
+vlc_modules += {
+    'name' : 'radio',
+    'sources' : files('radio.c'),
+    'plugin_dir' : 'services_discovery',
+}
+
+# SAP
+vlc_modules += {
+    'name' : 'sap',
+    'sources' : files('sap.c', '../access/rtp/sdp.c'),
+    'dependencies' : [socket_libs, z_dep],
+    'plugin_dir' : 'services_discovery',
+}
+
+# Zeroconf services discovery
+avahi_dep = dependency('avahi-client', version: '>= 0.6', required: get_option('avahi'))
+if avahi_dep.found()
+    vlc_modules += {
+        'name' : 'avahi',
+        'sources' : files('avahi.c'),
+        'dependencies' : [avahi_dep],
+        'plugin_dir' : 'services_discovery',
+    }
+endif
+
+# MTP devices support
+mtp_dep = dependency('libmtp', version: '>= 1.0.0', required: get_option('mtp'))
+if mtp_dep.found()
+    vlc_modules += {
+        'name' : 'mtp',
+        'sources' : files('mtp.c'),
+        'dependencies' : [mtp_dep],
+        'plugin_dir' : 'services_discovery',
+    }
+endif
+
+# UPnP Plugin (Intel SDK)
+upnp_dep = dependency('libupnp', 'UPNP', version: '>= 1.8.5', required: get_option('upnp'))
+if upnp_dep.found()
+
+    upnp_darwin_deps = []
+    if host_system == 'darwin'
+        systemconfiguration_dep = dependency('appleframeworks', modules: 'SystemConfiguration', required: true)
+        upnp_darwin_deps = [corefoundation_dep, systemconfiguration_dep]
+    endif
+
+    upnp_sources = files(
+        'upnp.cpp',
+        'upnp-wrapper.cpp',
+        '../stream_out/renderer_common.cpp',
+        '../stream_out/dlna/dlna.cpp',
+    )
+
+    if not get_option('upnp_server').disabled()
+        upnp_sources += files(
+            '../control/upnp_server/cds/Object.hpp',
+            '../control/upnp_server/cds/Container.hpp',
+            '../control/upnp_server/cds/FixedContainer.cpp',
+            '../control/upnp_server/cds/FixedContainer.hpp',
+            '../control/upnp_server/cds/Item.cpp',
+            '../control/upnp_server/cds/Item.hpp',
+            '../control/upnp_server/cds/MLContainer.hpp',
+            '../control/upnp_server/cds/MLFolderContainer.hpp',
+            '../control/upnp_server/cds/cds.cpp',
+            '../control/upnp_server/cds/cds.hpp',
+            '../control/upnp_server/ml.hpp',
+            '../control/upnp_server/xml_wrapper.hpp',
+            '../control/upnp_server/upnp_server.hpp',
+            '../control/upnp_server/utils.cpp',
+            '../control/upnp_server/utils.hpp',
+            '../control/upnp_server/FileHandler.cpp',
+            '../control/upnp_server/FileHandler.hpp',
+            '../control/upnp_server/upnp_server.cpp',
+        )
+    endif
+
+    vlc_modules += {
+        'name' : 'upnp',
+        'sources' : upnp_sources,
+        'dependencies' : [contrib_dep, upnp_dep, upnp_darwin_deps],
+        'plugin_dir' : 'services_discovery',
+    }
+endif
+
+# PipeWire device list
+vlc_modules += {
+    'name' : 'pipewirelist',
+    'sources' : files('pipewire.c'),
+    'link_with' : [libvlc_pipewire],
+    'dependencies' : [pipewire_dep],
+    'plugin_dir' : 'services_discovery',
+    'enabled' : pipewire_dep.found(),
+}
+
+# Pulse device list
+if pulse_dep.found()
+    vlc_modules += {
+        'name' : 'pulselist',
+        'sources' : files('pulse.c'),
+        'link_with' : [libvlc_pulse],
+        'dependencies' : [pulse_dep],
+        'plugin_dir' : 'services_discovery',
+    }
+endif
+
+# Linux udev device discovery
+libudev_dep = dependency('libudev', version: '>= 142', required: get_option('udev'))
+if libudev_dep.found()
+    vlc_modules += {
+        'name' : 'udev',
+        'sources' : files('udev.c'),
+        'dependencies' : [libudev_dep],
+        'plugin_dir' : 'services_discovery',
+    }
+endif
+
+# XCB Apps discovery
+if xcb_dep.found()
+    vlc_modules += {
+        'name' : 'xcb_apps',
+        'sources' : files('xcb_apps.c'),
+        'dependencies' : [xcb_dep],
+        'plugin_dir' : 'services_discovery',
+    }
+endif
+
+# Windows drive discovery
+if host_system == 'windows' and have_win_desktop
+    vlc_modules += {
+        'name' : 'windrive',
+        'sources' : files('windrive.c'),
+        'plugin_dir' : 'services_discovery',
+    }
+
+    vlc_modules += {
+        'name' : 'winvolumes',
+        'sources' : files('winvolumes.c'),
+        'plugin_dir' : 'services_discovery',
+    }
+endif
+
+# OS/2 drive discovery
+if host_system == 'os/2'
+    vlc_modules += {
+        'name' : 'os2drive',
+        'sources' : files('os2drive.c'),
+        'plugin_dir' : 'services_discovery',
+    }
+endif
+
+# mDNS using libmicrodns
+microdns_dep = dependency('microdns', required: get_option('microdns'))
+if microdns_dep.found()
+    vlc_modules += {
+        'name' : 'microdns',
+        'sources' : files('microdns.c'),
+        'dependencies' : [microdns_dep, socket_libs],
+        'plugin_dir' : 'services_discovery',
+    }
+endif
+
+# mDNS using Bonjour
+if host_system == 'darwin'
+    vlc_modules += {
+        'name' : 'bonjour',
+        'sources' : files('bonjour.m'),
+        'objc_args' : ['-fobjc-arc'],
+        'dependencies' : [foundation_dep],
+        'plugin_dir' : 'services_discovery',
+    }
+endif

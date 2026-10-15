@@ -1,0 +1,32 @@
+From e9920a2862dd75b153a5be6318c8f478971089a2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Felix=20Paul=20K=C3=BChne?= <fkuehne@videolan.org>
+Date: Wed, 5 Nov 2014 21:02:13 +0100
+Subject: [PATCH 2/6] fix compilation for iOS
+
+---
+ build/make/configure.sh | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/build/make/configure.sh b/build/make/configure.sh
+index eb479ddec..2b5075c23 100644
+--- a/build/make/configure.sh
++++ b/build/make/configure.sh
+@@ -903,15 +903,6 @@ process_common_toolchain() {
+       ;;
+   esac
+ 
+-  # Position independent code (PIC) is probably what we want when building
+-  # shared libs or position independent executable (PIE) targets.
+-  enabled shared && soft_enable pic
+-  check_cpp << EOF || soft_enable pic
+-#if !(__pie__ || __PIE__)
+-#error Neither __pie__ or __PIE__ are set
+-#endif
+-EOF
+-
+ if [ 0 -eq 1 ]; then
+   # Minimum iOS version for all target platforms (darwin and iphonesimulator).
+   # Shared library framework builds are only possible on iOS 8 and later.
+-- 
+2.52.0.windows.1
+

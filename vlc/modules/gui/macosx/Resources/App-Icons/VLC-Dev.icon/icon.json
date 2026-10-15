@@ -1,0 +1,525 @@
+{
+  "color-space-for-untagged-svg-colors" : "display-p3",
+  "fill-specializations" : [
+    {
+      "value" : {
+        "linear-gradient" : [
+          "display-p3:0.45375,0.73621,0.94435,1.00000",
+          "display-p3:0.26485,0.41845,0.92011,1.00000"
+        ],
+        "orientation" : {
+          "start" : {
+            "x" : 0.5,
+            "y" : 0
+          },
+          "stop" : {
+            "x" : 0.5,
+            "y" : 0.7
+          }
+        }
+      }
+    },
+    {
+      "appearance" : "dark",
+      "value" : {
+        "linear-gradient" : [
+          "gray:0.17062,1.00000",
+          "gray:0.04337,1.00000"
+        ]
+      }
+    }
+  ],
+  "groups" : [
+    {
+      "blend-mode" : "normal",
+      "blur-material" : 0.32,
+      "hidden" : false,
+      "layers" : [
+        {
+          "blend-mode" : "normal",
+          "fill-specializations" : [
+            {
+              "value" : {
+                "linear-gradient" : [
+                  "gray:1.00000,1.00000",
+                  "gray:1.00000,0.36167"
+                ],
+                "orientation" : {
+                  "start" : {
+                    "x" : 1,
+                    "y" : 0.4999999999999999
+                  },
+                  "stop" : {
+                    "x" : 0,
+                    "y" : 0.4999999999999999
+                  }
+                }
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "linear-gradient" : [
+                  "display-p3:0.61481,0.81834,1.00000,1.00000",
+                  "display-p3:0.00000,0.52840,1.00000,0.20212"
+                ],
+                "orientation" : {
+                  "start" : {
+                    "x" : 1,
+                    "y" : 0.4999999999999999
+                  },
+                  "stop" : {
+                    "x" : 0,
+                    "y" : 0.4999999999999999
+                  }
+                }
+              }
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "linear-gradient" : [
+                  "gray:1.00000,1.00000",
+                  "gray:1.00000,0.00000"
+                ],
+                "orientation" : {
+                  "start" : {
+                    "x" : 1,
+                    "y" : 0.49999999999999983
+                  },
+                  "stop" : {
+                    "x" : 0,
+                    "y" : 0.49999999999999983
+                  }
+                }
+              }
+            }
+          ],
+          "glass-specializations" : [
+            {
+              "value" : true
+            },
+            {
+              "appearance" : "dark",
+              "value" : true
+            }
+          ],
+          "hidden" : false,
+          "image-name" : "even stripes.svg",
+          "name" : "even stripes",
+          "opacity-specializations" : [
+            {
+              "value" : 1
+            },
+            {
+              "appearance" : "dark",
+              "value" : 1
+            },
+            {
+              "appearance" : "tinted",
+              "value" : 0.71
+            }
+          ],
+          "position" : {
+            "scale" : 1.29,
+            "translation-in-points" : [
+              -0.000663858876635004,
+              -25.71452434209158
+            ]
+          }
+        }
+      ],
+      "lighting" : "individual",
+      "name" : "group",
+      "opacity-specializations" : [
+        {
+          "value" : 1
+        },
+        {
+          "appearance" : "dark",
+          "value" : 1
+        },
+        {
+          "appearance" : "tinted",
+          "value" : 1
+        }
+      ],
+      "position" : {
+        "scale" : 1.68,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "refractivity" : {
+        "depth" : 0.5,
+        "enabled" : false,
+        "strength" : 0
+      },
+      "shadow" : {
+        "kind" : "none",
+        "opacity" : 1
+      },
+      "specular" : true,
+      "translucency-specializations" : [
+        {
+          "value" : {
+            "enabled" : true,
+            "value" : 0.2
+          }
+        },
+        {
+          "appearance" : "tinted",
+          "value" : {
+            "enabled" : true,
+            "value" : 0.2
+          }
+        }
+      ]
+    },
+    {
+      "blend-mode" : "normal",
+      "blur-material" : 0.5,
+      "hidden" : false,
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "value" : {
+                "linear-gradient" : [
+                  "srgb:1.00000,0.36314,0.09020,1.00000",
+                  "display-p3:0.93333,0.59216,0.00000,1.00000"
+                ],
+                "orientation" : {
+                  "start" : {
+                    "x" : 1,
+                    "y" : 0.5000000000000001
+                  },
+                  "stop" : {
+                    "x" : 0,
+                    "y" : 0.5000000000000001
+                  }
+                }
+              }
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "linear-gradient" : [
+                  "gray:0.19419,1.00000",
+                  "gray:0.82120,1.00000"
+                ],
+                "orientation" : {
+                  "start" : {
+                    "x" : 1,
+                    "y" : 0.5000000000000001
+                  },
+                  "stop" : {
+                    "x" : 0,
+                    "y" : 0.5000000000000001
+                  }
+                }
+              }
+            }
+          ],
+          "glass" : true,
+          "hidden" : true,
+          "image-name" : "odd stripes.svg",
+          "name" : "odd stripes",
+          "opacity-specializations" : [
+            {
+              "value" : 1
+            },
+            {
+              "appearance" : "dark",
+              "value" : 1
+            }
+          ],
+          "position" : {
+            "scale" : 1.29,
+            "translation-in-points" : [
+              -0.000663858876635004,
+              -25.71452434209158
+            ]
+          }
+        },
+        {
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "gray:1.00000,0.11733"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "linear-gradient" : [
+                  "display-p3:0.00000,0.50198,0.95000,0.69826",
+                  "display-p3:0.00000,0.52840,1.00000,0.11733"
+                ],
+                "orientation" : {
+                  "start" : {
+                    "x" : 1,
+                    "y" : 0.5
+                  },
+                  "stop" : {
+                    "x" : 0,
+                    "y" : 0.5
+                  }
+                }
+              }
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "solid" : "gray:1.00000,0.00000"
+              }
+            }
+          ],
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "odd stripes.svg",
+          "name" : "odd stripes",
+          "opacity-specializations" : [
+            {
+              "value" : 1
+            },
+            {
+              "appearance" : "dark",
+              "value" : 1
+            }
+          ],
+          "position" : {
+            "scale" : 1.29,
+            "translation-in-points" : [
+              -0.000663858876635004,
+              -25.71452434209158
+            ]
+          }
+        }
+      ],
+      "lighting" : "individual",
+      "name" : "group",
+      "opacity" : 1,
+      "position" : {
+        "scale" : 1.68,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "refractivity" : {
+        "depth" : 0.5,
+        "enabled" : false,
+        "strength" : 0
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 1
+      },
+      "specular" : true,
+      "translucency-specializations" : [
+        {
+          "value" : {
+            "enabled" : true,
+            "value" : 0
+          }
+        },
+        {
+          "appearance" : "tinted",
+          "value" : {
+            "enabled" : true,
+            "value" : 0.2
+          }
+        }
+      ]
+    },
+    {
+      "blend-mode" : "normal",
+      "blur-material" : 0.13,
+      "hidden" : false,
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "value" : {
+                "linear-gradient" : [
+                  "gray:1.00000,0.72000",
+                  "gray:1.00000,0.00000"
+                ],
+                "orientation" : {
+                  "start" : {
+                    "x" : 0.49999999999999983,
+                    "y" : 0
+                  },
+                  "stop" : {
+                    "x" : 0.5,
+                    "y" : 1
+                  }
+                }
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "linear-gradient" : [
+                  "display-p3:0.00000,0.52840,1.00000,0.60000",
+                  "display-p3:0.00000,0.52840,1.00000,0.00000"
+                ],
+                "orientation" : {
+                  "start" : {
+                    "x" : 0.49999999999999983,
+                    "y" : 0
+                  },
+                  "stop" : {
+                    "x" : 0.5,
+                    "y" : 1
+                  }
+                }
+              }
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "linear-gradient" : [
+                  "gray:1.00000,0.52000",
+                  "gray:1.00000,0.00000"
+                ],
+                "orientation" : {
+                  "start" : {
+                    "x" : 0.49999999999999983,
+                    "y" : 0
+                  },
+                  "stop" : {
+                    "x" : 0.5,
+                    "y" : 1
+                  }
+                }
+              }
+            }
+          ],
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "cone-27-shape-base.svg",
+          "name" : "base",
+          "opacity-specializations" : [
+            {
+              "value" : 0.77
+            },
+            {
+              "appearance" : "dark",
+              "value" : 1
+            }
+          ],
+          "position" : {
+            "scale" : 1.29,
+            "translation-in-points" : [
+              -0.000663858876635004,
+              -25.71452434209158
+            ]
+          }
+        }
+      ],
+      "lighting" : "individual",
+      "name" : "group",
+      "opacity-specializations" : [
+        {
+          "value" : 1
+        },
+        {
+          "appearance" : "tinted",
+          "value" : 1
+        }
+      ],
+      "position" : {
+        "scale" : 1.68,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "refractivity" : {
+        "depth" : 0,
+        "enabled" : false,
+        "strength" : 1
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 1
+      },
+      "specular" : true,
+      "translucency-specializations" : [
+        {
+          "value" : {
+            "enabled" : true,
+            "value" : 0.36
+          }
+        },
+        {
+          "appearance" : "tinted",
+          "value" : {
+            "enabled" : true,
+            "value" : 0
+          }
+        }
+      ]
+    },
+    {
+      "hidden" : false,
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "value" : "none"
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "display-p3:0.00000,0.52840,1.00000,0.58403"
+              }
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "solid" : "gray:1.00000,1.00000"
+              }
+            }
+          ],
+          "glass" : false,
+          "image-name" : "Untitled-1.png",
+          "name" : "Untitled-1",
+          "opacity-specializations" : [
+            {
+              "appearance" : "tinted",
+              "value" : 0.15
+            }
+          ]
+        }
+      ],
+      "name" : "grid",
+      "opacity-specializations" : [
+        {
+          "value" : 0.26
+        },
+        {
+          "appearance" : "tinted",
+          "value" : 1
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0.83
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

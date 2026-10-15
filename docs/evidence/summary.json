@@ -1,0 +1,31 @@
+{
+  "features": {
+    "case": "v89-feature-parity-help-stress",
+    "booleanChecks": 49,
+    "qmlWarnings": 0,
+    "exitCode": 0,
+    "privateDesktop": true
+  },
+  "toolbar": {
+    "case": "v84-toolbar-final",
+    "booleanChecks": 87,
+    "qmlWarnings": 0,
+    "exitCode": 0,
+    "privateDesktop": true
+  },
+  "settings-profiles": {
+    "case": "v85-combined-final",
+    "booleanChecks": 72,
+    "qmlWarnings": 0,
+    "exitCode": 0,
+    "privateDesktop": true
+  },
+  "layout": {
+    "case": "v87-layout-final",
+    "booleanChecks": 41,
+    "qmlWarnings": 0,
+    "exitCode": 0,
+    "privateDesktop": true
+  },
+  "appliedGuiDllSha256": "82f816cbc572f05e196963bdb7321ec7a963c136fd53cbe7015c60550a0fcc2a"
+}

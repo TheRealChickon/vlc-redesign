@@ -1,0 +1,275 @@
+/*****************************************************************************
+ * spawn.c
+ *****************************************************************************
+ * Copyright (C) 2022 VLC authors and VideoLAN
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#include <windows.h>
+#include <assert.h>
+#include <fcntl.h>
+
+#include <vlc_common.h>
+#include <vlc_fs.h>
+#include <vlc_spawn.h>
+#include <vlc_memstream.h>
+#include <vlc_charset.h>
+
+static LPPROC_THREAD_ATTRIBUTE_LIST allow_hstd_inherit(HANDLE *handles)
+{
+    SIZE_T attribute_list_size;
+    InitializeProcThreadAttributeList(NULL, 1, 0, &attribute_list_size);
+
+    LPPROC_THREAD_ATTRIBUTE_LIST lpAttributeList = malloc(attribute_list_size);
+    if (unlikely(!lpAttributeList))
+        return NULL;
+
+    BOOL result;
+    result = InitializeProcThreadAttributeList(lpAttributeList, 1, 0,
+                                               &attribute_list_size);
+    if (unlikely(!result))
+        goto error;
+
+    /* duplicated handles in authorized list will cause CreateProcess() failure */
+    int nb_handles = handles[2] == INVALID_HANDLE_VALUE ? 2 : 3;
+    if (handles[0] == handles[nb_handles - 1])
+        --nb_handles;
+    if (nb_handles > 2 && (handles[1] == handles[2]))
+        --nb_handles;
+    if (nb_handles > 1 && (handles[0] == handles[1])) {
+        ++handles;
+        --nb_handles;
+    }
+
+    result = UpdateProcThreadAttribute(lpAttributeList, 0,
+                                       PROC_THREAD_ATTRIBUTE_HANDLE_LIST, handles,
+                                       sizeof(*handles) * nb_handles, NULL, NULL);
+    if (unlikely(!result))
+        goto error;
+
+    return lpAttributeList;
+
+error:
+    if (lpAttributeList)
+        free(lpAttributeList);
+    return NULL;
+}
+
+static HANDLE dup_handle_from_fd(const int fd)
+{
+    intptr_t vlc_handle = _get_osfhandle(fd);
+    if (vlc_handle == (intptr_t)INVALID_HANDLE_VALUE)
+        return INVALID_HANDLE_VALUE;
+
+    if (vlc_handle == -2)
+        return INVALID_HANDLE_VALUE;
+
+    HANDLE dup_inheritable_handle;
+    BOOL result = DuplicateHandle(GetCurrentProcess(), (HANDLE)vlc_handle, GetCurrentProcess(),
+                                  &dup_inheritable_handle, 0, TRUE, DUPLICATE_SAME_ACCESS);
+    if (!result)
+        return INVALID_HANDLE_VALUE;
+
+    return dup_inheritable_handle;
+}
+
+static int vlc_spawn_inner(pid_t *restrict pid, const char *path,
+                           const int fdv[4], const char *const *argv,
+                           bool search)
+{
+    assert(pid != NULL);
+    assert(path != NULL);
+    assert(fdv != NULL);
+    assert(argv != NULL);
+
+    int ret = -1;
+    int nulfd = -1;
+    HANDLE nul_handle = INVALID_HANDLE_VALUE;
+    PROCESS_INFORMATION pi = {0};
+    STARTUPINFOEXW siEx = {
+        .StartupInfo = {
+            .cb         = sizeof(siEx),
+            .hStdInput  = INVALID_HANDLE_VALUE,
+            .hStdOutput = INVALID_HANDLE_VALUE,
+            .hStdError  = INVALID_HANDLE_VALUE,
+            .dwFlags    = STARTF_USESTDHANDLES
+        }
+    };
+
+    wchar_t *application_name = NULL;
+    wchar_t *wide_path = ToWide(path);
+    if (unlikely(wide_path == NULL))
+        return ret;
+    wchar_t *cmdline = NULL;
+
+    if (fdv[0] == -1 || fdv[1] == -1) {
+        nulfd = _open("\\\\.\\NUL", O_RDWR);
+        if (unlikely(nulfd == -1))
+            goto error;
+
+        nul_handle = dup_handle_from_fd(nulfd);
+        if (unlikely(nul_handle == INVALID_HANDLE_VALUE))
+            goto error;
+
+        if (fdv[0] == -1)
+            siEx.StartupInfo.hStdInput = nul_handle;
+        if (fdv[1] == -1)
+            siEx.StartupInfo.hStdOutput = nul_handle;
+    }
+
+    if (fdv[0] != -1) {
+        siEx.StartupInfo.hStdInput = dup_handle_from_fd(fdv[0]);
+        if (unlikely(siEx.StartupInfo.hStdInput == INVALID_HANDLE_VALUE))
+            goto error;
+    }
+    if (fdv[1] != -1) {
+        siEx.StartupInfo.hStdOutput = dup_handle_from_fd(fdv[1]);
+        if (unlikely(siEx.StartupInfo.hStdOutput == INVALID_HANDLE_VALUE))
+            goto error;
+    }
+    if (fdv[2] != -1) {
+        siEx.StartupInfo.hStdError = dup_handle_from_fd(fdv[2]);
+        if (unlikely(siEx.StartupInfo.hStdError == INVALID_HANDLE_VALUE))
+            goto error;
+    }
+
+    HANDLE handles[3] = {
+        siEx.StartupInfo.hStdInput,
+        siEx.StartupInfo.hStdOutput,
+        siEx.StartupInfo.hStdError
+    };
+    siEx.lpAttributeList = allow_hstd_inherit(handles);
+    if (unlikely(!siEx.lpAttributeList))
+        goto error;
+
+    if (search) {
+        wchar_t short_path[MAX_PATH];
+        if (!SetSearchPathMode(BASE_SEARCH_PATH_ENABLE_SAFE_SEARCHMODE))
+            goto error;
+
+        DWORD path_size = SearchPathW(NULL, wide_path, NULL, ARRAY_SIZE(short_path), short_path, NULL);
+        if (path_size == 0)
+            goto error;
+        if (path_size <= ARRAY_SIZE(short_path)) {
+            application_name = _wcsdup(short_path);
+            if (unlikely(!application_name))
+                goto error;
+        } else {
+            application_name = malloc(path_size * sizeof(*application_name));
+            if (unlikely(!application_name))
+                goto error;
+
+            DWORD full_path_size = SearchPathW(NULL, wide_path, NULL, path_size, application_name, NULL);
+            if (unlikely(path_size < full_path_size))
+                goto error;
+        }
+    } else {
+        application_name = wide_path;
+    }
+
+    if (likely(argv[0])) {
+        struct vlc_memstream cmdline_s;
+        if (unlikely(vlc_memstream_open(&cmdline_s) != 0))
+            goto error;
+        vlc_memstream_printf(&cmdline_s, "%s", argv[0]);
+        for (int argc = 1; argv[argc]; ++argc)
+            vlc_memstream_printf(&cmdline_s, " %s", argv[argc]);
+        if (vlc_memstream_close(&cmdline_s) != 0)
+            goto error;
+        cmdline = ToWide(cmdline_s.ptr);
+        free(cmdline_s.ptr);
+        if (unlikely(cmdline == NULL))
+            goto error;
+    }
+
+    DWORD creation_flags = EXTENDED_STARTUPINFO_PRESENT;
+    /* Workers with redirected input and output need no separate console. */
+    if (fdv[0] != -1 && fdv[1] != -1)
+        creation_flags |= CREATE_NO_WINDOW;
+    BOOL bSuccess = CreateProcessW(application_name, cmdline, NULL,
+                                   NULL, TRUE, creation_flags,
+                                   NULL, NULL, &siEx.StartupInfo, &pi);
+    if (!bSuccess)
+        goto error;
+
+    pid_t id = GetProcessId(pi.hProcess);
+    if (unlikely(!id))
+        goto error;
+    *pid = id;
+
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+
+    ret = 0;
+
+error:
+    if (nulfd != -1)
+        vlc_close(nulfd);
+    if (nul_handle != INVALID_HANDLE_VALUE)
+        CloseHandle(nul_handle);
+
+    if (fdv[0] != -1 && siEx.StartupInfo.hStdInput != INVALID_HANDLE_VALUE)
+        CloseHandle(siEx.StartupInfo.hStdInput);
+    if (fdv[1] != -1 && siEx.StartupInfo.hStdOutput != INVALID_HANDLE_VALUE)
+        CloseHandle(siEx.StartupInfo.hStdOutput);
+    if (siEx.StartupInfo.hStdError != INVALID_HANDLE_VALUE)
+        CloseHandle(siEx.StartupInfo.hStdError);
+
+    if (siEx.lpAttributeList) {
+        DeleteProcThreadAttributeList(siEx.lpAttributeList);
+        free(siEx.lpAttributeList);
+    }
+
+    if (application_name != wide_path)
+        free(application_name);
+    free(wide_path);
+    free(cmdline);
+
+    return ret;
+}
+
+int vlc_spawnp(pid_t *restrict pid, const char *path,
+               const int *fdv, const char *const *argv)
+{
+    return vlc_spawn_inner(pid, path, fdv, argv, true);
+}
+
+int vlc_spawn(pid_t *restrict pid, const char *file,
+              const int *fdv, const char *const *argv)
+{
+    return vlc_spawn_inner(pid, file, fdv, argv, false);
+}
+
+int vlc_waitpid(pid_t pid)
+{
+    HANDLE process = OpenProcess(SYNCHRONIZE | PROCESS_QUERY_INFORMATION, FALSE, pid);
+    if (!process)
+        return -1;
+
+    WaitForSingleObject(process, INFINITE);
+
+    DWORD exit_code;
+    BOOL success = GetExitCodeProcess(process, &exit_code);
+
+    CloseHandle(process);
+    if (success)
+        return exit_code;
+    return -1;
+}

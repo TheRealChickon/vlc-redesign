@@ -1,0 +1,14 @@
+#!/bin/sh
+
+OPTIONS="
+      --enable-lua
+      --enable-flac
+      --enable-theora
+      --enable-avcodec --enable-merge-ffmpeg
+      --enable-libass
+      --enable-shout
+      --enable-goom
+      --enable-sse
+      --enable-zvbi --disable-telx"
+
+sh "$(dirname $0)"/../../../configure ${OPTIONS}  "$@"

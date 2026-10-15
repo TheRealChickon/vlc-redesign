@@ -1,0 +1,939 @@
+From cf6ba1b49686398f9b1eb55948c8eb3f3c51013e Mon Sep 17 00:00:00 2001
+From: Steve Lhomme <robux4@ycbcr.xyz>
+Date: Wed, 25 Mar 2020 16:20:03 +0100
+Subject: [PATCH] port to nettle
+
+This removes the OpenSSL dependency
+
+Co-Authored-by: Jean-Baptiste Kempf <jb@videolan.org>
+---
+ configure.ac              |   2 +-
+ m4/ax_lib_nettle.m4       | 278 ++++++++++++++++++++++++++++++++++++
+ m4/ax_lib_openssl.m4      | 293 --------------------------------------
+ src/AS_DCP.h              |   4 +-
+ src/AS_DCP_AES.cpp        |  26 +---
+ src/KM_prng.cpp           | 104 ++++++--------
+ src/Makefile.am           |   2 +-
+ src/ST2052_TextParser.cpp |   3 +-
+ src/asdcp-test.cpp        |   2 +-
+ src/asdcp-util.cpp        |   4 +-
+ src/fips-186-rng-test.cpp |   2 +-
+ src/kmfilegen.cpp         |   2 +-
+ src/nettle_map.h          |  14 ++
+ 13 files changed, 350 insertions(+), 386 deletions(-)
+ create mode 100644 m4/ax_lib_nettle.m4
+ delete mode 100644 m4/ax_lib_openssl.m4
+ create mode 100644 src/nettle_map.h
+
+diff --git a/configure.ac b/configure.ac
+index 9fe94b2..c26f4d1 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -65,7 +65,7 @@ if test "$ac_cv_sys_largefile_CC" != no; then
+    CXX=$CXX$ac_cv_sys_largefile_CC
+ fi
+ 
+-AX_LIB_OPENSSL([0.9.7])
++AX_LIB_NETTLE([0.9.7])
+ AX_LIB_EXPAT
+ AX_LIB_XERCES
+ 
+diff --git a/m4/ax_lib_nettle.m4 b/m4/ax_lib_nettle.m4
+new file mode 100644
+index 0000000..f62c1eb
+--- /dev/null
++++ b/m4/ax_lib_nettle.m4
+@@ -0,0 +1,278 @@
++# ===========================================================================
++#             ax_lib_nettle.html
++# ===========================================================================
++#
++# SYNOPSIS
++#
++#   AX_LIB_NETTLE([MINIMUM-VERSION])
++#
++# DESCRIPTION
++#
++#   This macro provides tests of availability of Nettle of a
++#   particular version or newer. This macros checks for Nettle
++#   headers and libraries and defines compilation flags.
++#
++#   Macro supports following options and their values:
++#
++#   1) Single-option usage:
++#
++#     --with-nettle - yes, no or path to Nettle installation prefix
++#
++#   This macro calls:
++#
++#     AC_SUBST(NETTLE_CFLAGS)
++#     AC_SUBST(NETTLE_LDFLAGS)
++#     AC_SUBST(NETTLE_VERSION) - only if version requirement is used
++#
++#   And sets:
++#
++#     HAVE_NETTLE
++#
++# Copyright (c) 2008-2009 CineCert, LLC
++# All rights reserved.
++#
++# Redistribution and use in source and binary forms, with or without
++# modification, are permitted provided that the following conditions
++# are met:
++# 1. Redistributions of source code must retain the above copyright
++#    notice, this list of conditions and the following disclaimer.
++# 2. Redistributions in binary form must reproduce the above copyright
++#    notice, this list of conditions and the following disclaimer in the
++#    documentation and/or other materials provided with the distribution.
++# 3. The name of the author may not be used to endorse or promote products
++#    derived from this software without specific prior written permission.
++#
++# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
++# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++# IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
++# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++# NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++#
++
++AC_DEFUN([AX_LIB_NETTLE],
++[
++    AC_ARG_WITH([nettle],
++        AC_HELP_STRING([--with-nettle=@<:@ARG@:>@],
++            [use Nettle from given prefix (ARG=path); check standard prefixes (ARG=yes); disable (ARG=no)]
++        ),
++        [
++        if test "$withval" = "yes"; then
++            if test -d /var/local/include/nettle ; then
++                nettle_prefix=/var/local
++            elif test -d /usr/include/nettle ; then
++                nettle_prefix=/usr
++            else
++                nettle_prefix=""
++            fi
++            nettle_requested="yes"
++        elif test -d "$withval"; then
++            nettle_prefix="$withval"
++            nettle_requested="yes"
++        else
++            nettle_prefix=""
++            nettle_requested="no"
++        fi
++        ],
++        [
++        dnl Default behavior is implicit yes
++        if test -d /var/local/include/nettle ; then
++            nettle_prefix=/var/local
++        elif test -d /usr/include/nettle ; then
++            nettle_prefix=/usr
++        elif test -d /usr/local/include/nettle ; then
++            nettle_prefix=/usr/local
++        else
++            nettle_prefix=""
++        fi
++        ]
++    )
++
++    NETTLE_CPPFLAGS=""
++    NETTLE_LDFLAGS=""
++    NETTLE_VERSION=""
++
++    dnl
++    dnl Collect include/lib paths and flags
++    dnl
++    run_nettle_test="no"
++
++    if test -n "$nettle_prefix"; then
++        nettle_include_dir="$nettle_prefix/include"
++        nettle_ldflags="-L$nettle_prefix/lib64 -L$nettle_prefix/lib"
++        run_nettle_test="yes"
++    elif test "$nettle_requested" = "yes"; then
++        if test -n "$nettle_include_dir" -a -n "$nettle_lib_flags"; then
++            run_nettle_test="yes"
++        fi
++    else
++        run_nettle_test="no"
++    fi
++
++    nettle_libs="-lnettle -lgmp"
++
++    dnl
++    dnl Check Nettle files
++    dnl
++    if test "$run_nettle_test" = "yes"; then
++
++        saved_CPPFLAGS="$CPPFLAGS"
++        CPPFLAGS="$CPPFLAGS -I$nettle_include_dir"
++
++        saved_LDFLAGS="$LDFLAGS"
++        LDFLAGS="$LDFLAGS $nettle_ldflags"
++
++        saved_LIBS="$LIBS"
++        LIBS="$nettle_libs $LIBS"
++
++        dnl
++        dnl Check Nettle headers
++        dnl
++        AC_MSG_CHECKING([for Nettle headers in $nettle_include_dir])
++
++        AC_LANG_PUSH([C])
++        AC_COMPILE_IFELSE([
++            AC_LANG_PROGRAM(
++                [[
++@%:@include <nettle/sha1.h>
++@%:@include <nettle/aes.h>
++                ]],
++                [[]]
++            )],
++            [
++            NETTLE_CPPFLAGS="-I$nettle_include_dir"
++            nettle_header_found="yes"
++            AC_MSG_RESULT([found])
++            ],
++            [
++            nettle_header_found="no"
++            AC_MSG_RESULT([not found])
++            ]
++        )
++        AC_LANG_POP([C])
++
++        dnl
++        dnl Check Nettle libraries
++        dnl
++        if test "$nettle_header_found" = "yes"; then
++
++            AC_MSG_CHECKING([for Nettle libraries])
++
++            AC_LANG_PUSH([C])
++            AC_LINK_IFELSE([
++                AC_LANG_PROGRAM(
++                    [[
++@%:@include <nettle/aes.h>
++@%:@include <nettle/sha1.h>
++#if (NETTLE_VERSION_NUMBER < 0x0090700f)
++#endif
++                    ]],
++                    [[
++
++                    ]]
++                )],
++                [
++                NETTLE_LDFLAGS="$nettle_ldflags"
++                NETTLE_LIBS="$nettle_libs"
++                nettle_lib_found="yes"
++                AC_MSG_RESULT([found])
++                ],
++                [
++                nettle_lib_found="no"
++                AC_MSG_RESULT([not found])
++                ]
++            )
++            AC_LANG_POP([C])
++        fi
++
++        CPPFLAGS="$saved_CPPFLAGS"
++        LDFLAGS="$saved_LDFLAGS"
++        LIBS="$saved_LIBS"
++    fi
++
++    AC_MSG_CHECKING([for Nettle])
++
++    if test "$run_nettle_test" = "yes"; then
++        if test "$nettle_header_found" = "yes" -a "$nettle_lib_found" = "yes"; then
++
++            AC_SUBST([NETTLE_CPPFLAGS])
++            AC_SUBST([NETTLE_LDFLAGS])
++            AC_SUBST([NETTLE_LIBS])
++
++            HAVE_NETTLE="yes"
++        else
++            HAVE_NETTLE="no"
++        fi
++
++        AC_MSG_RESULT([$HAVE_NETTLE])
++
++        dnl
++        dnl Check Nettle version
++        dnl
++        if test "$HAVE_NETTLE" = "yes"; then
++
++            nettle_version_req=ifelse([$1], [], [], [$1])
++
++            if test  -n "$nettle_version_req"; then
++
++                AC_MSG_CHECKING([if Nettle version is >= $nettle_version_req])
++
++                if test -f "$nettle_include_dir/nettle/nettlev.h"; then
++
++                    NETTLE_VERSION=`grep NETTLE_VERSION_TEXT $nettle_include_dir/nettle/nettlev.h \
++                                    | grep -v fips | grep -v PTEXT | cut -f 2 | tr -d \"`
++                    AC_SUBST([NETTLE_VERSION])
++
++                    dnl Decompose required version string and calculate numerical representation
++                    nettle_version_req_major=`expr $nettle_version_req : '\([[0-9]]*\)'`
++                    nettle_version_req_minor=`expr $nettle_version_req : '[[0-9]]*\.\([[0-9]]*\)'`
++                    nettle_version_req_revision=`expr $nettle_version_req : '[[0-9]]*\.[[0-9]]*\.\([[0-9]]*\)'`
++                    nettle_version_req_patch=`expr $nettle_version_req : '[[0-9]]*\.[[0-9]]*\.[[0-9]]*\([[a-z]]*\)'`
++                    if test "x$nettle_version_req_revision" = "x"; then
++                        nettle_version_req_revision="0"
++                    fi
++                    if test "x$nettle_version_req_patch" = "x"; then
++                        nettle_version_req_patch="\`"
++                    fi
++
++                    nettle_version_req_number=`expr $nettle_version_req_major \* $((0x10000000)) \
++                                               \+ $nettle_version_req_minor \* $((0x100000)) \
++                                               \+ $nettle_version_req_revision \* $((0x1000)) \
++                                               \+ $((1 + $(printf "%d" \'$nettle_version_req_patch) - $(printf "%d" \'a))) \* $((0x10)) \
++                                               \+ $((0xf))`
++
++                    dnl Calculate numerical representation of detected version
++                    nettle_version_number=`expr $(($(grep NETTLE_VERSION_NUMBER $nettle_include_dir/nettle/nettlev.h | cut -f 2 | tr -d L)))`
++
++                    nettle_version_check=`expr $nettle_version_number \>\= $nettle_version_req_number`
++                    if test "$nettle_version_check" = "1"; then
++                        AC_MSG_RESULT([yes])
++                    else
++                        AC_MSG_RESULT([no])
++                        AC_MSG_WARN([Found $NETTLE_VERSION, which is older than required. Possible compilation failure.])
++                    fi
++                else
++                    AC_MSG_RESULT([no])
++                    AC_MSG_WARN([Missing header nettle/nettlev.h. Unable to determine Nettle version.])
++                fi
++            fi
++        fi
++
++    else
++        HAVE_NETTLE="no"
++        AC_MSG_RESULT([$HAVE_NETTLE])
++
++        if test "$nettle_requested" = "yes"; then
++            AC_MSG_WARN([Nettle support requested but headers or library not found. Specify valid prefix of Nettle using --with-nettle=@<:@DIR@:>@])
++        fi
++    fi
++    if test "$HAVE_NETTLE" = "yes"; then
++        CPPFLAGS="$CPPFLAGS $NETTLE_CPPFLAGS -DHAVE_SSL=1"
++        LDFLAGS="$LDFLAGS $NETTLE_LDFLAGS $NETTLE_LIBS"
++    fi
++    AM_CONDITIONAL([HAVE_NETTLE], [test x$HAVE_NETTLE = xyes])
++])
+diff --git a/m4/ax_lib_openssl.m4 b/m4/ax_lib_openssl.m4
+deleted file mode 100644
+index 074bdfb..0000000
+--- a/m4/ax_lib_openssl.m4
++++ /dev/null
+@@ -1,293 +0,0 @@
+-# ===========================================================================
+-#             ax_lib_openssl.html
+-# ===========================================================================
+-#
+-# SYNOPSIS
+-#
+-#   AX_LIB_OPENSSL([MINIMUM-VERSION])
+-#
+-# DESCRIPTION
+-#
+-#   This macro provides tests of availability of OpenSSL of a
+-#   particular version or newer. This macros checks for OpenSSL
+-#   headers and libraries and defines compilation flags.
+-#
+-#   Macro supports following options and their values:
+-#
+-#   1) Single-option usage:
+-#
+-#     --with-openssl - yes, no or path to OpenSSL installation prefix
+-#
+-#   This macro calls:
+-#
+-#     AC_SUBST(OPENSSL_CFLAGS)
+-#     AC_SUBST(OPENSSL_LDFLAGS)
+-#     AC_SUBST(OPENSSL_VERSION) - only if version requirement is used
+-#
+-#   And sets:
+-#
+-#     HAVE_OPENSSL
+-#
+-# Copyright (c) 2008-2009 CineCert, LLC
+-# All rights reserved.
+-#
+-# Redistribution and use in source and binary forms, with or without
+-# modification, are permitted provided that the following conditions
+-# are met:
+-# 1. Redistributions of source code must retain the above copyright
+-#    notice, this list of conditions and the following disclaimer.
+-# 2. Redistributions in binary form must reproduce the above copyright
+-#    notice, this list of conditions and the following disclaimer in the
+-#    documentation and/or other materials provided with the distribution.
+-# 3. The name of the author may not be used to endorse or promote products
+-#    derived from this software without specific prior written permission.
+-#
+-# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+-# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+-# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+-# IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+-# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+-# NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+-# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+-# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+-# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-#
+-
+-AC_DEFUN([AX_LIB_OPENSSL],
+-[
+-    AC_ARG_WITH([openssl],
+-        AC_HELP_STRING([--with-openssl=@<:@ARG@:>@],
+-            [use OpenSSL from given prefix (ARG=path); check standard prefixes (ARG=yes); disable (ARG=no)]
+-        ),
+-        [
+-        if test "$withval" = "yes"; then
+-            if test -d /var/local/ssl/include ; then
+-                openssl_prefix=/var/local/ssl
+-            elif test -d /var/local/include/openssl ; then
+-                openssl_prefix=/var/local
+-            elif test -d /usr/local/ssl/include ; then
+-                openssl_prefix=/usr/local/ssl
+-            elif test -d /usr/lib/ssl/include ; then
+-                openssl_prefix=/usr/lib/ssl
+-            elif test -d /usr/include/openssl ; then
+-                openssl_prefix=/usr
+-            else
+-                openssl_prefix=""
+-            fi
+-            openssl_requested="yes"
+-        elif test -d "$withval"; then
+-            openssl_prefix="$withval"
+-            openssl_requested="yes"
+-        else
+-            openssl_prefix=""
+-            openssl_requested="no"
+-        fi
+-        ],
+-        [
+-        dnl Default behavior is implicit yes
+-        if test -d /var/local/ssl/include ; then
+-            openssl_prefix=/var/local/ssl
+-        elif test -d /var/local/include/openssl ; then
+-            openssl_prefix=/var/local
+-        elif test -d /usr/local/ssl/include ; then
+-            openssl_prefix=/usr/local/ssl
+-        elif test -d /usr/lib/ssl/include ; then
+-            openssl_prefix=/usr/lib/ssl
+-        elif test -d /usr/include/openssl ; then
+-            openssl_prefix=/usr
+-        else
+-            openssl_prefix=""
+-        fi
+-        ]
+-    )
+-
+-    OPENSSL_CPPFLAGS=""
+-    OPENSSL_LDFLAGS=""
+-    OPENSSL_VERSION=""
+-
+-    dnl
+-    dnl Collect include/lib paths and flags
+-    dnl
+-    run_openssl_test="no"
+-
+-    if test -n "$openssl_prefix"; then
+-        openssl_include_dir="$openssl_prefix/include"
+-        openssl_ldflags="-L$openssl_prefix/lib64 -L$openssl_prefix/lib"
+-        run_openssl_test="yes"
+-    elif test "$openssl_requested" = "yes"; then
+-        if test -n "$openssl_include_dir" -a -n "$openssl_lib_flags"; then
+-            run_openssl_test="yes"
+-        fi
+-    else
+-        run_openssl_test="no"
+-    fi
+-
+-    openssl_libs="-lssl -lcrypto"
+-
+-    dnl
+-    dnl Check OpenSSL files
+-    dnl
+-    if test "$run_openssl_test" = "yes"; then
+-
+-        saved_CPPFLAGS="$CPPFLAGS"
+-        CPPFLAGS="$CPPFLAGS -I$openssl_include_dir"
+-
+-        saved_LDFLAGS="$LDFLAGS"
+-        LDFLAGS="$LDFLAGS $openssl_ldflags"
+-
+-        saved_LIBS="$LIBS"
+-        LIBS="$openssl_libs $LIBS"
+-
+-        dnl
+-        dnl Check OpenSSL headers
+-        dnl
+-        AC_MSG_CHECKING([for OpenSSL headers in $openssl_include_dir])
+-
+-        AC_LANG_PUSH([C])
+-        AC_COMPILE_IFELSE([
+-            AC_LANG_PROGRAM(
+-                [[
+-@%:@include <openssl/opensslv.h>
+-@%:@include <openssl/ssl.h>
+-@%:@include <openssl/crypto.h>
+-                ]],
+-                [[]]
+-            )],
+-            [
+-            OPENSSL_CPPFLAGS="-I$openssl_include_dir"
+-            openssl_header_found="yes"
+-            AC_MSG_RESULT([found])
+-            ],
+-            [
+-            openssl_header_found="no"
+-            AC_MSG_RESULT([not found])
+-            ]
+-        )
+-        AC_LANG_POP([C])
+-
+-        dnl
+-        dnl Check OpenSSL libraries
+-        dnl
+-        if test "$openssl_header_found" = "yes"; then
+-
+-            AC_MSG_CHECKING([for OpenSSL libraries])
+-
+-            AC_LANG_PUSH([C])
+-            AC_LINK_IFELSE([
+-                AC_LANG_PROGRAM(
+-                    [[
+-@%:@include <openssl/opensslv.h>
+-@%:@include <openssl/ssl.h>
+-@%:@include <openssl/crypto.h>
+-#if (OPENSSL_VERSION_NUMBER < 0x0090700f)
+-#endif
+-                    ]],
+-                    [[
+-SSL_library_init();
+-SSLeay();
+-                    ]]
+-                )],
+-                [
+-                OPENSSL_LDFLAGS="$openssl_ldflags"
+-                OPENSSL_LIBS="$openssl_libs"
+-                openssl_lib_found="yes"
+-                AC_MSG_RESULT([found])
+-                ],
+-                [
+-                openssl_lib_found="no"
+-                AC_MSG_RESULT([not found])
+-                ]
+-            )
+-            AC_LANG_POP([C])
+-        fi
+-
+-        CPPFLAGS="$saved_CPPFLAGS"
+-        LDFLAGS="$saved_LDFLAGS"
+-        LIBS="$saved_LIBS"
+-    fi
+-
+-    AC_MSG_CHECKING([for OpenSSL])
+-
+-    if test "$run_openssl_test" = "yes"; then
+-        if test "$openssl_header_found" = "yes" -a "$openssl_lib_found" = "yes"; then
+-
+-            AC_SUBST([OPENSSL_CPPFLAGS])
+-            AC_SUBST([OPENSSL_LDFLAGS])
+-            AC_SUBST([OPENSSL_LIBS])
+-
+-            HAVE_OPENSSL="yes"
+-        else
+-            HAVE_OPENSSL="no"
+-        fi
+-
+-        AC_MSG_RESULT([$HAVE_OPENSSL])
+-
+-        dnl
+-        dnl Check OpenSSL version
+-        dnl
+-        if test "$HAVE_OPENSSL" = "yes"; then
+-
+-            openssl_version_req=ifelse([$1], [], [], [$1])
+-
+-            if test  -n "$openssl_version_req"; then
+-
+-                AC_MSG_CHECKING([if OpenSSL version is >= $openssl_version_req])
+-
+-                if test -f "$openssl_include_dir/openssl/opensslv.h"; then
+-
+-                    OPENSSL_VERSION=`grep OPENSSL_VERSION_TEXT $openssl_include_dir/openssl/opensslv.h \
+-                                    | grep -v fips | grep -v PTEXT | sed -e 's/^.*OPENSSL_VERSION_TEXT[ ]*\"[ ]*OpenSSL[ ]*//' -e 's/[ ].*//'`
+-                    AC_SUBST([OPENSSL_VERSION])
+-
+-                    dnl Decompose required version string and calculate numerical representation
+-                    openssl_version_req_major=`expr $openssl_version_req : '\([[0-9]]*\)'`
+-                    openssl_version_req_minor=`expr $openssl_version_req : '[[0-9]]*\.\([[0-9]]*\)'`
+-                    openssl_version_req_revision=`expr $openssl_version_req : '[[0-9]]*\.[[0-9]]*\.\([[0-9]]*\)'`
+-                    openssl_version_req_patch=`expr $openssl_version_req : '[[0-9]]*\.[[0-9]]*\.[[0-9]]*\([[a-z]]*\)'`
+-                    if test "x$openssl_version_req_revision" = "x"; then
+-                        openssl_version_req_revision="0"
+-                    fi
+-                    if test "x$openssl_version_req_patch" = "x"; then
+-                        openssl_version_req_patch="\`"
+-                    fi
+-
+-                    openssl_version_req_number=`expr $openssl_version_req_major \* $((0x10000000)) \
+-                                               \+ $openssl_version_req_minor \* $((0x100000)) \
+-                                               \+ $openssl_version_req_revision \* $((0x1000)) \
+-                                               \+ $((1 + $(printf "%d" \'$openssl_version_req_patch) - $(printf "%d" \'a))) \* $((0x10)) \
+-                                               \+ $((0xf))`
+-
+-                    dnl Calculate numerical representation of detected version
+-                    openssl_version_number=`expr $(($(grep OPENSSL_VERSION_NUMBER $openssl_include_dir/openssl/opensslv.h | sed -e 's/[ ][ ][ ]*/\t/g' | cut -f 2 | tr -d L)))`
+-
+-                    openssl_version_check=`expr $openssl_version_number \>\= $openssl_version_req_number`
+-                    if test "$openssl_version_check" = "1"; then
+-                        AC_MSG_RESULT([yes])
+-                    else
+-                        AC_MSG_RESULT([no])
+-                        AC_MSG_WARN([Found $OPENSSL_VERSION, which is older than required. Possible compilation failure.])
+-                    fi
+-                else
+-                    AC_MSG_RESULT([no])
+-                    AC_MSG_WARN([Missing header openssl/opensslv.h. Unable to determine OpenSSL version.])
+-                fi
+-            fi
+-        fi
+-
+-    else
+-        HAVE_OPENSSL="no"
+-        AC_MSG_RESULT([$HAVE_OPENSSL])
+-
+-        if test "$openssl_requested" = "yes"; then
+-            AC_MSG_WARN([OpenSSL support requested but headers or library not found. Specify valid prefix of OpenSSL using --with-openssl=@<:@DIR@:>@])
+-        fi
+-    fi
+-    if test "$HAVE_OPENSSL" = "yes"; then
+-        CPPFLAGS="$CPPFLAGS $OPENSSL_CPPFLAGS -DHAVE_OPENSSL=1"
+-        LDFLAGS="$LDFLAGS $OPENSSL_LDFLAGS $OPENSSL_LIBS"
+-    else
+-        HAVE_OPENSSL="no"
+-    fi
+-    AM_CONDITIONAL([HAVE_OPENSSL], [test x$HAVE_OPENSSL = xyes])
+-])
+diff --git a/src/AS_DCP.h b/src/AS_DCP.h
+index aab7f77..93c95cc 100755
+--- a/src/AS_DCP.h
++++ b/src/AS_DCP.h
+@@ -52,7 +52,7 @@ be be limited to:
+  o SMPTE ST 422:2006 - JPEG 2000 picture in GC
+  o SMPTE ST 382:2007 - WAV/PCM sound in GC
+  o IETF RFC 2104 - HMAC/SHA1
+- o NIST FIPS 197 - AES (Rijndael) (via OpenSSL)
++ o NIST FIPS 197 - AES (Rijndael) (via Nettle)
+ 
+  o MXF Interop Track File Specification
+  o MXF Interop Track File Essence Encryption Specification
+@@ -75,7 +75,7 @@ The following use cases are supported by the library:
+  o Read header metadata from an AS-DCP file
+ 
+ This project depends upon the following libraries:
+- - OpenSSL http://www.openssl.org/
++ - Nettle http://www.nettle.org/
+  - Expat http://expat.sourceforge.net/  or
+      Xerces-C http://xerces.apache.org/xerces-c/
+    An XML library is not needed if you don't need support for SMPTE ST 429-5:2009.
+diff --git a/src/AS_DCP_AES.cpp b/src/AS_DCP_AES.cpp
+index 6409f5b..6aa0a76 100755
+--- a/src/AS_DCP_AES.cpp
++++ b/src/AS_DCP_AES.cpp
+@@ -39,20 +39,9 @@ using Kumu::DefaultLogSink;
+ using namespace ASDCP;
+ const int KEY_SIZE_BITS = 128;
+ 
+-#include <openssl/aes.h>
+-#include <openssl/sha.h>
+-#include <openssl/bn.h>
+-#include <openssl/err.h>
++#include "nettle_map.h"
+ 
+ 
+-void
+-print_ssl_error()
+-{
+-  char err_buf[256];
+-  unsigned long errval = ERR_get_error();
+-  DefaultLogSink().Error("OpenSSL: %s\n", ERR_error_string(errval, err_buf));
+-}
+-
+ //------------------------------------------------------------------------------------------
+ 
+ class ASDCP::AESEncContext::h__AESContext : public AES_KEY
+@@ -79,11 +68,8 @@ ASDCP::AESEncContext::InitKey(const byte_t* key)
+   m_Context = new h__AESContext;
+   m_Context->m_KeyBuf.Set(key);
+ 
+-  if ( AES_set_encrypt_key(m_Context->m_KeyBuf.Value(), KEY_SIZE_BITS, m_Context) )
+-    {
+-      print_ssl_error();
+-      return RESULT_CRYPT_INIT;
+-    }
++  // nettle set/get encrypt key returns void
++  aes128_set_encrypt_key(m_Context,  m_Context->m_KeyBuf.Value());
+ 
+   return RESULT_OK;
+ }
+@@ -182,11 +168,7 @@ ASDCP::AESDecContext::InitKey(const byte_t* key)
+   m_Context = new h__AESContext;
+   m_Context->m_KeyBuf.Set(key);
+ 
+-  if ( AES_set_decrypt_key(m_Context->m_KeyBuf.Value(), KEY_SIZE_BITS, m_Context) )
+-    {
+-      print_ssl_error();
+-      return RESULT_CRYPT_INIT;
+-    }
++  aes128_set_decrypt_key(m_Context, m_Context->m_KeyBuf.Value());
+ 
+   return RESULT_OK;
+ }
+diff --git a/src/KM_prng.cpp b/src/KM_prng.cpp
+index f9ec0c0..8b9054c 100755
+--- a/src/KM_prng.cpp
++++ b/src/KM_prng.cpp
+@@ -36,12 +36,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include <KM_mutex.h>
+ #include <string.h>
+ #include <assert.h>
+-
+-#ifdef HAVE_OPENSSL
++#include <nettle/sha1.h>
++#include <nettle/aes.h>
++#include <nettle/bignum.h>
+ # define ENABLE_FIPS_186
+-# include <openssl/sha.h>
+-# include <openssl/bn.h>
+-#endif // HAVE_OPENSSL
+ 
+ using namespace Kumu;
+ 
+@@ -210,11 +208,10 @@ Kumu::FortunaRNG::FillRandom(Kumu::ByteString& Buffer)
+ void
+ Kumu::Gen_FIPS_186_Value(const byte_t* key, ui32_t key_size, byte_t* out_buf, ui32_t out_buf_len)
+ {
+-  byte_t sha_buf[SHA_DIGEST_LENGTH];
++  byte_t sha_buf[SHA1_DIGEST_SIZE];
+   ui32_t const xkey_len = 64; // 512/8
+   byte_t xkey[xkey_len];
+-  BN_CTX* ctx1 = BN_CTX_new(); // used by BN_* functions
+-  assert(ctx1);
++
+ 
+   if ( key_size > xkey_len )
+     DefaultLogSink().Warn("Key too large for FIPS 186 seed, truncating to 64 bytes.\n");
+@@ -223,70 +220,57 @@ Kumu::Gen_FIPS_186_Value(const byte_t* key, ui32_t key_size, byte_t* out_buf, ui
+   memset(xkey, 0, xkey_len);
+   memcpy(xkey, key, xmin<ui32_t>(key_size, xkey_len));
+ 
+-  if ( key_size < SHA_DIGEST_LENGTH )
+-    key_size = SHA_DIGEST_LENGTH; // pad short key ( b < 160 )
++  if ( key_size < SHA1_DIGEST_SIZE )
++    key_size = SHA1_DIGEST_SIZE; // pad short key ( b < 160 )
+ 
+   // create the 2^b constant
+-  BIGNUM *c_2powb = BN_new();
+-  BIGNUM * c_2 = BN_new();
+-  BIGNUM * c_b = BN_new();
+-  assert(c_2powb);
+-  assert(c_2);
+-  assert(c_b);
+-
+-  BN_set_word(c_2, 2);
+-  BN_set_word(c_b, key_size * 8);
+-  BN_exp(c_2powb, c_2, c_b, ctx1);
++  mpz_t c_2powb, c_2, c_b, c_mod;
++  mpz_init(c_2powb);
++  mpz_init_set_si(c_2, 2);
++  mpz_init_set_si(c_b, key_size * 8);
++  mpz_init_set_si(c_mod, 1);
++  mpz_powm(c_2powb, c_2, c_b, c_mod);
+ 
+   for (;;)
+     {
+-      SHA_CTX SHA;
++     struct sha1_ctx SHA;
+ 
+       // step c -- x = G(t,xkey)
+-      SHA1_Init(&SHA); // set t
+-      SHA1_Update(&SHA, xkey, xkey_len);
++      sha1_init(&SHA); // set t
++      sha1_update(&SHA, xkey_len, xkey);
+ 
+       ui32_t* buf_p = (ui32_t*)sha_buf;
+-      *buf_p++ = KM_i32_BE(SHA.h0);
+-      *buf_p++ = KM_i32_BE(SHA.h1);
+-      *buf_p++ = KM_i32_BE(SHA.h2);
+-      *buf_p++ = KM_i32_BE(SHA.h3);
+-      *buf_p++ = KM_i32_BE(SHA.h4);
+-      memcpy(out_buf, sha_buf, xmin<ui32_t>(out_buf_len, SHA_DIGEST_LENGTH));
+-
+-      if ( out_buf_len <= SHA_DIGEST_LENGTH )
++      *buf_p++ = KM_i32_BE(SHA.state[0]);
++      *buf_p++ = KM_i32_BE(SHA.state[1]);
++      *buf_p++ = KM_i32_BE(SHA.state[2]);
++      *buf_p++ = KM_i32_BE(SHA.state[3]);
++      *buf_p++ = KM_i32_BE(SHA.state[4]);
++      memcpy(out_buf, sha_buf, xmin<ui32_t>(out_buf_len, SHA1_DIGEST_SIZE));
++
++      if ( out_buf_len <= SHA1_DIGEST_SIZE )
+ 	break;
+ 
+-      out_buf_len -= SHA_DIGEST_LENGTH;
+-      out_buf += SHA_DIGEST_LENGTH;
++      out_buf_len -= SHA1_DIGEST_SIZE;
++      out_buf += SHA1_DIGEST_SIZE;
+ 
+       // step d -- XKEY = (1 + XKEY + x) mod 2^b
+-      BIGNUM *bn_tmp = BN_new();
+-      BIGNUM *bn_xkey = BN_new();
+-      BIGNUM *bn_x_n = BN_new();
+-      assert(bn_tmp);
+-      assert(bn_xkey);
+-      assert(bn_x_n);
+-
+-      BN_bin2bn(xkey, key_size, bn_xkey);
+-      BN_bin2bn(sha_buf, SHA_DIGEST_LENGTH, bn_x_n);
+-      BN_add_word(bn_xkey, 1);            // xkey += 1
+-      BN_add(bn_tmp, bn_xkey, bn_x_n);       // xkey += x
+-      BN_mod(bn_xkey, bn_tmp, c_2powb, ctx1);  // xkey = xkey mod (2^b)
++      mpz_t bn_tmp, bn_xkey, bn_x_n;
++      mpz_init(bn_tmp);
++      mpz_init(bn_xkey);
++      mpz_init(bn_x_n);
++
++      mpz_import (bn_xkey, key_size, 1, 1, 0, 0, xkey);
++      mpz_import (bn_x_n, SHA1_DIGEST_SIZE, 1, 1, 0, 0, sha_buf);
++      mpz_add_ui(bn_xkey,bn_xkey, 1);            // xkey += 1
++      mpz_add(bn_xkey, bn_xkey, bn_x_n);       // xkey += x
++      mpz_mod(bn_xkey, bn_xkey, c_2powb);  // xkey = xkey mod (2^b)
+ 
+       memset(xkey, 0, xkey_len);
+-      ui32_t bn_buf_len = BN_num_bytes(bn_xkey);
++      ui32_t bn_buf_len = bn_xkey->_mp_size;
+       ui32_t idx = ( bn_buf_len < key_size ) ? key_size - bn_buf_len : 0;
+-      BN_bn2bin(bn_xkey, &xkey[idx]);
+-      BN_free(bn_tmp);
+-      BN_free(bn_xkey);
+-      BN_free(bn_x_n);
+-    }
++      mpz_export (xkey+idx, NULL, 1, 1, 0, 0, bn_xkey);
+ 
+-  BN_free(c_2powb);
+-  BN_free(c_2);
+-  BN_free(c_b);
+-  BN_CTX_free(ctx1);
++    }
+ }
+ 
+ #endif // ENABLE_FIPS_186
+diff --git a/src/Makefile.am b/src/Makefile.am
+index ebf0474..b3d2ce6 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -139,7 +139,7 @@ libasdcp_la_SOURCES = MPEG2_Parser.cpp MPEG.cpp JP2K_Codestream_Parser.cpp \
+ 	UUIDInformation.cpp UUIDInformation.h \
+ 	ST2095_PinkNoise.cpp
+ 
+-if HAVE_OPENSSL
++if HAVE_NETTLE
+ libasdcp_la_SOURCES += AS_DCP_AES.cpp
+ endif
+ 
+diff --git a/src/ST2052_TextParser.cpp b/src/ST2052_TextParser.cpp
+index 9dabfb7..da5877f 100644
+--- a/src/ST2052_TextParser.cpp
++++ b/src/ST2052_TextParser.cpp
+@@ -31,8 +31,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ #include "AS_02_internal.h"
+ #include "KM_xml.h"
+-#include "KM_sha1.h"
+-
++#include "nettle_map.h"
+ using namespace Kumu;
+ using namespace ASDCP;
+ 
+diff --git a/src/asdcp-test.cpp b/src/asdcp-test.cpp
+index 34c8fcf..604c24c 100755
+--- a/src/asdcp-test.cpp
++++ b/src/asdcp-test.cpp
+@@ -54,7 +54,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include <WavFileWriter.h>
+ #include <MXF.h>
+ #include <Metadata.h>
+-
++#include "nettle_map.h"
+ #include <iostream>
+ #include <assert.h>
+ 
+diff --git a/src/asdcp-util.cpp b/src/asdcp-util.cpp
+index d93465c..124cad8 100755
+--- a/src/asdcp-util.cpp
++++ b/src/asdcp-util.cpp
+@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include <KM_prng.h>
+ #include <KM_sha1.h>
+ #include <AS_DCP.h>
+-
++#include "nettle_map.h"
+ using namespace Kumu;
+ 
+ 
+diff --git a/src/fips-186-rng-test.cpp b/src/fips-186-rng-test.cpp
+index 8c94595..921f010 100755
+--- a/src/fips-186-rng-test.cpp
++++ b/src/fips-186-rng-test.cpp
+@@ -31,7 +31,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ #include <KM_util.h>
+ #include <KM_prng.h>
+-
++#include "nettle_map.h"
+ using namespace Kumu;
+ 
+ //
+diff --git a/src/kmfilegen.cpp b/src/kmfilegen.cpp
+index 21b1d8e..fae9f83 100755
+--- a/src/kmfilegen.cpp
++++ b/src/kmfilegen.cpp
+@@ -34,7 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include <iostream>
+ #include <KM_fileio.h>
+ #include <KM_prng.h>
+-#include <KM_aes.h>
++#include "nettle_map.h"
+ #include <assert.h>
+ 
+ using namespace Kumu;
+diff --git a/src/nettle_map.h b/src/nettle_map.h
+new file mode 100644
+index 0000000..0d9d1e4
+--- /dev/null
++++ b/src/nettle_map.h
+@@ -0,0 +1,14 @@
++#include <nettle/aes.h>
++#include <nettle/sha1.h>
++#include <nettle/bignum.h>
++
++typedef aes128_ctx AES_KEY;
++#define SHA_DIGEST_LENGTH SHA1_DIGEST_SIZE
++typedef sha1_ctx SHA_CTX;
++#define SHA1_Init(x) sha1_init(x)
++#define SHA1_Update(a,b,c)  sha1_update(a,c,b)
++#define SHA1_Final(a,b) sha1_digest(b, sizeof(a), a)
++#define AES_encrypt(a,b,c)  aes128_encrypt(c, sizeof(a), b, a)
++#define AES_decrypt(a, b, c) aes128_decrypt(c, sizeof(a), b, a)
++#define AES_decrypt(a, b, c) aes128_decrypt(c, sizeof(a), b, a)
++#define AES_set_encrypt_key(a, b, c)  aes128_set_encrypt_key(c, a)
+-- 
+2.37.3.windows.1
+

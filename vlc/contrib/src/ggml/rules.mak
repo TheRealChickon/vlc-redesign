@@ -1,0 +1,36 @@
+# ggml
+
+GGML_VERSION := 0.11.0
+GGML_URL := $(GITHUB)/ggml-org/ggml/archive/refs/tags/v$(GGML_VERSION).tar.gz
+
+ifeq ($(call need_pkg,"ggml"),)
+PKGS_FOUND += ggml
+endif
+
+$(TARBALLS)/ggml-$(GGML_VERSION).tar.gz:
+	$(call download_pkg,$(GGML_URL),ggml)
+
+.sum-ggml: ggml-$(GGML_VERSION).tar.gz
+
+ggml: ggml-$(GGML_VERSION).tar.gz .sum-ggml
+	$(UNPACK)
+	# fix path to install ggml.pc
+	sed -i.orig 's,DESTINATION share/pkgconfig,DESTINATION $${CMAKE_INSTALL_LIBDIR}/pkgconfig,' $(UNPACK_DIR)/CMakeLists.txt
+	# add missing libraries
+	sed -i.orig 's, -lggml$$, -lggml -lggml-base -lggml-cpu,' $(UNPACK_DIR)/ggml.pc.in
+	# use regular static library names
+	sed -i.orig 's,set(CMAKE_STATIC_LIBRARY_PREFIX,#set(CMAKE_STATIC_LIBRARY_PREFIX,' $(UNPACK_DIR)/CMakeLists.txt
+	$(APPLY) $(SRC)/ggml/0001-Use-LoadPackagedLibrary-in-UWP-builds.patch
+	$(MOVE)
+
+GGML_CONF := \
+	-DGGML_OPENMP=OFF \
+	-DGGML_BUILD_TESTS=OFF \
+	-DGGML_BUILD_EXAMPLES=OFF
+
+.ggml: ggml toolchain.cmake
+	$(CMAKECLEAN)
+	$(HOSTVARS_CMAKE) $(CMAKE) $(GGML_CONF)
+	+$(CMAKEBUILD)
+	$(CMAKEINSTALL)
+	touch $@

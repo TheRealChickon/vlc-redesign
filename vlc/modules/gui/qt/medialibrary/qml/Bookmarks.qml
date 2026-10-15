@@ -1,0 +1,114 @@
+/*****************************************************************************
+ * Copyright (C) 2022 VLC authors and VideoLAN
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * ( at your option ) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+import QtQuick
+
+import VLC.MediaLibrary
+
+import VLC.Widgets as Widgets
+import VLC.Style
+import VLC.Player
+
+Item {
+    id: control
+
+    property real barHeight
+    property int yShift
+
+    property bool controlBarHovered
+
+    property bool bookmarkHovered
+    property string bookmarkText
+    property real bookmarkPosition
+
+    implicitHeight: control.barHeight
+    height: implicitHeight
+
+    visible: false
+    opacity: 0
+
+    Widgets.PointingToolTipAttached.visible: control.bookmarkHovered
+    Widgets.PointingToolTipAttached.text: control.bookmarkText
+    Widgets.PointingToolTipAttached.pos: Qt.point(control.bookmarkPosition, - yShift)
+
+    transitions: [
+        Transition {
+            to: "hidden"
+            SequentialAnimation {
+                NumberAnimation{
+                    target: control
+                    properties: "opacity"
+                    to: 0
+                    duration: VLCStyle.duration_short; easing.type: Easing.OutSine
+                }
+                PropertyAction { target: control; property: "visible"; value: false; }
+            }
+        },
+        Transition {
+            to: "visible"
+            SequentialAnimation {
+                PropertyAction { target: control; property: "visible"; value: true; }
+                NumberAnimation{
+                    target: control
+                    properties: "opacity"
+                    to: 1
+                    duration: VLCStyle.duration_short; easing.type: Easing.InSine
+                }
+            }
+        }
+    ]
+
+    state: controlBarHovered && bookmarksRptr.count > 0 ? "visible" : "hidden"
+
+    readonly property ColorContext colorContext: ColorContext {
+        id: theme
+        colorSet: ColorContext.Window
+    }
+
+    Repeater {
+        id: bookmarksRptr
+        model: MLBookmarkModel {
+            id: modelBookmark
+
+            player: Player
+
+            ml: MediaLib
+        }
+
+        Widgets.RoundButtonExt {
+            id: bookmarkButton
+
+            height: control.barHeight
+            width: height
+            backgroundColor: bookmarkButton.colorContext.fg.primary
+
+            x: control.width * model.position - width/2
+            y: VLCStyle.dp(1, VLCStyle.scale)
+            focusPolicy: Qt.NoFocus
+
+            onClicked: modelBookmark.select(modelBookmark.index(index, 0))
+
+            onHoveredChanged: {
+                if(bookmarkButton.hovered){
+                    control.bookmarkText = model.name
+                    control.bookmarkPosition = x + width/2
+                }
+                control.bookmarkHovered = bookmarkButton.hovered
+            }
+        }
+    }
+}

@@ -1,0 +1,27 @@
+From 35d4dd642c955f5aa006ad8d105105a15ff14921 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Felix=20Paul=20K=C3=BChne?= <fkuehne@videolan.org>
+Date: Fri, 11 Sep 2015 16:43:11 +0200
+Subject: [PATCH 1/5] disable tests compilation
+
+---
+ Makefile.am | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 77355d1a..737f32ad 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -41,8 +41,8 @@ doc =
+ endif
+ 
+ 
+-DIST_SUBDIRS = m4 compat mpi cipher random src doc tests
+-SUBDIRS =         compat mpi cipher random src $(doc) tests
++DIST_SUBDIRS = m4 compat mpi cipher random src doc
++SUBDIRS =         compat mpi cipher random src $(doc)
+ 
+ EXTRA_DIST = autogen.sh autogen.rc README.GIT LICENSES      	           \
+              ChangeLog-2011 build-aux/ChangeLog-2011 doc/ChangeLog-2011    \
+-- 
+2.37.3.windows.1
+

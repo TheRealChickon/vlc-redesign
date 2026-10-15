@@ -1,0 +1,1670 @@
+{
+  "package": "portable-full-video-qa",
+  "modules": 415,
+  "plugins": 409,
+  "coreExportsSubtitleTimeScale": true,
+  "allBundledVlcImportsResolved": true,
+  "problems": [],
+  "files": [
+    {
+      "file": "plugins/access/libaccess_concat_plugin.dll",
+      "sha256": "6a78e7308a1ab12004f3003f7d12dfa0949b2581b672bec5f2c44397fc171423"
+    },
+    {
+      "file": "plugins/access/libaccess_imem_plugin.dll",
+      "sha256": "402f828756af4032394670ff6961078ea21fdcea378232c6b87fd544178d2e46"
+    },
+    {
+      "file": "plugins/access/libaccess_mms_plugin.dll",
+      "sha256": "01107b98eb8625c0ecf1f82a056dbc0f0b72f842a8d9fea39fe54fac97db99b2"
+    },
+    {
+      "file": "plugins/access/libaccess_srt_plugin.dll",
+      "sha256": "2ea34f5f882dca26daa8869d69a267ef189cadc42cfd524279648daa85bec11d"
+    },
+    {
+      "file": "plugins/access/libaccess_wasapi_plugin.dll",
+      "sha256": "90a9c2183d52188eccfedf1365276fafb035297587b1743b48270400a4ff2a91"
+    },
+    {
+      "file": "plugins/access/libamt_plugin.dll",
+      "sha256": "1bd8f98663e1f87e2080e1f97b874f1addb036f976838d4b2391e3cf326d9e5c"
+    },
+    {
+      "file": "plugins/access/libcdda_plugin.dll",
+      "sha256": "2ed962ab87023e66748db173edbf2c4b05f474d06b90ce2288fa97711aec2e57"
+    },
+    {
+      "file": "plugins/access/libdata_plugin.dll",
+      "sha256": "ed44347684a03993b7fa073378fe29774b546a9a7a065426889748902464a78b"
+    },
+    {
+      "file": "plugins/access/libdcp_plugin.dll",
+      "sha256": "e31584770da9c16c56010d92b293858f6ebb77d3756c13f6a9b7447f940497a9"
+    },
+    {
+      "file": "plugins/access/libdecklink_plugin.dll",
+      "sha256": "e98711f46b08f98f1de44bf809cbaffd586748a7519ab121cd7d8d260f922bad"
+    },
+    {
+      "file": "plugins/access/libdshow_plugin.dll",
+      "sha256": "244b2d5b497da46d95003edde2465152fcc53ec0a020b4578f0c6ff73cd7f02a"
+    },
+    {
+      "file": "plugins/access/libdtv_plugin.dll",
+      "sha256": "525873569c5a79e4317c941fa301ab6ce8055bc9da1e311d76d65ac2e2194e5b"
+    },
+    {
+      "file": "plugins/access/libdvdnav_plugin.dll",
+      "sha256": "05d537b3e7ad23d5ee712886428ed45955ac56316d7059292c14ec143b8858eb"
+    },
+    {
+      "file": "plugins/access/libdvdread_plugin.dll",
+      "sha256": "cb411be1a8bbdd0da4863b46af9fb1c4ae0e13187d0751f94776b608e1cc293b"
+    },
+    {
+      "file": "plugins/access/libfilesystem_plugin.dll",
+      "sha256": "99ac42b04e627e7b24baef3d8b3b1ebb22369c7fb86f6a865609ad8d0d367215"
+    },
+    {
+      "file": "plugins/access/libftp_plugin.dll",
+      "sha256": "3c169cb049a68b700b4a41bf57e947797df21ec484b5cbb1a06a6f0adc358503"
+    },
+    {
+      "file": "plugins/access/libgopher_plugin.dll",
+      "sha256": "1911d43d473a1a5ee9d28cff9c5d5c03d668c4f4a868974bca040ff243ea88b8"
+    },
+    {
+      "file": "plugins/access/libhttp_plugin.dll",
+      "sha256": "709edccc3e0ebc052228faf922118eb1d2012f942afabc803430818a34ba3864"
+    },
+    {
+      "file": "plugins/access/libhttps_plugin.dll",
+      "sha256": "c5388ffb8661811fc1ce0d4f50a6351b33f7adc134c0fda9afc7b0aa463f3800"
+    },
+    {
+      "file": "plugins/access/libidummy_plugin.dll",
+      "sha256": "f78bc8f21f332ba0ec1afd8032e409ddc6d6b2fea751ab4a720884fc499ead31"
+    },
+    {
+      "file": "plugins/access/libimem_plugin.dll",
+      "sha256": "1dabe503b63e3d3517df8d3812e6e7825ba9781b9bc040291250d19f9f1e435a"
+    },
+    {
+      "file": "plugins/access/liblibbluray_plugin.dll",
+      "sha256": "73630588f0120c27a0f3440dce0e45174bd91c4a757e39d0b202c9d173c309d7"
+    },
+    {
+      "file": "plugins/access/liblive555_plugin.dll",
+      "sha256": "36b56a99155bd93efadbd30f220eefd4247909949bd43f626b585af856a82870"
+    },
+    {
+      "file": "plugins/access/libnfs_plugin.dll",
+      "sha256": "ffe567e82fd225155e8ccb045b85e56a0e8b8a837e8ece3f132dc32005377409"
+    },
+    {
+      "file": "plugins/access/libnoidea_plugin.dll",
+      "sha256": "ce6807772a1d98e8f5b23850fb9abe9b85694ea2dab551d065add037195f6bfb"
+    },
+    {
+      "file": "plugins/access/librist_plugin.dll",
+      "sha256": "b9cd116dc03482e45e630aa07c667152d7bab708c86df80bb8bddca4744a285e"
+    },
+    {
+      "file": "plugins/access/librtp_ac3_plugin.dll",
+      "sha256": "a5bdbe245b526ae6c14b137ce3eb2b58468b2d543dbcbaf4102aff723ec69d9e"
+    },
+    {
+      "file": "plugins/access/librtp_h264_plugin.dll",
+      "sha256": "d0f3008b5c859ae0e4e0297639b50fb1113287f969e114e7371c049cc90b155e"
+    },
+    {
+      "file": "plugins/access/librtp_h265_plugin.dll",
+      "sha256": "d948a6cdade29aecb3d76d387f023e22f3a8e2a0ce7d1d6b21bc28e4ea6943ea"
+    },
+    {
+      "file": "plugins/access/librtp_mpeg12_plugin.dll",
+      "sha256": "c00709db2ac9f0c16a37cb22941c71adb875329f9d9ebb12095e38dd361099ed"
+    },
+    {
+      "file": "plugins/access/librtp_mpeg4_plugin.dll",
+      "sha256": "35b02f6fb2e4a8d0ce011dbb00abdfcf3098158a1dc3b9432c2531816fb7b3bf"
+    },
+    {
+      "file": "plugins/access/librtp_opus_plugin.dll",
+      "sha256": "1913c3abe79c344bd909da2887c10649841cc0bb74a4ac5bbf585018d964bd55"
+    },
+    {
+      "file": "plugins/access/librtp_pcm_plugin.dll",
+      "sha256": "5f22e57c4d91f9ab8ec5faad17810ea4e8462369caa9e5ea0d58023d97c16d57"
+    },
+    {
+      "file": "plugins/access/librtp_plugin.dll",
+      "sha256": "e526f0182e70a1e320e2fa626c15f278ca3a96138493737a942b4f096a9a7bde"
+    },
+    {
+      "file": "plugins/access/librtp_raw_plugin.dll",
+      "sha256": "b1b1b161a5a200f113305102e52b48eaf19679761fb7e27df83cef5fff052ff3"
+    },
+    {
+      "file": "plugins/access/librtp_xiph_plugin.dll",
+      "sha256": "5273ecf6e5cd96c0a165eefc07c9efbfe326355e0427c361cc5886a35ee9bb1f"
+    },
+    {
+      "file": "plugins/access/libsatip_plugin.dll",
+      "sha256": "0ccb3c2ceeccdbffe458f6791781e7b44b4389fbf2d2d86821d173739b1f3e2b"
+    },
+    {
+      "file": "plugins/access/libscreen_win_plugin.dll",
+      "sha256": "eb7834fd75f64cac74a3f1c46a3f58e3f163d2ca0741bff9fb2613a4dfcb446e"
+    },
+    {
+      "file": "plugins/access/libsdp_plugin.dll",
+      "sha256": "3dae3982831a768bef92b7d78f3ad0d1267e00fbabb021b6c41b83b75d52e0ee"
+    },
+    {
+      "file": "plugins/access/libsftp_plugin.dll",
+      "sha256": "e58c998c4bd9da97ef64dfa776a604358e5258af65da2b6f83132ab7814fae71"
+    },
+    {
+      "file": "plugins/access/libshm_plugin.dll",
+      "sha256": "537860cfc0a5e45b2ecb3483d239ad0b4427907d3e6ee89a8f23fadaa258b06f"
+    },
+    {
+      "file": "plugins/access/libtcp_plugin.dll",
+      "sha256": "ec030f3231c313651505496648aa1aedc5105ac7849192bfc67431879892c252"
+    },
+    {
+      "file": "plugins/access/libtimecode_plugin.dll",
+      "sha256": "0b421ad8423d5093c6f9e7d501386de31bc75d997fbc148de39e1726e47b2d35"
+    },
+    {
+      "file": "plugins/access/libudp_plugin.dll",
+      "sha256": "22585b95bf341c4951cae4079612427282827c6b6bcad6612af46ca2afd2d810"
+    },
+    {
+      "file": "plugins/access/libunc_plugin.dll",
+      "sha256": "ee312094988e146a9e83a58ea54537a12862e6f5f64f7d23b4b9ddb37806f6a8"
+    },
+    {
+      "file": "plugins/access/libvcd_plugin.dll",
+      "sha256": "13f9422accdbfb13eb21261d36b800d211127840ed8e2c5779a0fdb530c607cb"
+    },
+    {
+      "file": "plugins/access/libvdr_plugin.dll",
+      "sha256": "8580f93f62945bec150068918beb0a27c28f452244285533aedb0d7f5cdd2d11"
+    },
+    {
+      "file": "plugins/access/libvnc_plugin.dll",
+      "sha256": "00d5bc72c16c0764e3cd8064c26f6bab66108fd1f2b80f3f311799fd9e626ce5"
+    },
+    {
+      "file": "plugins/access/libwebdav_plugin.dll",
+      "sha256": "d5e47dff4dfe151ce526cc7ad2e6f21a533a67ce6f908b37ca21985b75397ece"
+    },
+    {
+      "file": "plugins/access_output/libaccess_http_put_plugin.dll",
+      "sha256": "9962156d48ffd223f91eae4feabad7ebd800299ea72d128860446698061666da"
+    },
+    {
+      "file": "plugins/access_output/libaccess_output_dummy_plugin.dll",
+      "sha256": "4d58c69f8dfa09a7db3e08c04b65b331941f7b0a1bedef9558372ea39d83a38e"
+    },
+    {
+      "file": "plugins/access_output/libaccess_output_file_plugin.dll",
+      "sha256": "da55fcd036fc3f0d2c80fe5b639da17704de0bbe1444dff7922a7548f3e29b35"
+    },
+    {
+      "file": "plugins/access_output/libaccess_output_http_plugin.dll",
+      "sha256": "3c0ed88e47424316509cd8d4f0c5bfc27caa98bd9dc0dd5bc6e498b4395e3f7a"
+    },
+    {
+      "file": "plugins/access_output/libaccess_output_livehttp_plugin.dll",
+      "sha256": "6c35301634d40e8295735d803e54f592492c37a251aa9abf39491504fc7da923"
+    },
+    {
+      "file": "plugins/access_output/libaccess_output_rist_plugin.dll",
+      "sha256": "7f0a021d494516e3641a33aa51d2e9fc13ea12b8acf104d7883bfb8d92aec244"
+    },
+    {
+      "file": "plugins/access_output/libaccess_output_shout_plugin.dll",
+      "sha256": "0d87166f06dde5142e9675cb11e7b4f6d9b49316510378496acdda5eee1266b5"
+    },
+    {
+      "file": "plugins/access_output/libaccess_output_srt_plugin.dll",
+      "sha256": "e5902ad25545b9d7af2e59eb788879d0598ea29ecd6bf1985fc82e42c02c19ab"
+    },
+    {
+      "file": "plugins/audio_filter/libaudio_format_plugin.dll",
+      "sha256": "804bbaca3a4aaa0f3db22eea73ef2945a23b1b4797902c054f0d13a5534b67d4"
+    },
+    {
+      "file": "plugins/audio_filter/libaudiobargraph_a_plugin.dll",
+      "sha256": "a827418b7ca0c5f3ae8ed7bf0a94b4769c1a34309565e410888a63ff012825fe"
+    },
+    {
+      "file": "plugins/audio_filter/libcenter_plugin.dll",
+      "sha256": "c47bee4848bc99d2ca26a94a1682dcd08b65a9d14fa859e9694f90efb48b78bf"
+    },
+    {
+      "file": "plugins/audio_filter/libchorus_flanger_plugin.dll",
+      "sha256": "320a77b897a0431d3a2ea8254c4eef52be3d7c05d56e1460c23c05bb3badf097"
+    },
+    {
+      "file": "plugins/audio_filter/libcompressor_plugin.dll",
+      "sha256": "cf6554df92fd4c9c53648f796fc90efee011040bb84b848f5981ff8d14d19bdc"
+    },
+    {
+      "file": "plugins/audio_filter/libdolby_surround_decoder_plugin.dll",
+      "sha256": "81bcc72244b0d3ab5e4fd72b65a68a280a4655033a1252c844f139da1e73e5dd"
+    },
+    {
+      "file": "plugins/audio_filter/libebur128_plugin.dll",
+      "sha256": "beb4a9616954d2a523b0184ab176076f8cadb9971867f503ff384a12e87f603d"
+    },
+    {
+      "file": "plugins/audio_filter/libequalizer_plugin.dll",
+      "sha256": "ac2fb1f624cfccac604fd6ed486d4523e957e1e821c8baccce45199feddb6abd"
+    },
+    {
+      "file": "plugins/audio_filter/libexpander_plugin.dll",
+      "sha256": "f7e24e49d4da39d2e07461672cb5a641292024828b5dbd65d200f2a7e98a7bba"
+    },
+    {
+      "file": "plugins/audio_filter/libgain_plugin.dll",
+      "sha256": "b43d2ef04fa5cac97c5215c0f7d2fe40c22c4db211e0a20ab897b6b2c441c858"
+    },
+    {
+      "file": "plugins/audio_filter/libgate_plugin.dll",
+      "sha256": "268c44faf82f2dc9a70bd68c62fb2c97889e3772e3c48d94c6db7a916c89da14"
+    },
+    {
+      "file": "plugins/audio_filter/libheadphone_channel_mixer_plugin.dll",
+      "sha256": "1955b61f7dfbe09b467d0421be800572c6144b1774f1200e53a36f7ac0a10514"
+    },
+    {
+      "file": "plugins/audio_filter/libkaraoke_plugin.dll",
+      "sha256": "b12b2f442b7bf2abdf89d6add4f95c84351924d8d1e00f36c8da9b3eaa98ef3e"
+    },
+    {
+      "file": "plugins/audio_filter/liblimiter_plugin.dll",
+      "sha256": "87e5963d9e87ed1bc0658120b3b8f0f67dfcb97fc08c344136cc224396d9bb85"
+    },
+    {
+      "file": "plugins/audio_filter/libmono_plugin.dll",
+      "sha256": "c53a367cc3e26e4a293e654c0aa287c66cee12b973280f211af4b10f592edfe1"
+    },
+    {
+      "file": "plugins/audio_filter/libnormvol_plugin.dll",
+      "sha256": "03f1de79c11ffefa6958a61a2b754d5f34885ecb4c5c05da0068eb7d221679d3"
+    },
+    {
+      "file": "plugins/audio_filter/libparam_eq_plugin.dll",
+      "sha256": "00907be7525525dacc8931595e2e85f261fef77c33afe77356acaaef0fb94cfb"
+    },
+    {
+      "file": "plugins/audio_filter/libremap_plugin.dll",
+      "sha256": "2c761c8a39ea2d618c0deb7b66c7ba4c25c6c4be3243cbe1a067406bc9b54fea"
+    },
+    {
+      "file": "plugins/audio_filter/librnnoise_plugin.dll",
+      "sha256": "299f946a4f172be6b69fe73b95d32ea987b6b7551fb58ad85a7416f972da24c4"
+    },
+    {
+      "file": "plugins/audio_filter/libsamplerate_plugin.dll",
+      "sha256": "2b4aa6575e0982bcc30620e38683836aa51e88701db094e1c2914922873afd71"
+    },
+    {
+      "file": "plugins/audio_filter/libscaletempo_pitch_plugin.dll",
+      "sha256": "e8e5b1068bfe14416d3d65283b91153796cfd45a3765e36f292ad7518f9a052e"
+    },
+    {
+      "file": "plugins/audio_filter/libscaletempo_plugin.dll",
+      "sha256": "f58fb302038013cf37ada37554ac912f7282838786cd51336e53d85bfec7c255"
+    },
+    {
+      "file": "plugins/audio_filter/libsimple_channel_mixer_plugin.dll",
+      "sha256": "86584bb9af0dd38a490e24c181afa448b861fe6dab41609933e0ddfc7a0c7d51"
+    },
+    {
+      "file": "plugins/audio_filter/libsoxr_plugin.dll",
+      "sha256": "044bf416e367fb9eaed9afd64711e3b79204ac5064f18d0393492239d40d619a"
+    },
+    {
+      "file": "plugins/audio_filter/libspatialaudio_plugin.dll",
+      "sha256": "5085990503b321900ccc0d3b3c243d511d119a01fa7c7f74254a8370e40107e0"
+    },
+    {
+      "file": "plugins/audio_filter/libspatializer_plugin.dll",
+      "sha256": "06bfc81ae31fbfd6b318e26d09388eb03562fc5e9d2592146b43aced921ae01c"
+    },
+    {
+      "file": "plugins/audio_filter/libspeex_resampler_plugin.dll",
+      "sha256": "767d67f41b31b472401c188f3cd4b56a0bae4ae7e46180fda661cf5a24c653d6"
+    },
+    {
+      "file": "plugins/audio_filter/libstereo_widen_plugin.dll",
+      "sha256": "303e803af9ef0eb90f958f8a47a3ed8dbe2397b522f2b68434373e85a3206df5"
+    },
+    {
+      "file": "plugins/audio_filter/libstereopan_plugin.dll",
+      "sha256": "920ac225e338e1db9acb791f978bee8b4a4199891536bb6180f276ee85c46db4"
+    },
+    {
+      "file": "plugins/audio_filter/libtospdif_plugin.dll",
+      "sha256": "1cded1bc627e8ac725d55a9d6955088877d5b4213fb3005c68f5a6f9f843735c"
+    },
+    {
+      "file": "plugins/audio_filter/libtrivial_channel_mixer_plugin.dll",
+      "sha256": "c3e34321bb50bcde8c91264a2854f28a672d703aa4ded4d7b5ee376657ffce16"
+    },
+    {
+      "file": "plugins/audio_filter/libugly_resampler_plugin.dll",
+      "sha256": "d21fa9b3ded5fedb3b09f14b35817f00321178c92fbd56c1ed0f68ecc5122121"
+    },
+    {
+      "file": "plugins/audio_mixer/libfloat_mixer_plugin.dll",
+      "sha256": "174949e1751ecd16046015feb167cd62e18fc5f14534dfc0f81f580f47bdef6c"
+    },
+    {
+      "file": "plugins/audio_mixer/libinteger_mixer_plugin.dll",
+      "sha256": "2c2f0b0bbab2d35d9d1cdd1970cdd0b12ab39cc730434b0df79ed583f7ccab12"
+    },
+    {
+      "file": "plugins/audio_output/libadummy_plugin.dll",
+      "sha256": "07c2be5e6ea719593a275a81a0b6889643beaee3a4b2c4ae579005f7e4c9b000"
+    },
+    {
+      "file": "plugins/audio_output/libafile_plugin.dll",
+      "sha256": "3caeb6261488402220468b2f9356f1f390707e1713c18d61502b7b779da37803"
+    },
+    {
+      "file": "plugins/audio_output/libamem_plugin.dll",
+      "sha256": "ca5665ce234897d2454906751c53a34d79da7f43161fb6c981bfa7f05b459173"
+    },
+    {
+      "file": "plugins/audio_output/libmmdevice_plugin.dll",
+      "sha256": "dd63035586669622e48ff60ecd46bc91f1e801b747b6e47df0c529f3ae7ee3e0"
+    },
+    {
+      "file": "plugins/audio_output/libwasapi_plugin.dll",
+      "sha256": "bf5c6c2a53ae0e10d41786b56b0d410ef2fa93e58153ebc17e73518f1f6dc265"
+    },
+    {
+      "file": "plugins/audio_output/libwaveout_plugin.dll",
+      "sha256": "03bb0681b37e96c3ef5ada1c2eaf924314de8481b431d9322f8d9ca3a94aeb9e"
+    },
+    {
+      "file": "plugins/codec/libadpcm_plugin.dll",
+      "sha256": "e5b55ee22167264546f35377644f64af842a9659a0e6036b4e9e216ca6b09c2e"
+    },
+    {
+      "file": "plugins/codec/libaes3_plugin.dll",
+      "sha256": "c5bfbfbc746dfa72ff94a3fc1a4bf931ea14c6fed4a745d8c57a84e80aa61c91"
+    },
+    {
+      "file": "plugins/codec/libaom_plugin.dll",
+      "sha256": "1fb5c728e694dc081accaf4ca6ef640d5e8bc420989926eef07b0b14fee1eb9f"
+    },
+    {
+      "file": "plugins/codec/libaraw_plugin.dll",
+      "sha256": "757e2c7c0917f7b2184fc654edc835457d1146f71b4cf27d034c9fe70ebbe749"
+    },
+    {
+      "file": "plugins/codec/libaribcaption_plugin.dll",
+      "sha256": "9d0a48e165b0c467dd439d7419bbfa199635c45ebdc8372354c180a27c088cd9"
+    },
+    {
+      "file": "plugins/codec/libaribsub_plugin.dll",
+      "sha256": "70b26fab628193f0613303810a92bf53713169028491b96ab379d15adcfac228"
+    },
+    {
+      "file": "plugins/codec/libavcodec_plugin.dll",
+      "sha256": "59e199c967296ad5e8d293125a5a78d1668cbec9312dcbb76efc956607a03e0a"
+    },
+    {
+      "file": "plugins/codec/libcc_plugin.dll",
+      "sha256": "d5be0ec0fb5ec06960fbab2ba2ca59d5f35b1c858b0d6a4df07922f67bdba0a9"
+    },
+    {
+      "file": "plugins/codec/libcdg_plugin.dll",
+      "sha256": "50648facc2cd43777804f62ffaebf5c3567324848acbe6740060a430efdce7d2"
+    },
+    {
+      "file": "plugins/codec/libcvdsub_plugin.dll",
+      "sha256": "a8fe44b505801d66e096bded8683a9894f7b6f7b25d00c2ede51b17a49f259d0"
+    },
+    {
+      "file": "plugins/codec/libd3d11va_plugin.dll",
+      "sha256": "fdfd02f7252c6e01fa9ea35a7db1cbaff6f13f8d2c388dd3adaafa0ecc72c0d2"
+    },
+    {
+      "file": "plugins/codec/libdav1d_plugin.dll",
+      "sha256": "0edb6f979f138865259722ee3d6d397876816b1847cf9250920c3a73cd8f6308"
+    },
+    {
+      "file": "plugins/codec/libddummy_plugin.dll",
+      "sha256": "df65f41bbcabc0c8a3eb64bceb5b079c9e6173d7b44a7f60b910e1f50be902a3"
+    },
+    {
+      "file": "plugins/codec/libdmo_plugin.dll",
+      "sha256": "78560d55b8e7d83585f8134860dc0d71ddd3e1921aba3fb949936da05b36527c"
+    },
+    {
+      "file": "plugins/codec/libdvbsub_plugin.dll",
+      "sha256": "3278bc47a360b3f9df51bd017d0a312ecb91d041ba16552f85c3b4651419db9a"
+    },
+    {
+      "file": "plugins/codec/libdxva2_plugin.dll",
+      "sha256": "9d6919aabcf51792dabcae6288093318dde0253fc1930b6609ff60108cd2027f"
+    },
+    {
+      "file": "plugins/codec/libedummy_plugin.dll",
+      "sha256": "eac1ddf25565d269592cf17ca056d77a45498a8609ba12b526ee40c766456b57"
+    },
+    {
+      "file": "plugins/codec/libfaad_plugin.dll",
+      "sha256": "fbc602db02f09503a294bff8b585737ffbd1b8da0b4da415bec249ca4dcd2ec6"
+    },
+    {
+      "file": "plugins/codec/libflac_plugin.dll",
+      "sha256": "191d70eb3e1a48b748eb35c5cdf52b703a8c0c2228a19d0079c7826f5d1cb0ff"
+    },
+    {
+      "file": "plugins/codec/libfluidsynth_plugin.dll",
+      "sha256": "1288fa94ecba59f4c8729756c995ae8e3c0537ccfd200e4197f2792275c1eacf"
+    },
+    {
+      "file": "plugins/codec/libg711_plugin.dll",
+      "sha256": "29544554f02226b83a9ad7a4db26cf5f166e81027013076b3ea5e086c0b8e288"
+    },
+    {
+      "file": "plugins/codec/libglinterop_nvdec_plugin.dll",
+      "sha256": "e73297ea78ca871839cec3e72f2b1eab8ed131b6205b0740ec89602af541552b"
+    },
+    {
+      "file": "plugins/codec/libjpeg_plugin.dll",
+      "sha256": "2037cd071660e4076b88cbc869590393962a3b12f533843e4ef3471ba2947dfc"
+    },
+    {
+      "file": "plugins/codec/libkate_plugin.dll",
+      "sha256": "e5c1af2496e9b258b75a3b2636cb6d77eba5b3a912e8972cc9c027d55143b79b"
+    },
+    {
+      "file": "plugins/codec/liblibass_plugin.dll",
+      "sha256": "f5f1acc69129213643de5b1a4e8b1491aafe82caf1eb7ed435025c606aad54e7"
+    },
+    {
+      "file": "plugins/codec/liblpcm_plugin.dll",
+      "sha256": "f0796ebbb18bb585ebd59cb8bd8856a4adebc50f8e1ecdd85efaa996ff215541"
+    },
+    {
+      "file": "plugins/codec/libmad_plugin.dll",
+      "sha256": "cec7e87707e28adef3d0b4eb8c2c32f3350d925bf4d05b4138a0c9e57bc7e472"
+    },
+    {
+      "file": "plugins/codec/libmft_plugin.dll",
+      "sha256": "d35e83df34e0f151031e6611d2301ce8c825ddf1cfe5b8c19edbf2a210709acd"
+    },
+    {
+      "file": "plugins/codec/libmpg123_plugin.dll",
+      "sha256": "42012e48809beeabcebf6e17e76d03e0666ce52751a729a6702e85daeec6eb20"
+    },
+    {
+      "file": "plugins/codec/liboggspots_plugin.dll",
+      "sha256": "df58e50ee6289981f56333aa1159ce9eba00047fa2d860a59365320e3616f2cb"
+    },
+    {
+      "file": "plugins/codec/libopenapv_plugin.dll",
+      "sha256": "9a1902ebc10e226d721769f53ab1e965a2728ac596398369b44bd473c36da5dd"
+    },
+    {
+      "file": "plugins/codec/libopus_plugin.dll",
+      "sha256": "b5ce8c222324f0371882b099665c1a559a72899c2e8838af38fc19a862863f15"
+    },
+    {
+      "file": "plugins/codec/libpng_plugin.dll",
+      "sha256": "0a6065e282f6f8aa0ce6bee8ac39511b75a0f5685ee719fd041f5442320f7423"
+    },
+    {
+      "file": "plugins/codec/libqsv_plugin.dll",
+      "sha256": "a5bfa80a4ad0613bba6bd1a3e3918aeb2e0d3672dc93d58867b2f226fe813120"
+    },
+    {
+      "file": "plugins/codec/librav1e_plugin.dll",
+      "sha256": "d1e02cc72c4c0fb48c3d5c9f36ece8863084f9e823a57dde3b71db147386febe"
+    },
+    {
+      "file": "plugins/codec/librawvideo_plugin.dll",
+      "sha256": "3c0be7f7fcf9cbd48486513df21d37d949c6447744d3d6c7d52e669fbeae79d3"
+    },
+    {
+      "file": "plugins/codec/librtp_rawvid_plugin.dll",
+      "sha256": "4dc1afe14cd02933da47f935ded3691b02f733500aa36b55cfc2118318378e21"
+    },
+    {
+      "file": "plugins/codec/librtpvideo_plugin.dll",
+      "sha256": "c8906b4f8582dcc78070b76bc624c382fae97d8e3f13217b36bd061bd1067ed9"
+    },
+    {
+      "file": "plugins/codec/libscte18_plugin.dll",
+      "sha256": "0cfbdc3b79b2fa3df2816856fc1d0e899d534a959dac2b7e8893f94f4498a819"
+    },
+    {
+      "file": "plugins/codec/libscte27_plugin.dll",
+      "sha256": "dc0d3fe107d2317c82bc436c6d3846cd7ef9b0f274b78d83393eacb05ff5da28"
+    },
+    {
+      "file": "plugins/codec/libspdif_plugin.dll",
+      "sha256": "b9f65e13f8029e5d061b3f9ab52351bbab506108596e4a8f3e4337d6c044a361"
+    },
+    {
+      "file": "plugins/codec/libspeex_plugin.dll",
+      "sha256": "4d2326622769fe3812dcff33326f2bd35849fe9dcefbfc329145d85b8cedcbf3"
+    },
+    {
+      "file": "plugins/codec/libspudec_plugin.dll",
+      "sha256": "98fb672afe8aee08c598e44a34c37b6e8b47cdef0cb6525732d1c2e0972642bd"
+    },
+    {
+      "file": "plugins/codec/libstl_plugin.dll",
+      "sha256": "27cb90b2cec036564e6ffcfeaf8a697b438deb8b3000b8c2963ed1e9f5612c7f"
+    },
+    {
+      "file": "plugins/codec/libsubsdec_plugin.dll",
+      "sha256": "b0f23bce14ee7397e6863942472ade29f7137cb75ee27035aad3d676163a843c"
+    },
+    {
+      "file": "plugins/codec/libsubstx3g_plugin.dll",
+      "sha256": "e253bcdc6c38e8ef61c0a3134752d4569d4f70db77ac584df83c44a836ce4f99"
+    },
+    {
+      "file": "plugins/codec/libsubsusf_plugin.dll",
+      "sha256": "d5615a38c8bd3fc238f20b7d22c5734635a3d343d7362ddadc760db5068c54fb"
+    },
+    {
+      "file": "plugins/codec/libsvcdsub_plugin.dll",
+      "sha256": "1e4b8e44c2a3f56fe149f5f4cc7fe2db17bcc46858231eedbbb462d568ebfa7f"
+    },
+    {
+      "file": "plugins/codec/libt140_plugin.dll",
+      "sha256": "315a51ca5af3cd60a6b70030a71a1add53745850d30eacc6b9f547246d26be0f"
+    },
+    {
+      "file": "plugins/codec/libtextst_plugin.dll",
+      "sha256": "2caa0daf6327592c35e23c062be5eafbdef16958bcb12f6a28b10ce5ef1308df"
+    },
+    {
+      "file": "plugins/codec/libtheora_plugin.dll",
+      "sha256": "e6f7655cb4ca3c650c1703df34f366ab8d832fb2e9b3bb3a95613800d086eb79"
+    },
+    {
+      "file": "plugins/codec/libttml_plugin.dll",
+      "sha256": "d4843f04a7ecdb52253293dcb2b7c33afe1b6a3bcc09e568e790675194af955b"
+    },
+    {
+      "file": "plugins/codec/libtwolame_plugin.dll",
+      "sha256": "0013075d226543ff2ba2ba0f6163fb5e194daa01f522277200ff3f7bf20d6097"
+    },
+    {
+      "file": "plugins/codec/libuleaddvaudio_plugin.dll",
+      "sha256": "5cea20ff845a2b826f60d30f0f687ad1604ca60bc73284c186142849c288654a"
+    },
+    {
+      "file": "plugins/codec/libvorbis_plugin.dll",
+      "sha256": "731c49377b7fe49c10f8ebd28bf4d131bc33d34f724633e418fde197a81e886b"
+    },
+    {
+      "file": "plugins/codec/libvpx_alpha_plugin.dll",
+      "sha256": "364b4fa35d2b8fbe5489cf8a55fa7835f39963aacd2500b6eb0a82f3a6938010"
+    },
+    {
+      "file": "plugins/codec/libvpx_plugin.dll",
+      "sha256": "791c3015c54ccf99bb823ae04216f2499a883943e2268e9fb415cfd3bbb86b34"
+    },
+    {
+      "file": "plugins/codec/libwebvtt_plugin.dll",
+      "sha256": "bf5d3af70b74f22df7f8057b32a864a0d0d7554f690b099565cc7c914fab07ab"
+    },
+    {
+      "file": "plugins/codec/libx26410b_plugin.dll",
+      "sha256": "c27cbfac673625ef039dcc4a50ea47aed66428972520b82f908b140e63679fe5"
+    },
+    {
+      "file": "plugins/codec/libx264_plugin.dll",
+      "sha256": "3adda2285eb459e34226ea49a953bfabde8b35481d20b30ed5bc9a1e24a9844c"
+    },
+    {
+      "file": "plugins/codec/libx265_plugin.dll",
+      "sha256": "29c8ed0757d29971f09f871b149ef9849109bd1bc26959befe5a97bf8e9d962e"
+    },
+    {
+      "file": "plugins/codec/libzvbi_plugin.dll",
+      "sha256": "eedc468d9a9b17e0095b8c2b57208cec30dc89ffb0d5f3ba8a57926ccb24dfd0"
+    },
+    {
+      "file": "plugins/control/libdummy_plugin.dll",
+      "sha256": "d340d291bb664068d27e1f1d53d27d05df25ea10604503ea1f949f2887532a77"
+    },
+    {
+      "file": "plugins/control/libgestures_plugin.dll",
+      "sha256": "6affd3d5ff1c7f41a641526584c56d09d49fffe04cae27dbffe72300eca1c38d"
+    },
+    {
+      "file": "plugins/control/libhotkeys_plugin.dll",
+      "sha256": "b2ec1715793a4f9dc9967a439ac31afb2472169f5bd5022de4d54036ed82a64e"
+    },
+    {
+      "file": "plugins/control/libntservice_plugin.dll",
+      "sha256": "007ea9acc1424e7fd6a82c445a40eaeb6c515dd28f8dca6e292c3501f4e14b73"
+    },
+    {
+      "file": "plugins/control/librc_plugin.dll",
+      "sha256": "b241d5bc7c702260e399d812c4bf74681e6f02d11765a3ae3a6a0671d3ea5fcf"
+    },
+    {
+      "file": "plugins/control/libwin_hotkeys_plugin.dll",
+      "sha256": "9aeb72213f4fc2571f086a08c2d2e04697f04ff50e8ee258b47a41a64f91d944"
+    },
+    {
+      "file": "plugins/control/libwin_msg_plugin.dll",
+      "sha256": "8c46fca6abaab4e427b3a1cfbad846f295c6e68b4661f76898146d669a6b1e97"
+    },
+    {
+      "file": "plugins/d3d11/libdirect3d11_filters_plugin.dll",
+      "sha256": "6846a4520a73a76e652599230d04439c05d3981ad77564c1d3502b625fd47090"
+    },
+    {
+      "file": "plugins/d3d9/libdirect3d9_filters_plugin.dll",
+      "sha256": "e55a2bad4e077720150fb89e471a9a64f9ee411433bd017753a3a8a6e6d38578"
+    },
+    {
+      "file": "plugins/demux/libadaptive_plugin.dll",
+      "sha256": "cb6cff15bd0802abd0ac72f2c7320d89371e05541a37db0cba723a06c5894728"
+    },
+    {
+      "file": "plugins/demux/libaiff_plugin.dll",
+      "sha256": "6182418d87378fbe8e097424bcf12f920a1c8ab1899e25b9439549ffe1218de9"
+    },
+    {
+      "file": "plugins/demux/libasf_plugin.dll",
+      "sha256": "9faecfe580e63458715fa7c178eeef61537eb612eda8c15831ec0069434d0e93"
+    },
+    {
+      "file": "plugins/demux/libau_plugin.dll",
+      "sha256": "132f233cacca1910fb30f9f47a7ce677a3ad3ead907c605bdcd75fa25d4454b5"
+    },
+    {
+      "file": "plugins/demux/libavi_plugin.dll",
+      "sha256": "a48c6262ef99c3d6d89778a8dc2e852ce39eb6431d175686120c30236820a200"
+    },
+    {
+      "file": "plugins/demux/libcaf_plugin.dll",
+      "sha256": "d645a46be754bfe3fb0cb8544df7e1a0bca551d281b6384f74980d48d5ba210f"
+    },
+    {
+      "file": "plugins/demux/libdemux_cdg_plugin.dll",
+      "sha256": "79b4aae3f04aa485a786ef69ffd858a490e818543d787ed1ddebff55cc365247"
+    },
+    {
+      "file": "plugins/demux/libdemux_chromecast_plugin.dll",
+      "sha256": "364350fbf3e8a084c94bf63ba3e9cdaf7f6f67e9ce939c952b5cb5f0d13aedae"
+    },
+    {
+      "file": "plugins/demux/libdemux_stl_plugin.dll",
+      "sha256": "8ef4cfae12db429b52118d83e04ba38ad8f37510111f652705becfebcce530ff"
+    },
+    {
+      "file": "plugins/demux/libdemuxdump_plugin.dll",
+      "sha256": "cef7d6fbf9ff94704a914f50bd5c47956b59a88373aacb66850bb7cb233aad6e"
+    },
+    {
+      "file": "plugins/demux/libdirectory_demux_plugin.dll",
+      "sha256": "890135f25a9ce66631e1cf812bc5ab8c974d191f2ef1c81046cdc640945f8b3a"
+    },
+    {
+      "file": "plugins/demux/libdmxmus_plugin.dll",
+      "sha256": "8ad07d3ca1c7f8bc978f01491c97f7881f9fa2cd96e53b18370e56e51f735ef9"
+    },
+    {
+      "file": "plugins/demux/libes_plugin.dll",
+      "sha256": "f8b8f29fad723050497e866e61c46f6e72690a7bda007964445eb438fb6be230"
+    },
+    {
+      "file": "plugins/demux/libflacsys_plugin.dll",
+      "sha256": "4976222c5d9b9b3fd23365dc18eacceec138a73cd75914555b39bba53de8f0e5"
+    },
+    {
+      "file": "plugins/demux/libg64rtp_plugin.dll",
+      "sha256": "34a5c65edf8f1a560641b6aeea1fde6c5b112c5462d604d72d64e89765b31794"
+    },
+    {
+      "file": "plugins/demux/libgme_plugin.dll",
+      "sha256": "a01796a806a88b95bb6b25a4fd942e8d0688c39b914890315fc81af4e86c72cc"
+    },
+    {
+      "file": "plugins/demux/libh26x_plugin.dll",
+      "sha256": "ba4369704c23df725116e34ddccaa8c60359be7f3b64632013b34040973ca1df"
+    },
+    {
+      "file": "plugins/demux/libhx_plugin.dll",
+      "sha256": "8d57f2420f73a14c850efc47afa3c7da3a4d1793eb5246123e894e0ec9275ad9"
+    },
+    {
+      "file": "plugins/demux/libimage_plugin.dll",
+      "sha256": "d60f8c9a9fa5c54513ac4091eb1315d2df3c9e5597e27b91360ed8e2a5427d40"
+    },
+    {
+      "file": "plugins/demux/libmjpeg_plugin.dll",
+      "sha256": "708f2de12e1e26c3e73f89436b43fb789094200467696aa66c91a690b4a340c1"
+    },
+    {
+      "file": "plugins/demux/libmkv_plugin.dll",
+      "sha256": "1d7b8523274da9a81b6aae5a2bc700c41e665f3bc552a5c58d0fb90496f1feaf"
+    },
+    {
+      "file": "plugins/demux/libmod_plugin.dll",
+      "sha256": "192766c32099cd474d3963c611e96d472644a9a2d8d55321a155fc677c242739"
+    },
+    {
+      "file": "plugins/demux/libmp4_plugin.dll",
+      "sha256": "5467f659f1a32221328a71e9aa71690236b7e45533c2e970ff61f4a1fc1c3338"
+    },
+    {
+      "file": "plugins/demux/libmpgv_plugin.dll",
+      "sha256": "207f59d14f8a025176589a3b62397aebf173dd5013669d8b75671d108e2e7488"
+    },
+    {
+      "file": "plugins/demux/libnoseek_plugin.dll",
+      "sha256": "533654f8e6038af0cff1396049cb56b1effd51de87a548fdfeb731100412c3b2"
+    },
+    {
+      "file": "plugins/demux/libnsv_plugin.dll",
+      "sha256": "6f39062640dfee7020bb95289936acf2991c1750d9171f64836b40a6ea99e47d"
+    },
+    {
+      "file": "plugins/demux/libnuv_plugin.dll",
+      "sha256": "b4eeb4e626e280556ee64c30533196bec2c9724736b1d9714c5bec0f00c286c9"
+    },
+    {
+      "file": "plugins/demux/libogg_plugin.dll",
+      "sha256": "66dd3a3925017877be5f41402a8fb076bf1cf973189507f8aed02512f0a7285e"
+    },
+    {
+      "file": "plugins/demux/libplaylist_plugin.dll",
+      "sha256": "cda778134645005ea9d83cd1431c03d4d140c1ae335978b580543d6a6e277209"
+    },
+    {
+      "file": "plugins/demux/libps_plugin.dll",
+      "sha256": "686bc296a5f94b644b286e087ee9b93e69825e566e18a679d9e1e536586ffd6f"
+    },
+    {
+      "file": "plugins/demux/libpva_plugin.dll",
+      "sha256": "640e52ec97867e7ab344ba17971f47049e600ff6990a35a0f89426d8f8939f39"
+    },
+    {
+      "file": "plugins/demux/librawaud_plugin.dll",
+      "sha256": "2538449729bb086cf3c0447e782a5330783021deb7465ddb5a138baa240fc26c"
+    },
+    {
+      "file": "plugins/demux/librawdv_plugin.dll",
+      "sha256": "cc8c9ac7071859ce5700ae787a49d919e465f5bc1b00b36592d8589b845059e3"
+    },
+    {
+      "file": "plugins/demux/librawvid_plugin.dll",
+      "sha256": "36bfb2706d232caf0c96f899afe4650c117e50632ff07eb57282c2e33df36c1f"
+    },
+    {
+      "file": "plugins/demux/libsid_plugin.dll",
+      "sha256": "a01a94f560ef288b9a2667f74411c6463beb2e1f4bbcc57973bcd1ad5f9718ce"
+    },
+    {
+      "file": "plugins/demux/libsmf_plugin.dll",
+      "sha256": "0155668f669ee67235014b756343a31fe5303bb0a653f0d1e11d0a2b37a89e10"
+    },
+    {
+      "file": "plugins/demux/libsubtitle_plugin.dll",
+      "sha256": "dc538fc34d93ef1a0e41e2d9f11e64b6a1f074058cc12d9f66323a9421093700"
+    },
+    {
+      "file": "plugins/demux/libts_plugin.dll",
+      "sha256": "add31cb79ee5c29d0a179399f9703e697534cfa70d374f7a5f91ec6a710387fa"
+    },
+    {
+      "file": "plugins/demux/libtta_plugin.dll",
+      "sha256": "ebac1401dbfe4702c072f03dc01b6a25f064724c7fa674ad239cae97cc65fbfa"
+    },
+    {
+      "file": "plugins/demux/libty_plugin.dll",
+      "sha256": "263a4a2c229ccb9b138f10e2ec41d911cb5089c76fb0cae6c92b91b112ce66bc"
+    },
+    {
+      "file": "plugins/demux/libvc1_plugin.dll",
+      "sha256": "a2f8f7f10cafc72d662f4011342be7ba2c7f3c9329e78d1eaaffaff54b1a1e9d"
+    },
+    {
+      "file": "plugins/demux/libvobsub_plugin.dll",
+      "sha256": "1de78b7725e11d1fa1f1214ff7158da56791732ff8a5ad3ee036dea5bd15d659"
+    },
+    {
+      "file": "plugins/demux/libvoc_plugin.dll",
+      "sha256": "08aff16df80e4ccea2f536819d794d1168e48737a6cad52a4a32644e3d078b9d"
+    },
+    {
+      "file": "plugins/demux/libwav_plugin.dll",
+      "sha256": "881a9108c5ee4a04885498e9723046356bdad4df203fa58b33e92ac558633364"
+    },
+    {
+      "file": "plugins/demux/libxa_plugin.dll",
+      "sha256": "7a208c3b1a570173ebb299b507fcbdaa2f6f33272edbd6556907b05c1ad907c5"
+    },
+    {
+      "file": "plugins/demux/libytdl_plugin.dll",
+      "sha256": "f6e4b32614827928f5f5bae833b3b37ccfb953f2630c2c20eae7cf8e0750e4d2"
+    },
+    {
+      "file": "plugins/gui/libqt_plugin.dll",
+      "sha256": "f8a40874835f264c94c642607256dd569b617fd006f6db5b975804154a828383"
+    },
+    {
+      "file": "plugins/gui/libskins2_plugin.dll",
+      "sha256": "b69c8aa041272238f47c0154a6a1a4719a4b7aa426830bba2fd87f577fead704"
+    },
+    {
+      "file": "plugins/keystore/libfile_keystore_plugin.dll",
+      "sha256": "26506f5120051fa279582bf16684966e76f87ece117178366093d91879293297"
+    },
+    {
+      "file": "plugins/keystore/libmemory_keystore_plugin.dll",
+      "sha256": "22c881456c48c82ec516efda603c3817f0a965a09a316566b57efc7edecec03b"
+    },
+    {
+      "file": "plugins/logger/libconsole_logger_plugin.dll",
+      "sha256": "ae7fa130d3407c2ade5596bcf0e77aeb79b3ae56a8ff32f5c4bd1ad15724aade"
+    },
+    {
+      "file": "plugins/logger/libfile_logger_plugin.dll",
+      "sha256": "937e46df6a7960c42f6c93ed293a2abde17e107e6bf4dd696a2d37165beeddc6"
+    },
+    {
+      "file": "plugins/logger/libjson_tracer_plugin.dll",
+      "sha256": "7333795a077e350d45564efb9f3295f59c815dd2138e405e67a0f60e7e026eed"
+    },
+    {
+      "file": "plugins/lua/liblua_plugin.dll",
+      "sha256": "2ba5c47af7c61e9ec79c0972bd16fe4417425c391f4f59010d461ca1fa1d5391"
+    },
+    {
+      "file": "plugins/meta_engine/libfolder_plugin.dll",
+      "sha256": "72eb0ce8ce779890541d569c0dae4bbfc3d5e484bf8a66138b694ff2220ff68e"
+    },
+    {
+      "file": "plugins/meta_engine/libtaglib_plugin.dll",
+      "sha256": "6f1261e6a9b825a2cf420026c569eaa2e3bbba1c560762b893d0f932746ea857"
+    },
+    {
+      "file": "plugins/misc/libaddonsfsstorage_plugin.dll",
+      "sha256": "a08b1de00d86f9928e85f4903973227dba5b2293f6af1f7be8e9c37c29f1c161"
+    },
+    {
+      "file": "plugins/misc/libaddonsvorepository_plugin.dll",
+      "sha256": "90cb8d81c0edbabe56a9c274023aa89e794426c7d3c82af4cc2de9e0f762acc4"
+    },
+    {
+      "file": "plugins/misc/libaudioscrobbler_plugin.dll",
+      "sha256": "5b18012546b2d2e86f4dd4ed0e6015badf0f47c31936caf92ebaf9a32cc3f914"
+    },
+    {
+      "file": "plugins/misc/libexport_plugin.dll",
+      "sha256": "02156d1158fcfb9ef06df52dd77f0530e95104f4380d487f9b7cc2d85d992a7b"
+    },
+    {
+      "file": "plugins/misc/libfingerprinter_plugin.dll",
+      "sha256": "7512c65e43eeba0461da6b605e7f8513eabeccd54796c50faa7f417cad6de0c4"
+    },
+    {
+      "file": "plugins/misc/libgnutls_plugin.dll",
+      "sha256": "6e63dcfe129dc2a113d04322c42e1d742427c151d3dbf1a6284b2197555b74bb"
+    },
+    {
+      "file": "plugins/misc/libmedialibrary_plugin.dll",
+      "sha256": "04e5b720f6264833e8b46e453d8bd909824a03770a4ab97591b134c8147ffe41"
+    },
+    {
+      "file": "plugins/misc/libpreparserserializer_json_plugin.dll",
+      "sha256": "25dc500d2db7250cf169d8208de3742cabec47dec6b1e534e6164fd30f0b6b2e"
+    },
+    {
+      "file": "plugins/misc/libstats_plugin.dll",
+      "sha256": "5d6eeb3b22785a701d1be3116f983d6f5f97a9a64d8ec34e6d6b3e2cea717ac8"
+    },
+    {
+      "file": "plugins/misc/libxml_plugin.dll",
+      "sha256": "df6360d1a72032941ca1f9115e47d2b546edc0c424ed6e4651a25f536c9704b1"
+    },
+    {
+      "file": "plugins/mux/libmux_asf_plugin.dll",
+      "sha256": "bd91ba407bc44ef4e52b1c0115baa079056b47d7ec6f3c88fb16d3a628e3e43b"
+    },
+    {
+      "file": "plugins/mux/libmux_avi_plugin.dll",
+      "sha256": "cf4e9a277293d1375079ccf90403db6f2fabb0c42b09ba4fe5dfbecc4e7d825d"
+    },
+    {
+      "file": "plugins/mux/libmux_dummy_plugin.dll",
+      "sha256": "7b9f40a7edc5d335f83d7bf3da615258b151db1bc239fb1661ab485aa81f895a"
+    },
+    {
+      "file": "plugins/mux/libmux_mp4_plugin.dll",
+      "sha256": "cad2c6f08ecce3fd24732714a64cc9859b05db06babf4935fbc4b246d88c7355"
+    },
+    {
+      "file": "plugins/mux/libmux_mpjpeg_plugin.dll",
+      "sha256": "f86313ec575117b80c414f028ab1c90811c53dc5b315296cba1c4346e1e89599"
+    },
+    {
+      "file": "plugins/mux/libmux_ogg_plugin.dll",
+      "sha256": "d6ea485198faf598a3fa0fce440ddca757aa27d429932443872027756f5deb79"
+    },
+    {
+      "file": "plugins/mux/libmux_ps_plugin.dll",
+      "sha256": "dff676c03c61483748eb787f1244a9d2399bc288ffb5cba4e3cae41be2d1a863"
+    },
+    {
+      "file": "plugins/mux/libmux_ts_plugin.dll",
+      "sha256": "3c924b48f19d858d150ba42d67492774758ec197ba410d468ae37e226354ee98"
+    },
+    {
+      "file": "plugins/mux/libmux_wav_plugin.dll",
+      "sha256": "b20a2ce7baa2e1769105ddf7e4fb353b633d7bcd370e74c21f06e04dbb8817b8"
+    },
+    {
+      "file": "plugins/nvdec/libnvdec_chroma_plugin.dll",
+      "sha256": "a60ee32ffc93abc699148377703191e89ed721b5b670e17a6ba3c23c78c6fac3"
+    },
+    {
+      "file": "plugins/nvdec/libnvdec_plugin.dll",
+      "sha256": "d4b2266c69edb2f660652a5a0b8839ae57ff545607ecc2afd46ba2153b4b3492"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_a52_plugin.dll",
+      "sha256": "dc1f181ff5ffb664d4fbbd2c8a2c309f66fd23a8ca45b6009b99711ce4efaee0"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_av1_plugin.dll",
+      "sha256": "888583600d51a9a3a080808d667c0a809d7bdcee731511614188c826a69ea078"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_copy_plugin.dll",
+      "sha256": "1107d7431f0553887d443bcdce650abb5b303f5e1ffe1d501c373dd9becf0571"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_dts_plugin.dll",
+      "sha256": "309477de22bfdc41c89fcd9b26766d2e98cede2ca4791b0665389e92c7996c17"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_flac_plugin.dll",
+      "sha256": "eaed2c6bc42a75a47e03c757017144c7ed72ecd9ce68e0bf351ec81ec5f42431"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_h264_plugin.dll",
+      "sha256": "151119f9269e530af4243af605ea1b3bfdcd5db3fe3a43f0507d5ac4f5f6723c"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_h266_plugin.dll",
+      "sha256": "b9b3d88dea92bc31576e3830e9b0930f9fe452e79e04310f2a59efd76897b1a1"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_hevc_plugin.dll",
+      "sha256": "7b53041252b4409fda000e41327901ac210cd5ff0cceb17ba02e811c0b9c07ad"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_mjpeg_plugin.dll",
+      "sha256": "a13000c48e16b2aea1aef542c3bf0865e12f379495acf6bbf9158ec52cc389eb"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_mlp_plugin.dll",
+      "sha256": "c16c0de74c3c2ea1e4045513c8675f1d05d33275483d2dcb7ff0af7ba524d475"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_mpeg4audio_plugin.dll",
+      "sha256": "0d9d34f6fffb654c1e024a47419ca54f34534a6b25d41b5ef10e385ea984e9e5"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_mpeg4video_plugin.dll",
+      "sha256": "be57a7285a6c8126b066a9a95ec322b2af0a1dd860204ae973a0a40f44fd9abd"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_mpegaudio_plugin.dll",
+      "sha256": "58ee5e34d60adf592848833791e00ef24b3850661a8b1bc5a1ba6e8b1e367094"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_mpegvideo_plugin.dll",
+      "sha256": "8b4d8fcfc050b1bf948ef7ba143687830f33e4789226e75c4018816a6ffcbb13"
+    },
+    {
+      "file": "plugins/packetizer/libpacketizer_vc1_plugin.dll",
+      "sha256": "620ee230da2f4c544f8871f5b09008804ef7cbd413e0a5c1ef831f74410ee4e3"
+    },
+    {
+      "file": "plugins/services_discovery/libmicrodns_plugin.dll",
+      "sha256": "588d77c8fceb4043f611aaa4e3e6a765a9e32c2aa1a3a35842d9353c0e8e469f"
+    },
+    {
+      "file": "plugins/services_discovery/libpodcast_plugin.dll",
+      "sha256": "0aba2702326e2d0d7595a9fd9129df5681167a79d90a78ae43712fc0476c43ef"
+    },
+    {
+      "file": "plugins/services_discovery/libradio_plugin.dll",
+      "sha256": "9de3fb9c77d85761284d14d72bb9926acd256f4e0ef9c35fb16aa132619373a0"
+    },
+    {
+      "file": "plugins/services_discovery/libsap_plugin.dll",
+      "sha256": "fe03a0e15bd466086f3304ed6643136acd657324f99991fd4a6b092da59becde"
+    },
+    {
+      "file": "plugins/services_discovery/libupnp_plugin.dll",
+      "sha256": "34db584b445fc508d5207e9cfc8ba67944af972499e364c52aec7517d701cb61"
+    },
+    {
+      "file": "plugins/services_discovery/libwindrive_plugin.dll",
+      "sha256": "6ffcdd88587f3820edaba07cc145a1af0c0bdb3213d4474b60a3546e92c77935"
+    },
+    {
+      "file": "plugins/services_discovery/libwinvolumes_plugin.dll",
+      "sha256": "515f34473d2b503d87b6c22a23011f5654205e05d0740e1f2e3a3a8a1a9b9012"
+    },
+    {
+      "file": "plugins/spu/libaudiobargraph_v_plugin.dll",
+      "sha256": "7f4fcea18ee36a791c3502013a71ce28860daea38143202cdc6909f7b14ec849"
+    },
+    {
+      "file": "plugins/spu/libdynamicoverlay_plugin.dll",
+      "sha256": "75cb2b7f638b4f06e49c2b233479dd4432ed0516655e3e33fd92ab05cdc39ac4"
+    },
+    {
+      "file": "plugins/spu/liblogo_plugin.dll",
+      "sha256": "1cd02529fe7560fce24db112d77aafc62d5b75007c8590364e597546272df614"
+    },
+    {
+      "file": "plugins/spu/libmarq_plugin.dll",
+      "sha256": "ebfcce41ec47adb7cd4048aeff2af6a71ed26a34f8b240b806f5712e1c11c356"
+    },
+    {
+      "file": "plugins/spu/libmosaic_plugin.dll",
+      "sha256": "7b915a211e01e6ed219934228ebe84089bf8e319952905c32b0276e7802c016e"
+    },
+    {
+      "file": "plugins/spu/librss_plugin.dll",
+      "sha256": "c76dbbc4124388b47bcf8cc260a26f42d9981534a235390f1cbb880e24bc80cb"
+    },
+    {
+      "file": "plugins/spu/libsubsdelay_plugin.dll",
+      "sha256": "858704203198d589fbc9129278f6a77ea2218c8e1f08cc4db38052236c9ac25a"
+    },
+    {
+      "file": "plugins/stream_extractor/libarchive_plugin.dll",
+      "sha256": "c222800decd2a6b29d204f6b44055f71386eab696aa790aa0cdaa868b67469ad"
+    },
+    {
+      "file": "plugins/stream_filter/libadf_plugin.dll",
+      "sha256": "2a91812798ab8f576e065c49bf7a6822552868cdd02bd099aa5d74ac50bc2402"
+    },
+    {
+      "file": "plugins/stream_filter/libaribcam_plugin.dll",
+      "sha256": "34653481747a582564450ce1171b4790bab04472408851aa199b6153f6e31ed8"
+    },
+    {
+      "file": "plugins/stream_filter/libcache_read_plugin.dll",
+      "sha256": "9f7ab98182636fc6123be037b2ab35092d2a752522affe0d06bca3a67339e182"
+    },
+    {
+      "file": "plugins/stream_filter/libhds_plugin.dll",
+      "sha256": "f50d85443b3ef47178e10b256aaa26dda3198a1b451f0f31674dc5c958140f32"
+    },
+    {
+      "file": "plugins/stream_filter/libinflate_plugin.dll",
+      "sha256": "c97b10d9eed9100b474acf5fd572f3c646f3331cad4e8b38d9cf29a28655b390"
+    },
+    {
+      "file": "plugins/stream_filter/libprefetch_plugin.dll",
+      "sha256": "90d29cdccdc5f280ccebb173a1344984f680943a3e4cc0c91dc4e84c431f83cb"
+    },
+    {
+      "file": "plugins/stream_filter/librecord_plugin.dll",
+      "sha256": "8d7b8323c0c7d77d28efc039b3ea5d3fddb82d65a466ab977bf96b5d5e3beb2b"
+    },
+    {
+      "file": "plugins/stream_filter/libskiptags_plugin.dll",
+      "sha256": "15c607c544cfb8cdd7f31bdaa1e5d6124bae492f75975612a7557bda602aac03"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_autodel_plugin.dll",
+      "sha256": "13299d9d33cd5172e82bf933706c39133d09d5fd26399c28f561c97737158023"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_bridge_plugin.dll",
+      "sha256": "934bd8df4fdd9323b4d16dd47f7a028f9eada58979421107e70411492367ea05"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_chromaprint_plugin.dll",
+      "sha256": "ff246409976ecd74e52765a1355bae89d6e1d7eff38326c1ca90a0e089816a5b"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_chromecast_plugin.dll",
+      "sha256": "1a4ba8855da0ed2a18565f109eeb690a43baa96e172f72070555754da1f5ce09"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_cycle_plugin.dll",
+      "sha256": "fc8eb3d4eb7fd922a67062ee26a22102fbd51f97a5881c8db0f03bcbd7cab148"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_delay_plugin.dll",
+      "sha256": "e27285f23bd345ae135302a066ec863ae3e8435309965a9f1f4dc27ad1be74b2"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_display_plugin.dll",
+      "sha256": "9faf57187533280ec5512d1110d7f740e70a5432ace1debaee0f3ee9ebd21a15"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_dummy_plugin.dll",
+      "sha256": "66964a1303ca56997878f93f1c2cc83c5bd4274f5d39f33fa68d057d5faee298"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_duplicate_plugin.dll",
+      "sha256": "b6d89e2e28a2f7e0ca8d379dffb3e3d00bb383ff82eca002489ef96573e3e16b"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_es_plugin.dll",
+      "sha256": "a3702cdfcddbd4e95f7a9e580c9144b1d7d8acbc44b71de6a22685fd294e617e"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_gather_plugin.dll",
+      "sha256": "3de68fb55e4b92183c4d35a1e58a081d021698b4928e0fabdcfcfc38d24e47bb"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_hls_plugin.dll",
+      "sha256": "3957b404b2a06e871c74b64e35c77f1aa8ae0aa9155cf7b3e47423fbe56eaeda"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_mosaic_bridge_plugin.dll",
+      "sha256": "de4d1ccb4c0f5761ddf6b383660f617fedf69e8be8eb7b2d7dcfe92389878992"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_record_plugin.dll",
+      "sha256": "ec2681724527e7f8c28e9ab0770ec4572d09181364350220231d7424b4687436"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_rtp_plugin.dll",
+      "sha256": "befda0cd380a1b745d52481b8e3b3c88880d478ad91431308455a0578b74aeac"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_sdi_plugin.dll",
+      "sha256": "d0000cfde31c4ea7020c300c5eed0188117c65aa1d967cf85fe67540d278aabb"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_setid_plugin.dll",
+      "sha256": "5e8ee70c816f5000998a796c70ef61a591012d6c65439ab8aa5db8390535ed8b"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_smem_plugin.dll",
+      "sha256": "8adfc0e5d154ae9b9bb8db29296858b1bf1bfb5af9b84794f8d365804046e8e0"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_standard_plugin.dll",
+      "sha256": "d7640b6bcfc7fd7a6f5ac4d083dd97eb6263efd09bea5e646ce359528e788093"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_stats_plugin.dll",
+      "sha256": "61f8c56a3141f26563727ec3cb588a7417340155c78912cdf12235e08ffbc334"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_trace_plugin.dll",
+      "sha256": "adc1cf2a2a154f11659377df3a097629fccca8c9021dc1acdc1cb87ea51800df"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_transcode_plugin.dll",
+      "sha256": "f958aa2291f133c6c416476109f44d1ed7297769b5ce3896bbdfe3c12a10da2f"
+    },
+    {
+      "file": "plugins/stream_out/libstream_out_udp_plugin.dll",
+      "sha256": "92e79d8f55cd580cf6a52862a0b9669383e6027458112a4daec8ba3889059a1d"
+    },
+    {
+      "file": "plugins/text_renderer/libfreetype_plugin.dll",
+      "sha256": "95f44c6b86018cd8c2571cd076cf817541b6589f34cc6090580df9600c281a1b"
+    },
+    {
+      "file": "plugins/text_renderer/libsapi_plugin.dll",
+      "sha256": "05436156f9cc0abf88ae2ecdfdddab31219d23519b747fb016bdb10272e108ef"
+    },
+    {
+      "file": "plugins/text_renderer/libtdummy_plugin.dll",
+      "sha256": "683a250ab7b68db541fd717be4ca45dcde75576cad4b61e9bac9aa1c05d18e5c"
+    },
+    {
+      "file": "plugins/video_chroma/libchain_plugin.dll",
+      "sha256": "ebbac2448c41319721d0d7d44ddd421108e67810630a37cafed8d9ed72618ba0"
+    },
+    {
+      "file": "plugins/video_chroma/libgrey_yuv_plugin.dll",
+      "sha256": "fa390de47a54b408c92d1333cacdef91322ec49b06618d9ef4abaf9217f59070"
+    },
+    {
+      "file": "plugins/video_chroma/libi420_nv12_plugin.dll",
+      "sha256": "11c7c3f80c092fe28b6044070defe61c76002d03e3cfacaf57c12fba600af6cf"
+    },
+    {
+      "file": "plugins/video_chroma/libi420_rgb_plugin.dll",
+      "sha256": "e3da57503ded8c695db45a751dffa100a50fc412ff0d650b1e5b11c91dedc838"
+    },
+    {
+      "file": "plugins/video_chroma/libi420_rgb_sse2_plugin.dll",
+      "sha256": "d858bba8d42ad79be6df9c72d25c240eea4d540ed1adda64035ca2976426d875"
+    },
+    {
+      "file": "plugins/video_chroma/libi422_i420_plugin.dll",
+      "sha256": "8043852720071ac0c59a0527789041d650cff5acc247c64ee8d8b9d51488ced4"
+    },
+    {
+      "file": "plugins/video_chroma/liborient_plugin.dll",
+      "sha256": "202ac7c11a061f87e9e649354b8327f7f9f23432738213204f4c65de4dae14e9"
+    },
+    {
+      "file": "plugins/video_chroma/librv32_plugin.dll",
+      "sha256": "84d5c2fe42259184f2e4376ff334039c5eb6b3e079ec0e20074008c6a72351d0"
+    },
+    {
+      "file": "plugins/video_chroma/libswscale_plugin.dll",
+      "sha256": "77daa58be1abe13fad615352cf062b7a56f6cfb83515d23def6a7f66fbb534b9"
+    },
+    {
+      "file": "plugins/video_chroma/libyuvp_plugin.dll",
+      "sha256": "404d1e1732d6b073c95972cc7ef56390ef25eeef574e7ccc611594dedbf7d61a"
+    },
+    {
+      "file": "plugins/video_chroma/libyuy2_i420_plugin.dll",
+      "sha256": "7ce5ce8ab94d4a4ae27e91e8e43d83a286b68a46f35c06a7dfac54fad063c8e9"
+    },
+    {
+      "file": "plugins/video_chroma/libyuy2_i422_plugin.dll",
+      "sha256": "d918d29f2938e1566abd7fd872dee41e59dbd9e094b11ca6bd2da6d9c2e9e614"
+    },
+    {
+      "file": "plugins/video_filter/libadjust_plugin.dll",
+      "sha256": "85458bbc68945bc987c2189d6a0aa07ec4489dbbe84c47bc921e69088e5f3955"
+    },
+    {
+      "file": "plugins/video_filter/libalphamask_plugin.dll",
+      "sha256": "daa0aaef892ecdff819f5497a86868f454647faf07879ec9c15a041ec9a6cad3"
+    },
+    {
+      "file": "plugins/video_filter/libamf_frc_plugin.dll",
+      "sha256": "de20e6fc491ec2421e406e2ddd4e44a900baad8f79256df1cd34a1f52a9fadd8"
+    },
+    {
+      "file": "plugins/video_filter/libamf_vqenhancer_plugin.dll",
+      "sha256": "fccbe14913810f875b2584706bfaa2de399493e0e7d25640a563039a370fee2a"
+    },
+    {
+      "file": "plugins/video_filter/libanaglyph_plugin.dll",
+      "sha256": "494120b06804b8fa3e24ff740c2d0f0690063bb3ddda2a35c1ccc8e8b03cbcdf"
+    },
+    {
+      "file": "plugins/video_filter/libantiflicker_plugin.dll",
+      "sha256": "97d3b1ff03279ecf60634523857ebbf946d37fa8ae767316ce186bbd856b4acf"
+    },
+    {
+      "file": "plugins/video_filter/libball_plugin.dll",
+      "sha256": "e90ac3589dc65a3bcb0e5047911f159227dac24ec706e09d982658b082b44f11"
+    },
+    {
+      "file": "plugins/video_filter/libblend_plugin.dll",
+      "sha256": "444bcecbc6dc56b65ab4fdf8cfb2cbf6b4d76cf3af47d7527b3af6591814d52b"
+    },
+    {
+      "file": "plugins/video_filter/libblendbench_plugin.dll",
+      "sha256": "7fe7e2b8e3984f366c1c104870ef37e77432b7c92b487ec80e5421b37a10d86e"
+    },
+    {
+      "file": "plugins/video_filter/libbluescreen_plugin.dll",
+      "sha256": "01972b51033de6c13cb2868cebedffbac853c4a5ff344f95caf7beb7b598ca00"
+    },
+    {
+      "file": "plugins/video_filter/libcanvas_plugin.dll",
+      "sha256": "65316e51b30625033bb67c5bc755eb79d04904b1104a6c1c5eb6e2a105168614"
+    },
+    {
+      "file": "plugins/video_filter/libcolorthres_plugin.dll",
+      "sha256": "23c347f904b089e4811d23ed86de82cb50131e2e25305f3505067b815cbfe7be"
+    },
+    {
+      "file": "plugins/video_filter/libcroppadd_plugin.dll",
+      "sha256": "083256e18fc6133db31de7e31feb17db03d26f801c2f1fa40bb9d6ab18a9975a"
+    },
+    {
+      "file": "plugins/video_filter/libdeinterlace_plugin.dll",
+      "sha256": "66d83ab3f8e3b685f020eadbd9f8c4566a489da9353427bf307737ded2de802f"
+    },
+    {
+      "file": "plugins/video_filter/libdither_plugin.dll",
+      "sha256": "953be3382c54cea5d5b57b31d218d4539f0018b285d235715eada1a174b02a48"
+    },
+    {
+      "file": "plugins/video_filter/libedgedetection_plugin.dll",
+      "sha256": "bc30657cbf9c2c3c66bfec8dff14b607032e008cbd3fdd9ca379cf6d6016e75e"
+    },
+    {
+      "file": "plugins/video_filter/liberase_plugin.dll",
+      "sha256": "b6abb570405797e45c43b4ee49de14bd7edceee8a98dc04941878c013296fc60"
+    },
+    {
+      "file": "plugins/video_filter/libextract_plugin.dll",
+      "sha256": "60d891db5db99bf84de3bed369069de2602162c261a70b3151031895af955b73"
+    },
+    {
+      "file": "plugins/video_filter/libformatcrop_plugin.dll",
+      "sha256": "3ff1f2d95bf932588115e84e085e5cbfdd60bf7e709a2b0c99eaabb0cba5bea5"
+    },
+    {
+      "file": "plugins/video_filter/libfps_plugin.dll",
+      "sha256": "5b42933c1760e3a83e254195c47a73457e966dd4d8e946f8d7d158fba3c2b30a"
+    },
+    {
+      "file": "plugins/video_filter/libfreeze_plugin.dll",
+      "sha256": "748564de8f48af165c8fb6ca5c3dcc95e6e76684fd6d6141a45c85a1070e622f"
+    },
+    {
+      "file": "plugins/video_filter/libgaussianblur_plugin.dll",
+      "sha256": "2eba453566beb7ea160f6d213c3aec8a9cf90a4efbfc77174789f436894c75ac"
+    },
+    {
+      "file": "plugins/video_filter/libgladjust_plugin.dll",
+      "sha256": "b81a959b3590e45a191437ea5ee034ef70340f796667d78d06cc1b93db4b7966"
+    },
+    {
+      "file": "plugins/video_filter/libglblend_plugin.dll",
+      "sha256": "bb3a02177dba41cd594c593fc294492c5e199ee6d105ad464763956e81a68b19"
+    },
+    {
+      "file": "plugins/video_filter/libgradfun_plugin.dll",
+      "sha256": "d3c1c72e6b25430cd7a4140505c36f9c0111db8eca830249fc5835ed63431a1c"
+    },
+    {
+      "file": "plugins/video_filter/libgradient_plugin.dll",
+      "sha256": "421cc7d3bf868a8869912d585a7a0807f9b2d2dd58c6907f444e46ac247d1b78"
+    },
+    {
+      "file": "plugins/video_filter/libgrain_plugin.dll",
+      "sha256": "d8b91aa6be07156f94e75afecf7bca2112a20db42f8dbc2fb2e9385c17e907ca"
+    },
+    {
+      "file": "plugins/video_filter/libhqdn3d_plugin.dll",
+      "sha256": "c2d51269b5342fe7c13b836eeb232abbfe6f6684686ddb0f21d935a2f0637532"
+    },
+    {
+      "file": "plugins/video_filter/libinvert_plugin.dll",
+      "sha256": "477a3171e19d3cbfc82552ee654a823f6ab313b6ac31f936634bdf01c5cf8f42"
+    },
+    {
+      "file": "plugins/video_filter/libmagnify_plugin.dll",
+      "sha256": "e178a3edc0524eb6824cc5ba4701286fd7643df600f4ca8e6d80530b2b56309e"
+    },
+    {
+      "file": "plugins/video_filter/libmirror_plugin.dll",
+      "sha256": "3b50a3a280a30dd5bfc83d181acbef0091a1205d60a784dfedff3b31f189024e"
+    },
+    {
+      "file": "plugins/video_filter/libmotionblur_plugin.dll",
+      "sha256": "445324d05e75151bf5addc133a75795b7dd7222af12961bbb8286e14f9b235e0"
+    },
+    {
+      "file": "plugins/video_filter/libmotiondetect_plugin.dll",
+      "sha256": "b3fdc5f18203a27054e2a31d3530157f6070b3add7c45018b7e33384424e6125"
+    },
+    {
+      "file": "plugins/video_filter/liboldmovie_plugin.dll",
+      "sha256": "4945982f24157c3a734181cb7da18b01d7d07d100bf1f2b9e2946ea91f53edc3"
+    },
+    {
+      "file": "plugins/video_filter/libopencv_example_plugin.dll",
+      "sha256": "8d274cc3149dacacd69b52b703c6c7b500f76b753bf5c5c50c7b65b54c048e9c"
+    },
+    {
+      "file": "plugins/video_filter/libopencv_wrapper_plugin.dll",
+      "sha256": "4591d8a4ab33f9b8e006291cdba45b9708302f54daea3157a68bc7240c2d51bd"
+    },
+    {
+      "file": "plugins/video_filter/libopengl_filter_plugin.dll",
+      "sha256": "9c214ac4809fd28301e6f3dcae94c2106391e712546e7c2c7504d37133480910"
+    },
+    {
+      "file": "plugins/video_filter/libpl_scale_plugin.dll",
+      "sha256": "c210fc125b0972aabcf661526e725599bb0e4cfbc8f4de3f49cc0dc9275a8197"
+    },
+    {
+      "file": "plugins/video_filter/libposterize_plugin.dll",
+      "sha256": "da4fc8ab93e48a54fe6d55fe7d7bf630282c6b9f686d77355b54270e9ded1c77"
+    },
+    {
+      "file": "plugins/video_filter/libpostproc_plugin.dll",
+      "sha256": "e9aac83520cbfaf3bd75a03600c490c273d67a71368b58bee250aed68073c818"
+    },
+    {
+      "file": "plugins/video_filter/libpsychedelic_plugin.dll",
+      "sha256": "6e376fb569202a586eb43421220520dddcc44a89b66580343249c4edf1294c6e"
+    },
+    {
+      "file": "plugins/video_filter/libpuzzle_plugin.dll",
+      "sha256": "f4fb3670bc237b20e00f8086688b6249f030fe9d0fd4eaa490dc1181c29c63a1"
+    },
+    {
+      "file": "plugins/video_filter/libripple_plugin.dll",
+      "sha256": "2dca9ea79c62ced02dd96b61b0c830e9a44ef55a62ab3dfa972e24fe64b4ecd4"
+    },
+    {
+      "file": "plugins/video_filter/librotate_plugin.dll",
+      "sha256": "f1fc0ffe207787cd5c9b38fac757d019b2ae464364a0f5a542b33c2e6bc9c513"
+    },
+    {
+      "file": "plugins/video_filter/libsam3_plugin.dll",
+      "sha256": "49217deb174c3a3196288bf3774aa5f9620edcad00e5c9b3195df4119fe27851"
+    },
+    {
+      "file": "plugins/video_filter/libscale_plugin.dll",
+      "sha256": "027979b8c036ffd7a6bace800d1ecad7411fe36ca01627b6e912184c7d8cdc2a"
+    },
+    {
+      "file": "plugins/video_filter/libscene_plugin.dll",
+      "sha256": "61d5c5abfbd209bb7ab74d1616c105975c3136f8d5211541ad6864f6b3810f2f"
+    },
+    {
+      "file": "plugins/video_filter/libsepia_plugin.dll",
+      "sha256": "c3bab500e86fde7879900ed180f699c3b02320e0595f8b1a4b75f7622e20b8b9"
+    },
+    {
+      "file": "plugins/video_filter/libsharpen_plugin.dll",
+      "sha256": "a205a0fb5aeb1a183b2a0a4916758420b183fce48dc7671af8d9ace5dd57a0a3"
+    },
+    {
+      "file": "plugins/video_filter/libtransform_plugin.dll",
+      "sha256": "efe943f0adbb2e43e4d53fbcc82500d0205ccb20355e99e940a1e34c62ca7dc0"
+    },
+    {
+      "file": "plugins/video_filter/libvhs_plugin.dll",
+      "sha256": "db04fbd3b062c147b645ed9d25c0cecea88510c2ae7956513a567674618563b2"
+    },
+    {
+      "file": "plugins/video_filter/libwave_plugin.dll",
+      "sha256": "bbdddc2a6691218bdb6b19113b27727a05019f17742044eb160ee22040cdb4f0"
+    },
+    {
+      "file": "plugins/video_output/libcaca_plugin.dll",
+      "sha256": "c9d77e0f10325d3b0451a5d69687601fa4055a78bc7ebabf30cc567a794dd22b"
+    },
+    {
+      "file": "plugins/video_output/libdecklinkoutput_plugin.dll",
+      "sha256": "c623444968b8f7b04040a3fc6afab674e9f531a9e70c5ef21539212e65f3942b"
+    },
+    {
+      "file": "plugins/video_output/libdirect3d11_plugin.dll",
+      "sha256": "1c9bfc13d41aad51dddff67db237ba7d80b99aafedd727c95f304d9006228ee9"
+    },
+    {
+      "file": "plugins/video_output/libdirect3d9_plugin.dll",
+      "sha256": "583b4e575c81a605a93128878ea2d1f095757ec8c1e4955662257127abd5d0e4"
+    },
+    {
+      "file": "plugins/video_output/libdrawable_plugin.dll",
+      "sha256": "dc10551f93987d65933ab8755b62a6843d8ebb8cbf124b61b05048c633f45ca3"
+    },
+    {
+      "file": "plugins/video_output/libflaschen_plugin.dll",
+      "sha256": "ec490493fefbf033806f670d78ec19e0623deddd8f95d0de325406d1a1e61207"
+    },
+    {
+      "file": "plugins/video_output/libgl_plugin.dll",
+      "sha256": "f91f49076e617eca096695daeb1b2e7b3a6c32a129d4b44fa8f73934bac0a341"
+    },
+    {
+      "file": "plugins/video_output/libglfilter_draw_plugin.dll",
+      "sha256": "eb403f0f4ec81244b9f9de78be04d4c9bc0c30816aad5750aa9882ae5022e3b4"
+    },
+    {
+      "file": "plugins/video_output/libglinterop_dxva2_plugin.dll",
+      "sha256": "14856d095bef5150e237ac646c4418f812c03f39201e9024a153b0be97300155"
+    },
+    {
+      "file": "plugins/video_output/libglinterop_sw_plugin.dll",
+      "sha256": "89b2a80dabdb0e0e022a7460619d180b1c214e987c37ab479bd1e36904c4a1d8"
+    },
+    {
+      "file": "plugins/video_output/libglsampler_builtin_plugin.dll",
+      "sha256": "f82359afe301c88554221f663667f2b594843122f16a8ab1f10e769a3f41a62d"
+    },
+    {
+      "file": "plugins/video_output/libglwin32_plugin.dll",
+      "sha256": "b293db63fa80c5a25d6a19b36004a0c6c9cc0e8a4937b6420e61603c2db72cd1"
+    },
+    {
+      "file": "plugins/video_output/libopengl_win_offscreen_plugin.dll",
+      "sha256": "1aa1e58d8649d235720fa6e4737867437c4a5cc2890959d261744b1c6c61348c"
+    },
+    {
+      "file": "plugins/video_output/libplacebo_gl_plugin.dll",
+      "sha256": "5fc1287129346324bb97cd2b8c5703a87dd6bdfbb38b93dacb80f1d41c5d8778"
+    },
+    {
+      "file": "plugins/video_output/libplacebo_plugin.dll",
+      "sha256": "d484e57f576aa4a50a30cff2f714b758f5aaeacba9580faeee7d08a9409ad0ff"
+    },
+    {
+      "file": "plugins/video_output/libplacebo_vk_plugin.dll",
+      "sha256": "242838dad2b8e49109822d3017c7705149bc433219c755cc8b04e37a7041f8dd"
+    },
+    {
+      "file": "plugins/video_output/libvdummy_plugin.dll",
+      "sha256": "e9904720de0770c088bccaa1d9d4f606ec457579fee4d340effeb10e5c33dcb6"
+    },
+    {
+      "file": "plugins/video_output/libvgl_plugin.dll",
+      "sha256": "afb4a5edae76b3ccb9e634deb001ea658340691e0918c8996a70fb41ca1349a4"
+    },
+    {
+      "file": "plugins/video_output/libvideo_splitter_plugin.dll",
+      "sha256": "194c293169292aa7387baf990b099199a188174cebc31bbdab7f34c25886798d"
+    },
+    {
+      "file": "plugins/video_output/libvk_win32_plugin.dll",
+      "sha256": "3403f5610aa934f561e9b3d0af0a4e3771597d17e3fb95dce2c49dd9fb128207"
+    },
+    {
+      "file": "plugins/video_output/libvmem_plugin.dll",
+      "sha256": "7b4ac838a73a1cc22e52c02e60dca8b6c1575066c4c8fdd6ad03b355d7a8b425"
+    },
+    {
+      "file": "plugins/video_output/libwdummy_plugin.dll",
+      "sha256": "75a44fa27d794126bde55cabbef50b928aca82592d58d8b211512725d33e344c"
+    },
+    {
+      "file": "plugins/video_output/libwextern_plugin.dll",
+      "sha256": "fc607b2146a935a07a22b6317ddb12568ff7ec18e0949a3122cee0861918f1f3"
+    },
+    {
+      "file": "plugins/video_output/libwgl_plugin.dll",
+      "sha256": "22b9ab6ac612789ad26a2b1e8415871331fdc81293be0575523b02a150ac3ab3"
+    },
+    {
+      "file": "plugins/video_output/libwin32_window_plugin.dll",
+      "sha256": "b6b03e5a8c6cf653de402515d4014617103b2e9da6791044007caea414fc499e"
+    },
+    {
+      "file": "plugins/video_output/libwingdi_plugin.dll",
+      "sha256": "7537344dfc4f25ab52361d17135b291e4b203cda66578e274769a7468b605cc2"
+    },
+    {
+      "file": "plugins/video_output/libwinhibit_plugin.dll",
+      "sha256": "fc78c121ef5f9450d815cc4de4df4b3e74111a9366aa5033d8abf82cdc8a5e54"
+    },
+    {
+      "file": "plugins/video_output/libyuv_plugin.dll",
+      "sha256": "7a453118167ab071b1b64e93f8122fc2bbca49e9f99874b4d0d2d660e71ddded"
+    },
+    {
+      "file": "plugins/video_splitter/libclone_plugin.dll",
+      "sha256": "c8d12275ee49ec02eb43763f4d237df26baabef443c2d63593631cd85841953c"
+    },
+    {
+      "file": "plugins/video_splitter/libpanoramix_plugin.dll",
+      "sha256": "d367498607230b41bdb50408507953effe6327abece3c63b9bbd0f60afe396a7"
+    },
+    {
+      "file": "plugins/video_splitter/libwall_plugin.dll",
+      "sha256": "0953c816fffcafb9295fd54bc9c19ad17f7caf469f28598f3255008bbff50755"
+    },
+    {
+      "file": "plugins/visualization/libglspectrum_plugin.dll",
+      "sha256": "5386bb36800e3ef835412cdf4539f84fb8d84bcbfb1e35585f353ef441ebfe1f"
+    },
+    {
+      "file": "plugins/visualization/libgoom_plugin.dll",
+      "sha256": "b31eecbc161db30b979aeb663504c58bb69636232a97d732d351f2bc54c0e955"
+    },
+    {
+      "file": "plugins/visualization/libprojectm_plugin.dll",
+      "sha256": "4a1f3648b2e69a676d83d8676610be216c6ca03a1c338f5345f925041fbf35b2"
+    },
+    {
+      "file": "plugins/visualization/libvisual_plugin.dll",
+      "sha256": "3f23fc9fc7b35e7c89a91c14d5d9d3dd40bec64d96606e1642f57182918e829b"
+    },
+    {
+      "file": "plugins/x86/libdeinterlace_x86_plugin.dll",
+      "sha256": "02fc8a745779d8dfcedd955e5f62e68fcbc623c4da7613f16df7a3579f67b7c2"
+    },
+    {
+      "file": "libvlc.dll",
+      "sha256": "a6ec3b4dbd9d2012e1ed3e3ce49afe8f791f4bce4b55694f62ee6e3920ae5744"
+    },
+    {
+      "file": "libvlccore.dll",
+      "sha256": "28cbd721a7d9ac6c752186825df3dd0e61bc46019cab1847aa3d146d00c5064a"
+    },
+    {
+      "file": "vlc.exe",
+      "sha256": "a6877bd319ce6c56d1ecea1188f388ac1c9511795f82eb7ca7e5d0d6d22efe33"
+    },
+    {
+      "file": "vlc-waveform.exe",
+      "sha256": "0da3e5f900e7cc06d3b5eab0c0eaf8704893909a28325576ff2731fdbecd330d"
+    },
+    {
+      "file": "vlc-preparser.exe",
+      "sha256": "4842228abda78bef402721c3d102f89e46a14ed65b350aed900dfa51c0b259a4"
+    },
+    {
+      "file": "vlc-cache-gen.exe",
+      "sha256": "983436205a3edf2a7efb0833c414bca63f609b07828036513510ac022fee7f8e"
+    }
+  ]
+}

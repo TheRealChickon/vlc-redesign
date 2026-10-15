@@ -1,0 +1,21 @@
+{
+  "mediaLibraryEnabled": true,
+  "softwareVideoOutput": true,
+  "playAccepted": true,
+  "decodedFrames": 16,
+  "distinctDecodedFrames": 14,
+  "initialTimeUs": 888554,
+  "clockAdvanced": true,
+  "pauseStoppedClock": true,
+  "rateAccepted": true,
+  "seekAccepted": true,
+  "reportedRate": 1.25,
+  "seekTimeUs": 31124802,
+  "seekReachedTarget": true,
+  "volumeAccepted": true,
+  "audioPeakBeforeVolume": 5144,
+  "audioPeakAfterVolume": 883,
+  "volumeReducedDecodedAudio": true,
+  "finalDecodedFrames": 67,
+  "decodedAudioSamples": 250812
+}

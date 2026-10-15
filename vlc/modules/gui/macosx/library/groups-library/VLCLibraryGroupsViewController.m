@@ -1,0 +1,268 @@
+/*****************************************************************************
+ * VLCLibraryGroupsViewController.m: MacOS X interface module
+ *****************************************************************************
+ * Copyright (C) 2024 VLC authors and VideoLAN
+ *
+ * Authors: Claudio Cambra <developer@claudiocambra.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+
+#import "VLCLibraryGroupsViewController.h"
+
+#import "extensions/NSImage+VLCAdditions.h"
+#import "extensions/NSScrollView+VLCAdditions.h"
+#import "extensions/NSString+Helpers.h"
+
+#import "library/VLCLibraryCollectionView.h"
+#import "library/VLCLibraryCollectionViewDelegate.h"
+#import "library/VLCLibraryCollectionViewFlowLayout.h"
+#import "library/VLCLibraryCollectionViewItem.h"
+#import "library/VLCLibraryCollectionViewMediaItemSupplementaryDetailView.h"
+#import "library/VLCLibraryCollectionViewSupplementaryElementView.h"
+#import "library/VLCLibraryController.h"
+#import "library/VLCLibraryHeaderCell.h"
+#import "library/VLCLibraryHeaderView.h"
+#import "library/VLCLibraryMasterDetailViewTableViewDelegate.h"
+#import "library/VLCLibraryModel.h"
+#import "library/VLCLibraryTableCellView.h"
+#import "library/VLCLibraryTableView.h"
+#import "library/VLCLibraryTwoPaneSplitViewDelegate.h"
+#import "library/VLCLibraryWindow.h"
+#import "library/VLCLibraryWindowPersistentPreferences.h"
+
+#import "library/groups-library/VLCLibraryGroupsDataSource.h"
+
+#import "main/VLCMain.h"
+
+#import "views/VLCUIUnits.h"
+
+@interface VLCLibraryGroupsViewController ()
+{
+    NSArray<NSLayoutConstraint *> *_internalPlaceholderImageViewSizeConstraints;
+}
+@end
+
+@implementation VLCLibraryGroupsViewController
+
+- (instancetype)initWithLibraryWindow:(VLCLibraryWindow *)libraryWindow
+{
+    self = [super initWithLibraryWindow:libraryWindow];
+    if (self) {
+        [self setupDataSource];
+        [self setupGridViewModeViews];
+        [self setupListViewModeViews];
+        [self setupPlaceholderView];
+    }
+    return self;
+}
+
+- (void)setupDataSource
+{
+    _dataSource = [[VLCLibraryGroupsDataSource alloc] init];
+    self.dataSource.libraryModel = VLCMain.sharedInstance.libraryController.libraryModel;
+}
+
+- (void)setupGridViewModeViews
+{
+    _collectionView = [[VLCLibraryCollectionView alloc] init];
+    self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+
+    _collectionViewScrollView = [NSScrollView libraryScrollViewWithDocumentView:self.collectionView];
+
+    const CGFloat collectionItemSpacing = VLCUIUnits.collectionViewItemSpacing;
+    const NSEdgeInsets collectionViewSectionInset = VLCUIUnits.collectionViewSectionInsets;
+
+    VLCLibraryCollectionViewFlowLayout * const collectionViewLayout =
+        [[VLCLibraryCollectionViewFlowLayout alloc] init];
+    collectionViewLayout.headerReferenceSize =
+        VLCLibraryCollectionViewSupplementaryElementView.defaultHeaderSize;
+    collectionViewLayout.minimumLineSpacing = collectionItemSpacing;
+    collectionViewLayout.minimumInteritemSpacing = collectionItemSpacing;
+    collectionViewLayout.sectionInset = collectionViewSectionInset;
+    self.collectionView.collectionViewLayout = collectionViewLayout;
+
+    _collectionViewDelegate = [[VLCLibraryCollectionViewDelegate alloc] init];
+    self.collectionViewDelegate.itemsAspectRatio = VLCLibraryCollectionViewItemAspectRatioVideoItem;
+    self.collectionViewDelegate.staticItemSize = VLCUIUnits.defaultVideoItemCollectionViewItemSize;
+    self.collectionView.delegate = self.collectionViewDelegate;
+
+    self.collectionView.selectable = YES;
+    self.collectionView.allowsEmptySelection = YES;
+    self.collectionView.allowsMultipleSelection = YES;
+
+    [self.collectionView registerClass:VLCLibraryCollectionViewItem.class
+                 forItemWithIdentifier:VLCLibraryCollectionViewItemIdentifier];
+
+    [self.collectionView registerClass:VLCLibraryCollectionViewSupplementaryElementView.class
+            forSupplementaryViewOfKind:NSCollectionElementKindSectionHeader
+                        withIdentifier:VLCLibrarySupplementaryElementViewIdentifier];
+
+    NSString * const mediaItemSupplementaryDetailViewString =
+        NSStringFromClass(VLCLibraryCollectionViewMediaItemSupplementaryDetailView.class);
+    NSNib * const mediaItemSupplementaryDetailViewNib =
+        [[NSNib alloc] initWithNibNamed:mediaItemSupplementaryDetailViewString bundle:nil];
+
+    [self.collectionView registerNib:mediaItemSupplementaryDetailViewNib
+          forSupplementaryViewOfKind:VLCLibraryCollectionViewMediaItemSupplementaryDetailViewKind
+                      withIdentifier:VLCLibraryCollectionViewMediaItemSupplementaryDetailViewIdentifier];
+
+    self.dataSource.collectionView = self.collectionView;
+
+    self.collectionView.dataSource = self.dataSource;
+    self.collectionView.delegate = self.collectionViewDelegate;
+}
+
+- (void)setupListViewModeViews
+{
+    _tableViewDelegate = [[VLCLibraryMasterDetailViewTableViewDelegate alloc] init];
+    _splitViewDelegate = [[VLCLibraryTwoPaneSplitViewDelegate alloc] init];
+    _groupsTableView = [[VLCLibraryTableView alloc] init];
+    _selectedGroupTableView = [[VLCLibraryTableView alloc] init];
+    _listViewSplitView = [[NSSplitView alloc] init];
+
+    self.dataSource.headerDelegate = self.tableViewDelegate;
+
+    self.listViewSplitView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.groupsTableView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.selectedGroupTableView.translatesAutoresizingMaskIntoConstraints = NO;
+
+    _groupsTableViewScrollView = [NSScrollView libraryScrollViewWithDocumentView:self.groupsTableView];
+    _selectedGroupTableViewScrollView = [NSScrollView libraryDetailScrollViewWithDocumentView:self.selectedGroupTableView];
+
+    self.listViewSplitView.vertical = YES;
+    self.listViewSplitView.dividerStyle = NSSplitViewDividerStyleThin;
+    self.listViewSplitView.delegate = self.splitViewDelegate;
+    [self.listViewSplitView addArrangedSubview:self.groupsTableViewScrollView];
+    [self.listViewSplitView addArrangedSubview:self.selectedGroupTableViewScrollView];
+
+    NSTableColumn * const groupsColumn = [[NSTableColumn alloc] initWithIdentifier:@"groups"];
+    NSTableColumn * const selectedGroupColumn =
+        [[NSTableColumn alloc] initWithIdentifier:@"selectedGroup"];
+
+    [self.groupsTableView addTableColumn:groupsColumn];
+    [self.selectedGroupTableView addTableColumn:selectedGroupColumn];
+
+    NSNib * const tableCellViewNib = 
+        [[NSNib alloc] initWithNibNamed:NSStringFromClass(VLCLibraryTableCellView.class)
+                                 bundle:nil];
+    [self.groupsTableView registerNib:tableCellViewNib
+                        forIdentifier:@"VLCLibraryTableViewCellIdentifier"];
+    [self.selectedGroupTableView registerNib:tableCellViewNib
+                               forIdentifier:@"VLCLibraryTableViewCellIdentifier"];
+
+    _selectedGroupTableHeaderView = [VLCLibraryHeaderView paddedHeaderView];
+
+    self.tableViewDelegate.detailTableHeaderView = self.selectedGroupTableHeaderView;
+
+    self.groupsTableView.headerView = nil;
+    self.groupsTableView.allowsEmptySelection = NO;
+    self.groupsTableView.allowsMultipleSelection = YES;
+    self.selectedGroupTableView.headerView = self.selectedGroupTableHeaderView;
+
+    selectedGroupColumn.headerCell = [VLCLibraryHeaderCell new];
+
+    self.groupsTableView.rowHeight = VLCUIUnits.mediumTableViewRowHeight;
+    self.selectedGroupTableView.rowHeight = VLCUIUnits.mediumTableViewRowHeight;
+    self.selectedGroupTableView.allowsMultipleSelection = YES;
+
+    self.groupsTableView.delegate = self.tableViewDelegate;
+    self.selectedGroupTableView.delegate = self.tableViewDelegate;
+
+    self.dataSource.masterTableView = self.groupsTableView;
+    self.dataSource.detailTableView = self.selectedGroupTableView;
+
+    self.groupsTableView.dataSource = self.dataSource;
+    self.selectedGroupTableView.dataSource = self.dataSource;
+}
+
+- (void)setupPlaceholderView
+{
+    _internalPlaceholderImageViewSizeConstraints = @[
+        [NSLayoutConstraint constraintWithItem:self.placeholderImageView
+                                     attribute:NSLayoutAttributeWidth
+                                     relatedBy:NSLayoutRelationEqual
+                                        toItem:nil
+                                     attribute:NSLayoutAttributeNotAnAttribute
+                                    multiplier:0.f
+                                      constant:182.f],
+        [NSLayoutConstraint constraintWithItem:self.placeholderImageView
+                                     attribute:NSLayoutAttributeHeight
+                                     relatedBy:NSLayoutRelationEqual
+                                        toItem:nil
+                                     attribute:NSLayoutAttributeNotAnAttribute
+                                    multiplier:0.f
+                                      constant:114.f],
+    ];
+}
+
+- (id<VLCLibraryDataSource>)currentDataSource
+{
+    return self.dataSource;
+}
+
+- (NSArray<NSLayoutConstraint *> *)placeholderImageViewSizeConstraints
+{
+    return _internalPlaceholderImageViewSizeConstraints;
+}
+
+- (void)presentPlaceholderGroupsView
+{
+    [self.libraryWindow displayLibraryPlaceholderViewWithImage:NSImage.VLCPlaceholderVideoImage
+                                              usingConstraints:self.placeholderImageViewSizeConstraints
+                                             displayingMessage:_NS("Your media groups will appear here.")];
+}
+
+- (void)presentGroupsView
+{
+    const VLCLibraryViewModeSegment viewModeSegment =
+        VLCLibraryWindowPersistentPreferences.sharedInstance.groupsLibraryViewMode;
+
+    if (self.dataSource.libraryModel.numberOfGroups > 0) {
+        if (viewModeSegment == VLCLibraryGridViewModeSegment) {
+            [self.libraryWindow displayLibraryView:self.collectionViewScrollView];
+        } else {
+            [self.libraryWindow displayLibraryView:self.listViewSplitView];
+            [self.splitViewDelegate resetDefaultSplitForSplitView:self.listViewSplitView];
+            [self.dataSource updateHeaderInTableView:self.selectedGroupTableView
+                                  forMasterSelection:self.groupsTableView];
+        }
+    } else if (self.dataSource.libraryModel.filterString.length > 0) {
+        [self.libraryWindow displayNoResultsMessage];
+    } else {
+        [self presentPlaceholderGroupsView];
+    }
+}
+
+- (void)presentLibraryItem:(id<VLCMediaLibraryItemProtocol>)libraryItem
+{
+    [self presentGroupsView];
+    
+    const VLCLibraryViewModeSegment viewModeSegment =
+        VLCLibraryWindowPersistentPreferences.sharedInstance.groupsLibraryViewMode;
+    if (viewModeSegment == VLCLibraryGridViewModeSegment) {
+        NSIndexPath * const groupIndexPath = [self.dataSource indexPathForLibraryItem:libraryItem];
+        NSSet<NSIndexPath *> * const groupIndexPathSet = [NSSet setWithObject:groupIndexPath];
+        [self.collectionView scrollToItemsAtIndexPaths:groupIndexPathSet
+                                        scrollPosition:NSCollectionViewScrollPositionTop];
+    } else {
+        const NSInteger groupRow = [self.dataSource rowForLibraryItem:libraryItem];
+        [self.groupsTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:groupRow]
+                          byExtendingSelection:NO];
+        [self.groupsTableView scrollRowToVisible:groupRow];
+    }
+}
+
+@end

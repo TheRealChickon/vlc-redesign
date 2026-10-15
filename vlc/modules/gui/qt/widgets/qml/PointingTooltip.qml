@@ -1,0 +1,92 @@
+/*****************************************************************************
+ * Copyright (C) 2020 VLC authors and VideoLAN
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * ( at your option ) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+import QtQuick
+
+import VLC.Style
+
+// NOTE: Attached pointing tool tip must be used if the popup type is `Popup.Window`.
+ToolTipExt {
+    id: pointingTooltip
+
+    margins: 0
+    padding: VLCStyle.margin_xxsmall
+    radius: VLCStyle.dp(6, VLCStyle.scale)
+
+    height: implicitHeight + background.arrowHeight
+    bottomInset: height - implicitHeight
+
+    implicitHeight: (implicitContentHeight + topPadding + bottomPadding)
+
+    x: _x
+    y: _pos.y - (implicitHeight + arrowArea.implicitHeight + VLCStyle.dp(7.5, VLCStyle.scale))
+
+    readonly property real _x: _pos.x - (width / 2)
+    property point pos
+    property point _pos
+
+    // We do not want to respect `pos` until it becomes relevant:
+    onAboutToShow: {
+        _pos = Qt.binding(() => { return pointingTooltip.pos })
+    }
+
+    onAboutToHide: {
+        _pos = pos
+    }
+
+    background: Rectangle {
+        border.color: pointingTooltip.colorContext.border
+        color: pointingTooltip.colorContext.bg.primary
+        radius: pointingTooltip.radius
+        border.pixelAligned: (radius < Number.EPSILON)
+
+        readonly property real arrowHeight: arrow.implicitHeight + border.width
+
+        Item {
+            id: arrowArea
+
+            z: 1
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.bottom
+            anchors.topMargin: -(parent.border.width)
+
+            implicitHeight: arrow.implicitHeight * Math.sqrt(2) / 2
+
+            clip: true
+
+            Rectangle {
+                id: arrow
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                // NOTE: The offset is also set with independent window popup, because the position
+                //       may still be clamped due to screen geometry:
+                anchors.horizontalCenterOffset: (pointingTooltip._x - pointingTooltip.x)
+                anchors.verticalCenter: parent.top
+
+                implicitWidth: VLCStyle.dp(10, VLCStyle.scale)
+                implicitHeight: VLCStyle.dp(10, VLCStyle.scale)
+
+                rotation: 45
+
+                color: pointingTooltip.colorContext.bg.primary
+                border.color: pointingTooltip.colorContext.border
+                border.pixelAligned: (radius < Number.EPSILON)
+            }
+        }
+    }
+}

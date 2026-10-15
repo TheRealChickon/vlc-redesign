@@ -1,0 +1,162 @@
+/*****************************************************************************
+ * VLCLibraryHomeViewActionButtonCell.m: MacOS X interface module
+ *****************************************************************************
+ * Copyright (C) 2024 VLC authors and VideoLAN
+ *
+ * Authors: Claudio Cambra <developer@claudiocambra.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+
+#import "VLCLibraryHomeViewActionButtonCell.h"
+
+#import "extensions/NSColor+VLCAdditions.h"
+#import "extensions/NSFont+VLCAdditions.h"
+
+#import "views/VLCUIUnits.h"
+
+@interface VLCLibraryHomeViewActionButtonCell ()
+
+@property NSImage *cachedImage;
+@property BOOL prevIsHighlighted;
+@property NSRect prevFrame;
+
+@property (readonly) NSDictionary<NSAttributedStringKey, id> *cachedTitleAttributes;
+@property (readonly) CGFloat cachedTitleHeight;
+
+@end
+
+@implementation VLCLibraryHomeViewActionButtonCell
+
+- (NSRect)titleRectForBounds:(NSRect)bounds
+{
+    return bounds;
+}
+
+- (NSRect)imageRectForBounds:(NSRect)bounds
+{
+    return bounds;
+}
+
+- (NSDictionary<NSAttributedStringKey, id> *)titleAttributes
+{
+    if (_cachedTitleAttributes) {
+        return _cachedTitleAttributes;
+    }
+    NSMutableParagraphStyle * const titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    titleParagraphStyle.alignment = NSTextAlignmentCenter;
+    _cachedTitleAttributes = @{
+        NSForegroundColorAttributeName: NSColor.controlTextColor,
+        NSFontAttributeName: NSFont.VLCLibrarySubsectionSubheaderFont,
+        NSParagraphStyleAttributeName: titleParagraphStyle
+    };
+    return _cachedTitleAttributes;
+}
+
+- (CGFloat)titleHeightWithAttributes:(NSDictionary<NSAttributedStringKey, id> *)attributes
+{
+    if (_cachedTitleHeight) {
+        return _cachedTitleHeight;
+    }
+    const NSSize titleSize = [self.title sizeWithAttributes:attributes];
+    _cachedTitleHeight = titleSize.height + VLCUIUnits.smallSpacing;
+    return _cachedTitleHeight;
+}
+
+- (void)drawImage:(NSImage *)image withFrame:(NSRect)frame inView:(NSView *)controlView
+{
+    const CGSize cellSize = frame.size;
+    const CGFloat cellWidth = cellSize.width;
+    const CGFloat cellHeight = cellSize.height;
+    const CGFloat titleHeight = [self titleHeightWithAttributes:[self titleAttributes]];
+
+    const CGSize imageSize = self.image.size;
+
+    if (self.cachedImage != self.image ||
+        self.prevIsHighlighted != self.isHighlighted ||
+        !NSEqualRects(self.prevFrame, frame)) {
+
+        self.cachedImage = [NSImage imageWithSize:imageSize
+                                          flipped:NO
+                                   drawingHandler:^BOOL(NSRect __unused dstRect) {
+            if (self.isHighlighted) {
+                [NSColor.VLCSubtleBorderColor set];
+            } else {
+                [NSColor.VLCSubtlerAccentColor set];
+            }
+            const NSRect imageRect = {NSZeroPoint, imageSize};
+            [self.image drawInRect:imageRect];
+            NSRectFillUsingOperation(imageRect, NSCompositingOperationSourceIn);
+            return YES;
+        }];
+
+        self.prevIsHighlighted = self.isHighlighted;
+        self.prevFrame = frame;
+    } 
+
+    const CGFloat originalImageAspectRatio = imageSize.width / imageSize.height;
+    const CGFloat imageAvailableVerticalSpace =
+        cellHeight - titleHeight - VLCUIUnits.largeSpacing * 2;
+    CGFloat imageWidth, imageHeight;
+
+    // Try to scale focusing on width first, if this yields a height that is too large, switch
+    if (cellWidth / originalImageAspectRatio > imageAvailableVerticalSpace) {
+        imageHeight = imageAvailableVerticalSpace;
+        imageWidth = imageHeight * originalImageAspectRatio;
+    } else {
+        imageWidth = cellWidth;
+        imageHeight = imageWidth / originalImageAspectRatio;
+    }
+
+    const CGPoint cellOrigin = frame.origin;
+    const NSRect imageRect = NSMakeRect(cellOrigin.x + (cellWidth - imageWidth) / 2,
+                                        cellOrigin.y + (cellHeight - imageHeight) / 2,
+                                        imageWidth,
+                                        imageHeight);
+    [self.cachedImage drawInRect:imageRect];
+}
+
+- (NSRect)drawTitle:(NSAttributedString *)title withFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{
+    const CGFloat cellMinX = NSMinX(cellFrame);
+    const CGFloat cellMaxY = NSMaxY(cellFrame);
+    const CGSize cellSize = cellFrame.size;
+    const CGFloat cellWidth = cellSize.width;
+
+    NSDictionary<NSAttributedStringKey, id> * const titleAttributes = [self titleAttributes];
+    const CGFloat titleHeight = [self titleHeightWithAttributes:titleAttributes];
+    const NSRect titleRect = CGRectMake(cellMinX + VLCUIUnits.smallSpacing,
+                                      cellMaxY - titleHeight,
+                                      cellWidth - VLCUIUnits.smallSpacing * 2,
+                                      titleHeight);
+    [self.title drawInRect:titleRect withAttributes:titleAttributes];
+    return titleRect;
+}
+
+- (void)drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView
+{
+    [NSColor.VLCSubtleBorderColor setStroke];
+    [NSColor.windowBackgroundColor setFill];
+
+    NSBezierPath * const separatorPath =
+        [NSBezierPath bezierPathWithRoundedRect:frame
+                                        xRadius:VLCUIUnits.cornerRadius
+                                        yRadius:VLCUIUnits.cornerRadius];
+    separatorPath.lineWidth = VLCUIUnits.borderThickness;
+    [separatorPath stroke];
+    [separatorPath fill];
+}
+
+@end

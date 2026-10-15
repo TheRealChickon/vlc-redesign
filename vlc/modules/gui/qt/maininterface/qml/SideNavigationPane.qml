@@ -1,0 +1,351 @@
+/*****************************************************************************
+ * Copyright (C) 2024 VLC authors and VideoLAN
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * ( at your option ) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Templates as T
+import QtQuick.Controls.Basic as C
+import QtQml.Models
+
+import VLC.Style
+import VLC.Widgets as Widgets
+
+import VLC.MainInterface
+import VLC.Dialogs
+import VLC.Util
+
+T.Pane {
+    id: root
+
+    signal itemClicked(uri : var, item : Item)
+
+    //safe area margins for delegate content,
+    //so the background of the delegates fills the available space
+    //but the content remains within the safe area
+    property int safeAreaLeftMargin: 0
+    property int safeAreaRightMargin: 0
+
+    property bool useAcrylic: true
+
+    property bool delegateShowText: true
+
+    property alias model: navigationModel
+
+    readonly property int minimumWidth: VLCStyle.expandNavigationPaneWidth + safeAreaLeftMargin + safeAreaRightMargin
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
+
+    padding: VLCStyle.margin_xsmall
+
+    readonly property ColorContext colorContext: ColorContext {
+        id: theme
+        colorSet: ColorContext.Window
+    }
+
+    Accessible.name: qsTr("Sidebar")
+
+    NavigationModel {
+        id: navigationModel
+        hasMedialib: MainCtx.mediaLibraryAvailable
+    }
+
+    Connections {
+        target: History
+
+        // NOTE: handles cases where the path changes not by clicking in the sidebar
+        function onViewPathChanged(viewPath) {
+            for (let i = 0; i < listView.count; ++i) {
+                const rowIndex = navigationModel.index(i, 0)
+                const uri = navigationModel.data(rowIndex, NavigationModel.URI)
+
+                if (uri && History.match(viewPath, uri)) {
+                    // handle back button
+                    listView.currentIndex = i
+
+                    // handle keyboard navigation
+                    if (!navigationModel.data(rowIndex, NavigationModel.EXPANDED))
+                        navigationModel.setData(rowIndex, true, NavigationModel.EXPANDED)
+
+                    return
+                }
+            }
+        }
+    }
+
+    background: Widgets.AcrylicBackground {
+        enabled: root.useAcrylic
+        tintColor: theme.bg.primary
+    }
+
+    contentItem:  Item {
+        id: contentItemId
+
+        //don't use Layout as top item as items put as children of the Control
+        //would be parented (and layouted) to the Layout
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: VLCStyle.margin_xsmall
+
+            Widgets.ListViewExt {
+                id: listView
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                clip: !fadingEdge.implicitClipping && (height < contentHeight)
+                focus: true
+
+                model: navigationModel
+
+                Binding {
+                    target: listView.T.ScrollBar.vertical
+                    property: "policy"
+                    when: listView.T.ScrollBar.vertical?.size > (1.0 - Number.EPSILON)
+                    value: T.ScrollBar.AlwaysOff
+                }
+
+                colorContext.colorSet: ColorContext.Window
+
+                fadingEdge.backgroundColor:  (root.background && (root.background.color.a >= 1.0)) ? root.background.color
+                                                                                                   : "transparent"
+
+                component DelegateAnimation : NumberAnimation {
+                    easing.type: Easing.InOutSine
+                    duration: VLCStyle.duration_long
+                }
+
+                reuseItems: false // Not relevant here, we disable it because of QTBUG-131106 when transition is involved.
+
+                // As the docs note, `ListView` transitions do not seem to handle height animation. For that reason,
+                // we animate the height directly in the delegate (Qt's recommended workaround). Because of this, we
+                // do not need to have `addDisplaced` transition here, but we can have `removeDisplaced` here:
+                removeDisplaced: Transition {
+                    DelegateAnimation { property: "y" }
+                }
+
+                onCurrentIndexChanged: {
+                    const rowIndex = navigationModel.index(currentIndex, 0)
+
+                    if (rowIndex.valid && !navigationModel.data(rowIndex, NavigationModel.EXPANDED)
+                            && History.match(History.viewPath, navigationModel.data(rowIndex, NavigationModel.URI)))
+                        navigationModel.setData(rowIndex, true, NavigationModel.EXPANDED)
+                }
+
+                property bool readyForAnimations: false
+
+                onModelChanged: {
+                    if (!listView.readyForAnimations)
+                        Qt.callLater(() => { listView.readyForAnimations = true })
+                }
+
+                Navigation.parentItem: root
+                Navigation.downItem: preferenceButton
+
+                delegate: SideNavigationDelegate {
+                    id: delegate
+
+                    width: ListView.view.contentWidth
+                    height: preferredHeight
+
+                    property real preferredHeight: shouldShow ? VLCStyle.buttonHeightNavigationPane : 0.0
+
+                    leftPadding: root.safeAreaLeftMargin + VLCStyle.margin_xsmall
+                    rightPadding: root.safeAreaRightMargin
+
+                    leftInset: root.safeAreaLeftMargin + implicitLeftInset
+                    rightInset: root.safeAreaRightMargin + implicitRightInset
+
+                    iconTxt: icon_alias
+                    text: title
+
+                    showText: root.delegateShowText
+                    focusPolicy: Qt.StrongFocus
+
+                    required property string title
+                    required property var uri
+                    required property int depth
+                    // TODO: Qt 6.2 has property `icon` marked final, so we can't override it:
+                    required property string icon_alias
+                    required property bool expandable
+                    required property bool expanded
+
+                    required property int index
+
+                    visible: (height > 0.0)
+
+                    property bool shouldShow: showText || (iconTxt.length > 0)
+
+                    onShouldShowChanged: {
+                        if (listView.readyForAnimations)
+                            heightBehavior.enabled = true // At this point, it can keep being enabled for good.
+                    }
+
+                    Binding on highlighted {
+                        when: !!uri && History.match(History.viewPath, uri)
+                        value: true
+                    }
+                    checked: (!showText || !expanded) && highlighted
+
+                    onClicked: {
+                        if (uri && uri[0] === "add") {
+                            addItemMenu.popup()
+                            return
+                        }
+                        itemClicked(uri, this)
+                        listView.currentIndex = index
+                        listView.forceActiveFocus(focusReason)
+                    }
+
+                    Behavior on height {
+                        id: heightBehavior
+
+                        enabled: false
+
+                        DelegateAnimation {
+                            onRunningChanged: {
+                                if (running) {
+                                    delegate.clip = true
+                                } else {
+                                    delegate.clip = false
+                                }
+                            }
+                        }
+                    }
+
+                    ListView.onAdd: {
+                        if (listView.readyForAnimations && delegate.showText) {
+                            heightBehavior.enabled = false
+                            delegate.height = 0.0
+                            heightBehavior.enabled = true
+                            delegate.height = Qt.binding(() => delegate.preferredHeight)
+                            heightBehavior.enabled = false
+                        }
+                    }
+                }
+            }
+
+            ListView {
+                id: pins
+                objectName: "redesignSidebarPins"
+                Layout.fillWidth: true
+                Layout.preferredHeight: Math.min(contentHeight, 192 * VLCStyle.scale)
+                visible: VLCStyle.pinnedItems.length > 0
+                clip: true
+                model: VLCStyle.pinnedItems
+                C.ScrollBar.vertical: C.ScrollBar { }
+                delegate: SideNavigationDelegate {
+                    required property var modelData
+                    width: pins.width; height: VLCStyle.buttonHeightNavigationPane
+                    text: modelData.title
+                    iconTxt: modelData.kind === "folder" ? "redesign-folder" : VLCIcons.playlist
+                    showText: root.delegateShowText
+                    focusPolicy: Qt.StrongFocus
+                    leftPadding: root.safeAreaLeftMargin + VLCStyle.margin_xsmall
+                    onClicked: {
+                        if (modelData.kind === "folder") {
+                            const tree = MainCtx.redesignFolderTree(modelData.target)
+                            if (tree) History.push(["network", "browse"], {tree:tree})
+                        } else if (MainCtx.mediaLibraryAvailable) {
+                            MainCtx.mediaLibrary.addAndPlay(modelData.kind === "playlist"
+                                ? MainCtx.mediaLibrary.deserializeMlItemIdFromString(modelData.target) : modelData.target)
+                            MainCtx.playerView = true
+                        }
+                    }
+                    TapHandler { acceptedButtons: Qt.RightButton; onTapped: { pinMenu.kind = modelData.kind; pinMenu.target = modelData.target; pinMenu.popup() } }
+                }
+            }
+            Loader {
+                id: loaderProgress
+
+                Layout.fillWidth: true
+
+                active: (MainCtx.mediaLibraryAvailable && MainCtx.mediaLibrary.idle === false)
+                visible: active
+
+                source: "qrc:///qt/qml/VLC/MediaLibrary/ScanProgressBar.qml"
+
+                onLoaded: {
+                    if (item.background) {
+                        item.background.opacity = 0.6
+                        item.background.radius = Qt.binding(() => VLCStyle.dp(4, VLCStyle.scale))
+                    }
+
+                    item.leftPadding = Qt.binding(function() { return root.safeAreaLeftMargin + VLCStyle.margin_small })
+                    item.rightPadding = Qt.binding(function() { return root.safeAreaRightMargin + VLCStyle.margin_small })
+
+                    item.leftInset = Qt.binding(() => { return VLCStyle.margin_xxsmall + root.safeAreaLeftMargin })
+                    item.rightInset = Qt.binding(() => { return VLCStyle.margin_xxsmall + root.safeAreaRightMargin })
+                }
+            }
+
+            SideNavigationDelegate {
+                id: preferenceButton
+
+                AccessibleCompat.id: "preferencesButton"
+
+                Layout.fillWidth: true
+                Layout.preferredHeight: VLCStyle.buttonHeightNavigationPane
+
+                leftPadding: root.safeAreaLeftMargin + VLCStyle.margin_xsmall
+                rightPadding: root.safeAreaRightMargin
+
+                leftInset: root.safeAreaLeftMargin + implicitLeftInset
+                rightInset: root.safeAreaRightMargin + implicitRightInset
+
+                iconTxt: VLCIcons.settings
+                text: qsTr("Preferences")
+
+                checked: DialogsProvider.prefsDialogVisible
+
+                showText: root.delegateShowText
+
+                onClicked: DialogsProvider.prefsDialog()
+
+                //SideNavigationDelegate is an ItemDelegate and has NoFocus by default
+                focusPolicy: Qt.StrongFocus
+
+                Navigation.parentItem: root
+                Navigation.upItem: listView
+
+                Keys.priority: Keys.AfterItem
+                Keys.onPressed: (e) => Navigation.defaultKeyAction(e)
+                Keys.onReleased: (e) => Navigation.defaultKeyReleaseAction(e)
+            }
+
+        }
+    }
+    C.Menu {
+        id: addItemMenu
+        palette.text: theme.fg.primary; palette.window: theme.bg.primary; palette.highlight: theme.accent
+        background: Rectangle { color: theme.bg.primary; radius: 6 * VLCStyle.scale; border.color: theme.border }
+        C.MenuItem { text: qsTr("Open file"); onTriggered: DialogsProvider.openFileDialog() }
+        C.MenuItem { text: qsTr("Add folder to library"); onTriggered: { const path = MainCtx.pickRedesignPath("redesign-media-folder", ""); if (path) MainCtx.addRedesignMediaFolder(path) } }
+        C.MenuItem { text: qsTr("Pin folder to sidebar"); onTriggered: { const path = MainCtx.pickRedesignPath("redesign-media-folder", ""); if (path) VLCStyle.pinItem("folder", path, path.replace(/\\/g,"/").split("/").filter(part => part).pop() || path) } }
+        C.MenuItem { text: qsTr("Open network stream"); onTriggered: DialogsProvider.openUrlDialog() }
+    }
+    C.Menu {
+        id: pinMenu
+        palette.text: theme.fg.primary; palette.window: theme.bg.primary; palette.highlight: theme.accent
+        background: Rectangle { color: theme.bg.primary; radius: 6 * VLCStyle.scale; border.color: theme.border }
+        property string kind: ""
+        property string target: ""
+        C.MenuItem { text: qsTr("Unpin from sidebar"); onTriggered: VLCStyle.unpinItem(pinMenu.kind, pinMenu.target) }
+    }
+}

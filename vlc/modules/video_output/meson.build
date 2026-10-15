@@ -1,0 +1,351 @@
+#
+# Video output modules
+#
+
+# Declared here, as its used by both the
+# libplacebo and opengl subfolder build file.
+if have_win_store
+    # even if it's there, don't use it
+    missing_win_glew = true
+elif host_system == 'windows'
+    missing_win_glew = not cdata.has('HAVE_GL_WGLEW_H')
+else
+    missing_win_glew = false
+endif
+
+if missing_win_glew or have_ios
+    opengl_dep = disabler()
+else
+    opengl_dep = dependency('gl', required: false)
+endif
+opengles2_dep = dependency('glesv2', required: get_option('gles2'))
+egl_dep = dependency('egl', required: false)
+
+# Declared here so it's available in opengl subdir for egl_display_gbm
+drm_dep = dependency('libdrm', version: '>= 2.4.83', required: get_option('drm'))
+drm_includes = declare_dependency()
+if drm_dep.found()
+    drm_includes = declare_dependency(dependencies: drm_dep.partial_dependency(
+                                          includes: true, compile_args: true),
+                                      compile_args: '-DHAVE_LIBDRM=1')
+endif
+
+# Declared here, as it's used by both the libplacebo and wayland subfolders
+vulkan_dep = dependency('vulkan', version: '>= 1.0.26', required: get_option('vulkan'))
+
+if host_system == 'darwin'
+    subdir('apple')
+
+    vlc_modules += {
+        'name' : 'window_macosx',
+        'sources' : files('window_macosx.m'),
+        'objc_args' : ['-fobjc-arc', '-fobjc-exceptions'],
+        'dependencies' : [
+            frameworks['Cocoa'],
+        ],
+        'plugin_dir' : 'video_output',
+    }
+endif
+
+subdir('libplacebo')
+subdir('opengl')
+
+if have_wayland
+    subdir('wayland')
+endif
+
+if host_system == 'windows'
+    subdir('win32')
+endif
+
+# Dummy video output
+vlc_modules += {
+    'name' : 'vdummy',
+    'sources' : files('vdummy.c'),
+    'plugin_dir' : 'video_output',
+}
+
+# Dummy window provider
+vlc_modules += {
+    'name' : 'wdummy',
+    'sources' : files('wdummy.c'),
+    'plugin_dir' : 'video_output',
+}
+
+android_lib = []
+
+# Android window provider (vout window + AWINDOW decoder device)
+if host_system == 'android'
+    android_lib = cc.find_library('android')
+    egl_lib = cc.find_library('EGL')
+    glesv2_lib = cc.find_library('GLESv2')
+    vlc_modules += {
+        'name' : 'android_window',
+        'sources' : files('android/window.c'),
+        'link_with' : [libandroid_utils, libandroid_env],
+        'dependencies' : [android_lib, egl_lib, glesv2_lib],
+    }
+    # gl_common_dep pulls in desktop OpenGL (-lGL) which doesn't exist on Android.
+    # Build the android display module with its own copy of the opengl sources,
+    # using OpenGL ES 2 headers/libs instead.
+    android_gl_sources = files(
+        'opengl/filter.c',
+        'opengl/filters.c',
+        'opengl/gl_api.c',
+        'opengl/gl_util.c',
+        'opengl/importer.c',
+        'opengl/interop.c',
+        'opengl/picture.c',
+        'opengl/sampler.c',
+        'opengl/sub_renderer.c',
+        'opengl/renderer.c',
+        'opengl/vout_helper.c',
+    )
+    vlc_modules += {
+        'name' : 'android_display',
+        'sources' : [files('android/display.c'), android_gl_sources],
+        'c_args' : ['-DUSE_OPENGL_ES2'],
+        'include_directories' : [vlc_include_dirs],
+        'link_with' : [libandroid_utils, libandroid_env],
+        'dependencies' : [android_lib, egl_lib, glesv2_lib, m_lib],
+        'plugin_dir' : 'video_output',
+    }
+
+    # EGL display module for Android
+    vlc_modules += {
+        'name' : 'egl_android',
+        'sources' : files('opengl/egl.c'),
+        'c_args' : ['-DUSE_PLATFORM_ANDROID=1'],
+        'link_with' : [libandroid_utils, libandroid_env],
+        'dependencies' : [android_lib, egl_lib, glesv2_lib],
+        'plugin_dir' : 'video_output',
+    }
+
+    # OpenGL ES 2 interop for Android Surface (SurfaceTexture / ANativeWindow)
+    vlc_modules += {
+        'name' : 'glinterop_asurface',
+        'sources' : files('opengl/interop_asurface.c'),
+        'c_args' : ['-DUSE_OPENGL_ES2'],
+        'link_with' : [libandroid_utils, libandroid_env],
+        'dependencies' : [android_lib, egl_lib, glesv2_lib],
+        'plugin_dir' : 'video_output',
+    }
+
+    # OpenGL ES 2 interop for Android Image (AImageReader)
+    vlc_modules += {
+        'name' : 'glinterop_aimage',
+        'sources' : files('opengl/interop_aimage.c'),
+        'c_args' : ['-DUSE_OPENGL_ES2'],
+        'link_with' : [libandroid_utils],
+        'dependencies' : [android_lib, egl_lib, glesv2_lib],
+        'plugin_dir' : 'video_output',
+    }
+endif
+
+# Video splitter
+vlc_modules += {
+    'name' : 'video_splitter',
+    'sources' : files('splitter.c'),
+    'plugin_dir' : 'video_output',
+}
+
+# YUV video output
+vlc_modules += {
+    'name' : 'yuv',
+    'sources' : files('yuv.c'),
+    'plugin_dir' : 'video_output',
+}
+
+# Flaschen video output
+vlc_modules += {
+    'name' : 'flaschen',
+    'sources' : files('flaschen.c'),
+    'dependencies' : [socket_libs],
+    'plugin_dir' : 'video_output',
+}
+
+# vmem
+vlc_modules += {
+    'name' : 'vmem',
+    'sources' : files('vmem.c'),
+    'plugin_dir' : 'video_output',
+}
+
+# wextern
+vlc_modules += {
+    'name' : 'wextern',
+    'sources' : files('wextern.c'),
+    'plugin_dir' : 'video_output',
+}
+
+# vgl
+vlc_modules += {
+    'name' : 'vgl',
+    'sources' : files('vgl.c'),
+    'plugin_dir' : 'video_output',
+}
+
+vlc_modules += {
+    'name' : 'decklinkoutput',
+    'sources' : files('decklink.cpp',
+                    '../stream_out/sdi/Ancillary.cpp',
+                    '../stream_out/sdi/Ancillary.hpp',
+                    '../stream_out/sdi/DBMHelper.cpp',
+                    '../stream_out/sdi/DBMHelper.hpp',
+                    '../stream_out/sdi/SDIGenerator.cpp',
+                    '../stream_out/sdi/SDIGenerator.hpp',
+                    '../stream_out/sdi/V210.cpp',
+                    '../stream_out/sdi/V210.hpp'),
+    'dependencies' : [dl_lib, decklink_dep],
+    'cpp_args' : decklink_cpp_args,
+    'plugin_dir' : 'video_output',
+    'enabled' : decklink_dep.found(),
+}
+
+# Kernel Mode Setting
+if drm_dep.found()
+    vlc_modules += {
+        'name' : 'kms',
+        'sources' : files('kms.c'),
+        'dependencies' : [drm_dep],
+        'plugin_dir' : 'video_output',
+    }
+endif
+
+# Coloured ASCII art (Caca)
+caca_dep = dependency('caca', version: '>= 0.99.beta14', required: get_option('caca'))
+caca_deps = [ caca_dep ]
+if not (host_system in ['windows', 'darwin'])
+    caca_deps += x11_dep
+endif
+if caca_dep.found()
+    vlc_modules += {
+        'name' : 'caca',
+        'sources' : files('caca.c'),
+        'dependencies' : [caca_deps],
+        'plugin_dir' : 'video_output',
+    }
+endif
+
+#
+# Vulkan video outputs
+#
+if vulkan_dep.found()
+    vlc_modules += {
+        'name' : 'vk_win32',
+        'sources' : files('vulkan/platform.c', 'vulkan/platform_win32.c'),
+        'c_args' : ['-DVK_USE_PLATFORM_WIN32_KHR', '-DPLATFORM_NAME=Win32'],
+        'dependencies' : [vulkan_dep],
+        'plugin_dir' : 'video_output',
+        'enabled': host_system == 'windows' and not have_win_store,
+    }
+
+    vlc_modules += {
+        'name' : 'vk_android',
+        'sources' : files('vulkan/platform.c', 'vulkan/platform_android.c'),
+        'c_args' : ['-DVK_USE_PLATFORM_ANDROID_KHR', '-DPLATFORM_NAME=Android'],
+        'dependencies' : [vulkan_dep],
+        'plugin_dir' : 'video_output',
+        'enabled': host_system == 'android'
+    }
+endif
+
+#
+# x11 video outputs
+#
+
+if xcb_dep.found()
+    vlc_xcb_events_lib = library('vlc_xcb_events',
+        files('xcb/events.c'),
+        include_directories: [vlc_include_dirs],
+        link_args: gc_sections_linkargs,
+        dependencies: [xcb_dep, libvlccore_dep],
+        install: true,
+        install_dir: pkglibdir_path,
+        )
+
+    if xcb_randr_dep.found() and xproto_dep.found()
+        vlc_modules += {
+            'name' : 'xcb_window',
+            'sources' : files('xcb/window.c'),
+            'dependencies' : [xcb_dep, xcb_randr_dep, xproto_dep],
+            'plugin_dir' : 'video_output',
+        }
+    endif
+
+    if xcb_render_dep.found() and xcb_shm_dep.found()
+        vlc_modules += {
+            'name' : 'xcb_render',
+            'sources' : files(
+              'xcb/pictures.c',
+              'xcb/render.c'
+            ),
+            'dependencies' : [xcb_dep, xcb_render_dep, xcb_shm_dep, m_lib],
+            'link_with' : [vlc_xcb_events_lib],
+            'plugin_dir' : 'video_output',
+        }
+    endif
+
+    if xcb_shm_dep.found()
+        vlc_modules += {
+            'name' : 'xcb_x11',
+            'sources' : files(
+              'xcb/pictures.c',
+              'xcb/x11.c'
+            ),
+            'dependencies' : [xcb_dep, xcb_shm_dep],
+            'link_with' : [vlc_xcb_events_lib],
+            'plugin_dir' : 'video_output',
+        }
+    endif
+endif
+
+if x11_dep.found() and egl_dep.found()
+    vlc_modules += {
+        'name' : 'egl_x11',
+        'sources' : files('opengl/egl.c'),
+        'c_args' : ['-DUSE_PLATFORM_X11=1'],
+        'dependencies' : [egl_dep, x11_dep],
+        'plugin_dir' : 'video_output',
+    }
+endif
+
+if x11_dep.found() and opengl_dep.found()
+    vlc_modules += {
+        'name' : 'glx',
+        'sources' : files('glx.c'),
+        'dependencies' : [x11_dep, opengl_dep],
+        'plugin_dir' : 'video_output',
+    }
+endif
+
+#
+# OS/2 video output
+#
+if host_system == 'os/2'
+    vlc_modules += {
+        'name' : 'drawable_os2',
+        'sources' : files('drawable_os2.c'),
+        'plugin_dir' : 'video_output',
+    }
+
+    vlc_modules += {
+        'name' : 'window_os2',
+        'sources' : files('window_os2.c'),
+        'plugin_dir' : 'video_output',
+    }
+
+    if get_option('kva').allowed()
+        kva_lib = cc.find_library('kva',
+                                   has_headers: ['kva.h'],
+                                   required: get_option('kva').enabled())
+
+        vlc_modules += {
+            'name' : 'kva',
+            'sources' : files('kva.c'),
+            'dependencies' : [kva_lib],
+            'plugin_dir' : 'video_output',
+            'enabled' : kva_lib.found(),
+        }
+    endif
+endif

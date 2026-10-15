@@ -1,0 +1,152 @@
+From 2c19c1a1249b43a0bae49624774ce98e4297576d Mon Sep 17 00:00:00 2001
+From: Jean-Baptiste Kempf <jb@videolan.org>
+Date: Tue, 17 Jan 2017 23:04:04 +0100
+Subject: [PATCH] This removes the OpenSSL dependency
+
+Close #16999 and #17815
+---
+ src/Makefile.am | 52 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index b3d2ce6..2864ab8 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -149,7 +149,7 @@ endif
+ 
+ libasdcp_la_LDFLAGS = -release @VERSION@
+ # additional libraries to link against for a library
+-libasdcp_la_LIBADD = libkumu.la
++libasdcp_la_LIBADD = libkumu.la -lnettle -lgmp
+ libasdcp_la_CPPFLAGS = -DASDCP_PLATFORM=\"@host@\"
+ 
+ if USE_AS_02
+@@ -180,7 +180,7 @@ libas02_la_SOURCES	= \
+ 	AS_02_ACES.cpp
+ 
+ libas02_la_LDFLAGS = -release @VERSION@
+-libas02_la_LIBADD = libasdcp.la libkumu.la
++libas02_la_LIBADD = libasdcp.la libkumu.la -lnettle -lgmp
+ libas02_la_CPPFLAGS = -DASDCP_PLATFORM=\"@host@\"
+ endif
+ 
+@@ -193,7 +193,7 @@ libphdr_la_SOURCES	= \
+ 	AS_02_PHDR.cpp
+ 
+ libphdr_la_LDFLAGS = -release @VERSION@
+-libphdr_la_LIBADD = libasdcp.la libkumu.la
++libphdr_la_LIBADD = libasdcp.la libkumu.la -lnettle -lgmp
+ libphdr_la_CPPFLAGS = -DASDCP_PLATFORM=\"@host@\"
+ endif
+ 
+@@ -231,70 +231,70 @@ endif
+ 
+ # sources and linkage for CLI utilities
+ asdcp_test_SOURCES = asdcp-test.cpp
+-asdcp_test_LDADD = libasdcp.la libkumu.la
++asdcp_test_LDADD = libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ asdcp_wrap_SOURCES = asdcp-wrap.cpp
+-asdcp_wrap_LDADD = libasdcp.la libkumu.la
++asdcp_wrap_LDADD = libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ asdcp_unwrap_SOURCES = asdcp-unwrap.cpp
+-asdcp_unwrap_LDADD = libasdcp.la libkumu.la
++asdcp_unwrap_LDADD = libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ asdcp_util_SOURCES = asdcp-util.cpp
+-asdcp_util_LDADD = libasdcp.la libkumu.la
++asdcp_util_LDADD = libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ asdcp_info_SOURCES = asdcp-info.cpp
+-asdcp_info_LDADD = libasdcp.la libkumu.la
++asdcp_info_LDADD = libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ kmfilegen_SOURCES = kmfilegen.cpp
+-kmfilegen_LDADD = libkumu.la 
++kmfilegen_LDADD = libkumu.la -lnettle -lgmp
+ 
+ kmrandgen_SOURCES = kmrandgen.cpp
+-kmrandgen_LDADD = libkumu.la 
++kmrandgen_LDADD = libkumu.la -lnettle -lgmp
+ 
+ kmuuidgen_SOURCES = kmuuidgen.cpp
+-kmuuidgen_LDADD = libkumu.la 
++kmuuidgen_LDADD = libkumu.la -lnettle -lgmp
+ 
+ blackwave_SOURCES = blackwave.cpp
+-blackwave_LDADD = libasdcp.la  libkumu.la
++blackwave_LDADD = libasdcp.la  libkumu.la -lnettle -lgmp
+ 
+ pinkwave_SOURCES = pinkwave.cpp
+-pinkwave_LDADD = libasdcp.la  libkumu.la
++pinkwave_LDADD = libasdcp.la  libkumu.la -lnettle -lgmp
+ 
+ klvwalk_SOURCES = klvwalk.cpp
+-klvwalk_LDADD = libasdcp.la libkumu.la
++klvwalk_LDADD = libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ wavesplit_SOURCES = wavesplit.cpp
+-wavesplit_LDADD = libasdcp.la libkumu.la
++wavesplit_LDADD = libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ j2c_test_SOURCES = j2c-test.cpp
+-j2c_test_LDADD = libasdcp.la libkumu.la
++j2c_test_LDADD = libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ klvsplit_SOURCES = klvsplit.cpp
+-klvsplit_LDADD = libasdcp.la libkumu.la
++klvsplit_LDADD = libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ if USE_AS_02
+ as_02_wrap_SOURCES = as-02-wrap.cpp
+-as_02_wrap_LDADD = libas02.la libasdcp.la libkumu.la
++as_02_wrap_LDADD = libas02.la libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ as_02_wrap_jxs_SOURCES = as-02-wrap-jxs.cpp
+-as_02_wrap_jxs_LDADD = libas02.la libasdcp.la libkumu.la
++as_02_wrap_jxs_LDADD = libas02.la libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ as_02_wrap_iab_SOURCES = as-02-wrap-iab.cpp
+-as_02_wrap_iab_LDADD = libas02.la libasdcp.la libkumu.la
++as_02_wrap_iab_LDADD = libas02.la libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ as_02_unwrap_SOURCES = as-02-unwrap.cpp
+-as_02_unwrap_LDADD = libas02.la libasdcp.la libkumu.la
++as_02_unwrap_LDADD = libas02.la libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ as_02_info_SOURCES = as-02-info.cpp
+-as_02_info_LDADD = libas02.la libasdcp.la libkumu.la
++as_02_info_LDADD = libas02.la libasdcp.la libkumu.la -lnettle -lgmp
+ endif
+ 
+ if USE_PHDR
+ phdr_wrap_SOURCES = phdr-wrap.cpp
+-phdr_wrap_LDADD = libphdr.la libas02.la libasdcp.la libkumu.la
++phdr_wrap_LDADD = libphdr.la libas02.la libasdcp.la libkumu.la -lnettle -lgmp
+ 
+ phdr_unwrap_SOURCES = phdr-unwrap.cpp
+-phdr_unwrap_LDADD = libphdr.la libas02.la libasdcp.la libkumu.la
++phdr_unwrap_LDADD = libphdr.la libas02.la libasdcp.la libkumu.la -lnettle -lgmp
+ endif
+ 
+ # list of programs that need to be compiled for use in test suite
+@@ -310,13 +310,13 @@ asdcp_mem_test_SOURCES = asdcp-mem-test.cpp
+ asdcp_mem_test_LDADD = libasdcp.la
+ 
+ path_test_SOURCES = path-test.cpp
+-path_test_LDADD = libkumu.la
++path_test_LDADD = libkumu.la -lnettle -lgmp
+ 
+ fips_186_rng_test_SOURCES = fips-186-rng-test.cpp
+ fips_186_rng_test_LDADD = libasdcp.la
+ 
+ asdcp_version_SOURCES = asdcp-version.cpp
+-asdcp_version_LDADD = libkumu.la 
++asdcp_version_LDADD = libkumu.la -lnettle -lgmp
+ 
+ if DEV_HEADERS
+ nodist_tt_xform_SOURCES = tt-xform.cpp TimedText_Transform.h
+-- 
+2.37.3.windows.1
+

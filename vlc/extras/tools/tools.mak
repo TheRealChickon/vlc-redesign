@@ -1,0 +1,521 @@
+# Copyright (C) 2003-2011 the VideoLAN team
+#
+# This file is under the same license as the vlc package.
+
+include $(TOOLS)/packages.mak
+TARBALLS := $(TOOLS)
+
+#
+# common rules
+#
+
+ifeq ($(shell command -v curl >/dev/null 2>&1 || echo FAIL),)
+download = curl -f -L --retry 3 --output "$@" -- "$(1)"
+else ifeq ($(shell command -v wget >/dev/null 2>&1 || echo FAIL),)
+download = rm -f $@.tmp && \
+	wget --passive -c -p -O $@.tmp "$(1)" && \
+	touch $@.tmp && \
+	mv $@.tmp $@
+else ifeq ($(shell command -v fetch >/dev/null 2>&1 || echo FAIL),)
+download = rm -f $@.tmp && \
+	fetch -p -o $@.tmp "$(1)" && \
+	touch $@.tmp && \
+	mv $@.tmp $@
+else
+download = $(error Neither curl nor wget found!)
+endif
+
+ifeq ($(shell command -v sha512sum >/dev/null 2>&1 || echo FAIL),)
+SHA512SUM = sha512sum -c
+else ifeq ($(shell command -v shasum >/dev/null 2>&1 || echo FAIL),)
+SHA512SUM = shasum -a 512 --check
+else ifeq ($(shell command -v openssl >/dev/null 2>&1 || echo FAIL),)
+SHA512SUM = openssl dgst -sha512
+else
+SHA512SUM = $(error SHA-512 checksumming not found!)
+endif
+
+download_pkg = $(call download,$(VIDEOLAN)/$(2)/$(lastword $(subst /, ,$(@)))) || \
+	( $(call download,$(1)) && echo "Please upload this package $(lastword $(subst /, ,$(@))) to our FTP" )  \
+	&& grep $(@) $(TOOLS)/SHA512SUMS| $(SHA512SUM) /dev/stdin
+
+ifeq ($(V),1)
+TAR_VERBOSE := v
+endif
+
+UNPACK = $(RM) -R $@ $(UNPACK_DIR) \
+    $(foreach f,$(filter %.tar.gz %.tgz %.tar.bz2 %.tar.xz %.tar.zst,$^), && tar $(TAR_VERBOSE)xfo $(f)) \
+    $(foreach f,$(filter %.zip,$^), && unzip $(f))
+
+UNPACK_DIR = $(patsubst %.tar,%,$(basename $(notdir $<)))
+APPLY = (cd $(UNPACK_DIR) && patch -p1) <
+MOVE = mv $(UNPACK_DIR) $@ && touch $@
+
+#
+# package rules
+#
+
+# nasm
+
+nasm-$(NASM_VERSION).tar.gz:
+	$(call download_pkg,$(NASM_URL),nasm)
+
+.getnasm: nasm-$(NASM_VERSION).tar.gz
+nasm: nasm-$(NASM_VERSION).tar.gz
+	$(UNPACK)
+	$(MOVE)
+
+.buildnasm: nasm
+	cd $<; ./configure --prefix=$(PREFIX)
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	touch $@
+
+CLEAN_FILE += .buildnasm
+CLEAN_PKG += nasm
+DISTCLEAN_PKG += nasm-$(NASM_VERSION).tar.gz
+
+# cmake
+
+cmake-$(CMAKE_VERSION).tar.gz:
+	$(call download_pkg,$(CMAKE_URL),cmake)
+
+.getcmake: cmake-$(CMAKE_VERSION).tar.gz
+cmake: cmake-$(CMAKE_VERSION).tar.gz
+	$(UNPACK)
+	$(MOVE)
+
+.buildcmake: cmake
+	cd $<; ./configure --prefix=$(PREFIX) $(CMAKEFLAGS) --no-qt-gui -- -DCMAKE_USE_OPENSSL:BOOL=OFF -DBUILD_TESTING:BOOL=OFF
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	touch $@
+
+CLEAN_FILE += .buildcmake
+CLEAN_PKG += cmake
+DISTCLEAN_PKG += cmake-$(CMAKE_VERSION).tar.gz
+
+# help2man
+help2man-$(HELP2MAN_VERSION).tar.xz:
+	$(call download_pkg,$(HELP2MAN_URL),help2man)
+
+help2man: .tar
+.gethelp2man: help2man-$(HELP2MAN_VERSION).tar.xz
+help2man: help2man-$(HELP2MAN_VERSION).tar.xz
+	$(UNPACK)
+	$(MOVE)
+
+.buildhelp2man: help2man
+	cd $<; ./configure --prefix=$(PREFIX)
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	touch $@
+
+CLEAN_FILE += .buildhelp2man
+CLEAN_PKG += help2man
+DISTCLEAN_PKG += help2man-$(HELP2MAN_VERSION).tar.xz
+
+# libtool
+
+libtool-$(LIBTOOL_VERSION).tar.gz:
+	$(call download_pkg,$(LIBTOOL_URL),libtool)
+
+.getlibtool: libtool-$(LIBTOOL_VERSION).tar.gz
+libtool: libtool-$(LIBTOOL_VERSION).tar.gz
+	$(UNPACK)
+	(cd $(UNPACK_DIR) && chmod u+w build-aux/ltmain.sh)
+	$(APPLY) $(TOOLS)/libtool-2.4.7-bitcode.patch
+	$(APPLY) $(TOOLS)/libtool-2.4.7-lpthread.patch
+	$(APPLY) $(TOOLS)/libtool-2.6.2-embed-bitcode.patch
+
+	$(APPLY) $(TOOLS)/libtool-2.5.4-ltmain.in-reference-MAGIC_EXE-in-the-main.patch
+	$(APPLY) $(TOOLS)/libtool-2.5.4-libtool.m4-respect-the-provided-LTCFLAGS-LTCC-during.patch
+	$(MOVE)
+
+.buildlibtool: libtool .automake .help2man
+	(cd $(UNPACK_DIR) && autoreconf -fv)
+	cd $<; ./configure --prefix=$(PREFIX)
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	ln -sf libtool $(PREFIX)/bin/glibtool
+	ln -sf libtoolize $(PREFIX)/bin/glibtoolize
+	touch $@
+
+CLEAN_PKG += libtool
+DISTCLEAN_PKG += libtool-$(LIBTOOL_VERSION).tar.gz
+CLEAN_FILE += .buildlibtool
+
+# GNU tar (with xz support)
+
+tar-$(TAR_VERSION).tar.bz2:
+	$(call download_pkg,$(TAR_URL),tar)
+
+.gettar: tar-$(TAR_VERSION).tar.bz2
+tar: tar-$(TAR_VERSION).tar.bz2
+	$(UNPACK)
+	$(MOVE)
+
+.buildtar: tar .xz
+	cd $<; ./configure --prefix=$(PREFIX)
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	touch $@
+
+CLEAN_PKG += tar
+DISTCLEAN_PKG += tar-$(TAR_VERSION).tar.bz2
+CLEAN_FILE += .buildtar
+
+# xz
+
+xz-$(XZ_VERSION).tar.bz2:
+	$(call download_pkg,$(XZ_URL),xz)
+
+.getxz: xz-$(XZ_VERSION).tar.bz2
+xz: xz-$(XZ_VERSION).tar.bz2
+	$(UNPACK)
+	$(MOVE)
+
+.buildxz: xz
+	cd $<; ./configure --prefix=$(PREFIX)
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	rm $(PREFIX)/lib/pkgconfig/liblzma.pc
+	touch $@
+
+CLEAN_PKG += xz
+DISTCLEAN_PKG += xz-$(XZ_VERSION).tar.bz2
+CLEAN_FILE += .buildxz
+
+# zstd
+
+zstd-$(ZSTD_VERSION).tar.gz:
+	$(call download_pkg,$(ZSTD_URL),zstd)
+
+.getzstd: zstd-$(ZSTD_VERSION).tar.gz
+zstd: zstd-$(ZSTD_VERSION).tar.gz
+	$(UNPACK)
+	$(MOVE)
+
+.buildzstd: zstd
+	+$(MAKE) -C $</programs
+	+$(MAKE) -C $</programs install prefix=$(PREFIX)
+	touch $@
+
+CLEAN_PKG += zstd
+DISTCLEAN_PKG += zstd-$(ZSTD_VERSION).tar.gz
+CLEAN_FILE += .buildzstd
+
+# config.guess
+
+config.guess: $(TOOLS)/config.guess-$(CONFIGGUESS_VERSION)
+	# CONFIGGUESS_URL=https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=$(CONFIGGUESS_VERSION)
+	cp -f $< $@
+
+config.sub: $(TOOLS)/config.sub-$(CONFIGSUB_VERSION)
+	# CONFIGSUB_URL=https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=$(CONFIGSUB_VERSION)
+	cp -f $< $@
+
+.getconfigguess:
+.buildconfigguess: config.guess config.sub
+	# install in a dummy autoconf so that VLC contribs pick it
+	install -d           "$(PREFIX)/share/autoconf-vlc/build-aux"
+	install config.guess "$(PREFIX)/share/autoconf-vlc/build-aux"
+	install config.sub   "$(PREFIX)/share/autoconf-vlc/build-aux"
+	touch $@
+
+# autoconf
+
+autoconf-$(AUTOCONF_VERSION).tar.gz:
+	$(call download_pkg,$(AUTOCONF_URL),autoconf)
+
+autoconf: .configguess
+.getautoconf: autoconf-$(AUTOCONF_VERSION).tar.gz
+autoconf: autoconf-$(AUTOCONF_VERSION).tar.gz
+	$(UNPACK)
+	@-cp config.guess $(UNPACK_DIR)/build-aux
+	@-cp config.sub $(UNPACK_DIR)/build-aux
+	$(MOVE)
+
+.buildautoconf: autoconf .pkg-config .m4
+	cd $<; ./configure --prefix=$(PREFIX)
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	touch $@
+
+CLEAN_FILE += .buildautoconf
+CLEAN_PKG += autoconf
+DISTCLEAN_PKG += autoconf-$(AUTOCONF_VERSION).tar.gz
+
+# automake
+
+automake-$(AUTOMAKE_VERSION).tar.gz:
+	$(call download_pkg,$(AUTOMAKE_URL),automake)
+
+automake: .configguess
+.getautomake: automake-$(AUTOMAKE_VERSION).tar.gz
+automake: automake-$(AUTOMAKE_VERSION).tar.gz
+	$(UNPACK)
+	$(APPLY) $(TOOLS)/automake-disable-documentation.patch
+	$(APPLY) $(TOOLS)/automake-clang.patch
+	@-cp config.guess $(UNPACK_DIR)/lib
+	@-cp config.sub $(UNPACK_DIR)/lib
+	$(MOVE)
+
+.buildautomake: automake .autoconf
+	(cd $<; ./bootstrap)
+	cd $<; ./configure --prefix=$(PREFIX)
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	touch $@
+
+CLEAN_FILE += .buildautomake
+CLEAN_PKG += automake
+DISTCLEAN_PKG += automake-$(AUTOMAKE_VERSION).tar.gz
+
+# m4
+
+m4-$(M4_VERSION).tar.gz:
+	$(call download_pkg,$(M4_URL),m4)
+
+.getm4: m4-$(M4_VERSION).tar.gz
+m4: m4-$(M4_VERSION).tar.gz
+	$(UNPACK)
+	$(MOVE)
+
+.buildm4: m4
+	cd $<; ./configure --prefix=$(PREFIX)
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	touch $@
+
+CLEAN_FILE += .buildm4
+CLEAN_PKG += m4
+DISTCLEAN_PKG += m4-$(M4_VERSION).tar.gz
+
+# pkg-config
+
+pkg-config-$(PKGCONFIG_VERSION).tar.gz:
+	$(call download_pkg,$(PKGCONFIG_URL),pkgconfiglite)
+
+.getpkgconfig: pkg-config-$(PKGCFG_VERSION).tar.gz
+pkgconfig: pkg-config-$(PKGCONFIG_VERSION).tar.gz
+	$(UNPACK)
+	mv pkg-config-lite-$(PKGCONFIG_VERSION) pkg-config-$(PKGCONFIG_VERSION)
+	$(APPLY) $(TOOLS)/pkg-config-stdc23-port.patch
+	$(MOVE)
+
+.buildpkg-config: pkgconfig
+	cd $<; ./configure --prefix=$(PREFIX) --disable-shared --enable-static --disable-dependency-tracking
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	touch $@
+
+CLEAN_FILE += .buildpkg-config
+CLEAN_PKG += pkgconfig
+DISTCLEAN_PKG += pkg-config-$(PKGCONFIG_VERSION).tar.gz
+
+# GNU sed
+
+sed-$(SED_VERSION).tar.bz2:
+	$(call download_pkg,$(SED_URL),sed)
+
+.getsed: sed-$(SED_VERSION).tar.bz2
+sed: sed-$(SED_VERSION).tar.bz2
+	$(UNPACK)
+	$(MOVE)
+
+.buildsed: sed
+	cd $<; ./configure --prefix=$(PREFIX)
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	touch $@
+
+CLEAN_PKG += sed
+DISTCLEAN_PKG += sed-$(SED_VERSION).tar.bz2
+CLEAN_FILE += .buildsed
+
+# Apache ANT
+
+apache-ant-$(ANT_VERSION).tar.bz2:
+	$(call download_pkg,$(ANT_URL),ant)
+
+.getant: apache-ant-$(ANT_VERSION).tar.bz2
+ant: apache-ant-$(ANT_VERSION).tar.bz2
+	$(UNPACK)
+	$(MOVE)
+
+.buildant: ant
+	(mkdir -p $(PREFIX)/bin && cp $</bin/* $(PREFIX)/bin/)
+	(mkdir -p $(PREFIX)/lib && cp $</lib/* $(PREFIX)/lib/)
+	touch $@
+
+CLEAN_PKG += ant
+DISTCLEAN_PKG += apache-ant-$(ANT_VERSION).tar.bz2
+CLEAN_FILE += .buildant
+
+
+#
+# GNU bison
+#
+
+bison-$(BISON_VERSION).tar.xz:
+	$(call download_pkg,$(BISON_URL),bison)
+
+bison: .tar
+.getbison: bison-$(BISON_VERSION).tar.xz
+bison: bison-$(BISON_VERSION).tar.xz
+	$(UNPACK)
+	$(MOVE)
+
+.buildbison: bison
+	cd $<; ./configure --prefix=$(PREFIX)
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	touch $@
+
+CLEAN_PKG += bison
+DISTCLEAN_PKG += bison-$(BISON_VERSION).tar.xz
+CLEAN_FILE += .buildbison
+
+#
+# GNU flex
+#
+
+flex-$(FLEX_VERSION).tar.gz:
+	$(call download_pkg,$(FLEX_URL),flex)
+
+.getflex: flex-$(FLEX_VERSION).tar.gz
+flex: flex-$(FLEX_VERSION).tar.gz
+	$(UNPACK)
+	$(MOVE)
+
+.buildflex: flex
+	cd $<; ./configure --prefix=$(PREFIX)
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	touch $@
+
+CLEAN_PKG += flex
+DISTCLEAN_PKG += flex-$(FLEX_VERSION).tar.gz
+CLEAN_FILE += .buildflex
+
+
+
+#
+# GNU gettext
+#
+
+GETTEXT_CONF = \
+	--disable-relocatable \
+	--disable-java \
+	--disable-native-java \
+	--disable-csharp \
+	--disable-d \
+	--disable-go \
+	--disable-modula2 \
+	--disable-openmp \
+	--without-emacs \
+	--without-included-libxml \
+	--without-git \
+	--without-cvs
+
+gettext-$(GETTEXT_VERSION).tar.gz:
+	$(call download_pkg,$(GETTEXT_URL),gettext)
+
+.getgettext: gettext-$(GETTEXT_VERSION).tar.gz
+gettext: gettext-$(GETTEXT_VERSION).tar.gz
+	$(UNPACK)
+	$(APPLY) $(TOOLS)/gettext-no-iconv.patch
+	$(MOVE)
+
+.buildgettext: gettext
+	cd $<; ./configure --prefix=$(PREFIX) $(GETTEXT_CONF)
+	+$(MAKE) -C $< EXAMPLESFILES= EXAMPLESDIRS= TESTS=
+	+$(MAKE) -C $< EXAMPLESFILES= EXAMPLESDIRS= TESTS= install
+	touch $@
+
+CLEAN_PKG += gettext
+DISTCLEAN_PKG += gettext-$(GETTEXT_VERSION).tar.gz
+CLEAN_FILE += .buildgettext
+
+#
+# meson build
+#
+
+meson-$(MESON_VERSION).tar.gz:
+	$(call download_pkg,$(MESON_URL),meson)
+
+.getmeson: meson-$(MESON_VERSION).tar.gz
+meson: meson-$(MESON_VERSION).tar.gz
+	$(UNPACK)
+	$(MOVE)
+
+.buildmeson: meson
+	mkdir -p $(PREFIX)/bin
+	printf "#!/bin/sh\n\npython3 $(abspath .)/meson/meson.py \"\$$@\"\n" > $(PREFIX)/bin/meson
+	chmod +x $(PREFIX)/bin/meson
+	touch $@
+
+CLEAN_PKG += meson
+DISTCLEAN_PKG += meson-$(MESON_VERSION).tar.gz
+CLEAN_FILE += .buildmeson
+
+#
+# ninja build
+#
+
+ninja-$(NINJA_BUILD_NAME).tar.gz:
+	$(call download_pkg,$(NINJA_URL),ninja)
+
+ninja: .cmake
+ninja: UNPACK_DIR=ninja-$(NINJA_BUILD_NAME)
+.getninja: ninja-$(NINJA_BUILD_NAME).tar.gz
+ninja: ninja-$(NINJA_BUILD_NAME).tar.gz
+	$(UNPACK)
+	$(MOVE)
+
+.buildninja: ninja
+	cmake -S $< -B $</vlc_build -DCMAKE_INSTALL_PREFIX:STRING=$(PREFIX) -DBUILD_TESTING=OFF
+	+cmake --build $</vlc_build
+	+cmake --install $</vlc_build
+	touch $@
+
+CLEAN_PKG += ninja
+DISTCLEAN_PKG += ninja-$(NINJA_BUILD_NAME).tar.gz
+CLEAN_FILE += .buildninja
+
+# gperf
+
+gperf-$(GPERF_VERSION).tar.gz:
+	$(call download_pkg,$(GPERF_URL),gperf)
+
+.getgperf: gperf-$(GPERF_VERSION).tar.gz
+gperf: gperf-$(GPERF_VERSION).tar.gz
+	$(UNPACK)
+	$(MOVE)
+
+.buildgperf: gperf
+	cd $<; ./configure --prefix=$(PREFIX)
+	+$(MAKE) -C $<
+	+$(MAKE) -C $< install
+	touch $@
+
+CLEAN_PKG += gperf
+DISTCLEAN_PKG += gperf-$(GPERF_VERSION).tar.gz
+CLEAN_FILE += .buildgperf
+
+#
+#
+#
+
+fetch-all: $(DISTCLEAN_PKG)
+
+clean:
+	rm -fr $(CLEAN_FILE) $(CLEAN_PKG) build/
+
+distclean: clean
+	rm -fr $(DISTCLEAN_PKG)
+
+.PHONY: all clean distclean
+
+.DELETE_ON_ERROR:

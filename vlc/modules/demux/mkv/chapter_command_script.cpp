@@ -1,0 +1,89 @@
+// Copyright (C) 2003-2024 VLC authors and VideoLAN
+// SPDX-License-Identifier: LGPL-2.1-or-later
+//
+// chapter_command_script.cpp : Matroska Script Codec for Matroska Chapter Codecs
+// Authors: Laurent Aimar <fenrir@via.ecp.fr>
+//          Steve Lhomme <steve.lhomme@free.fr>
+
+
+#include "chapter_command_script.hpp"
+#include "virtual_segment.hpp"
+
+namespace mkv {
+
+#define M_MS_MAX_DEPTH 8
+//Matroska Script
+const std::string matroska_script_interpretor_c::CMD_MS_GOTO_AND_PLAY = "GotoAndPlay";
+
+// see http://www.matroska.org/technical/specs/chapters/index.html#mscript
+//  for a description of existing commands
+bool matroska_script_interpretor_c::Interpret( MatroskaChapterProcessTime time, const binary * p_command, size_t i_size )
+{
+    static thread_local int n_call = 0;
+    if( n_call > M_MS_MAX_DEPTH )
+      return false;
+    n_call++;
+
+    bool b_result = false;
+
+    std::string sz_command( reinterpret_cast<const char*> (p_command), i_size );
+
+    vlc_debug( l, "command : %s", sz_command.c_str() );
+
+    if ( sz_command.compare( 0, CMD_MS_GOTO_AND_PLAY.size(), CMD_MS_GOTO_AND_PLAY ) == 0 )
+    {
+        size_t i,j;
+
+        // find the (
+        for ( i=CMD_MS_GOTO_AND_PLAY.size(); i<sz_command.size(); i++)
+        {
+            if ( sz_command[i] == ' ' )
+                continue;
+            if ( sz_command[i] == '(' )
+            {
+                i++;
+                break;
+            }
+            return false; // extra characters between command and ( is not supported
+        }
+        // find the )
+        for ( j=i; j<sz_command.size(); j++)
+        {
+            if ( sz_command[j] == ')' )
+            {
+                i--;
+                break;
+            }
+        }
+
+        if(i+1 < j-i-1)
+        {
+            std::string st = sz_command.substr( i+1, j-i-1 );
+            chapter_uid i_chapter_uid = std::stoull( st );
+
+            virtual_segment_c *p_vsegment;
+            virtual_chapter_c *p_vchapter = vm.FindVChapter( i_chapter_uid, p_vsegment );
+
+            if ( p_vchapter == NULL )
+                vlc_debug( l, "Chapter %" PRId64 " not found", i_chapter_uid);
+            else
+            {
+                auto current_chapter = vm.GetCurrentVSegment()->CurrentChapter();
+                if ( p_vchapter == current_chapter) {
+                    if ( time == MATROSKA_CHAPPROCESSTIME_BEFORE )
+                        // the enter command is enter itself, avoid infinite loop
+                        return false;
+                    vm.JumpTo( *p_vsegment, *p_vchapter );
+                }
+                else if ( !p_vchapter->EnterAndLeave( current_chapter, false ) )
+                    vm.JumpTo( *p_vsegment, *p_vchapter );
+                b_result = true;
+            }
+        }
+    }
+
+    n_call--;
+    return b_result;
+}
+
+} // namespace

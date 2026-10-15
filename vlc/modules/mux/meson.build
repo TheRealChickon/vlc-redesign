@@ -1,0 +1,75 @@
+# muxer modules
+
+vlc_modules += {
+    'name': 'mux_dummy',
+    'sources': files('dummy.c'),
+    'plugin_dir' : 'mux',
+}
+
+vlc_modules += {
+    'name': 'mux_asf',
+    'sources': files('asf.c'),
+    'plugin_dir' : 'mux',
+}
+
+vlc_modules += {
+    'name': 'mux_avi',
+    'sources': files('avi.c'),
+    'plugin_dir' : 'mux',
+}
+
+vlc_modules += {
+    'name': 'mux_mp4',
+    'sources': files(
+        'mp4/mp4.c',
+        'mp4/libmp4mux.c',
+        'extradata.c',
+        '../packetizer/h266_nal.c',
+        '../packetizer/av1_obu.c'),
+    'link_with': [hxxxhelper_lib],
+    'plugin_dir' : 'mux',
+}
+
+vlc_modules += {
+    'name': 'mux_mpjpeg',
+    'sources': files('mpjpeg.c'),
+    'plugin_dir' : 'mux',
+}
+
+vlc_modules += {
+    'name': 'mux_ogg',
+    'sources': files('ogg.c'),
+    'dependencies': [ ogg_dep ],
+    'plugin_dir' : 'mux',
+    'enabled': ogg_dep.found(),
+}
+
+vlc_modules += {
+    'name': 'mux_ps',
+    'sources': files(
+        'mpeg/pes.c',
+        'mpeg/repack.c',
+        'mpeg/ps.c'),
+    'plugin_dir' : 'mux',
+}
+
+vlc_modules += {
+    'name': 'mux_ts',
+    'sources': files(
+        'mpeg/pes.c',
+        'mpeg/repack.c',
+        'mpeg/csa.c',
+        'mpeg/tables.c',
+        'mpeg/tsutil.c',
+        'mpeg/ts.c',
+    ),
+    'dependencies': [ libdvbpsi_dep, libdvbcsa_dep ],
+    'plugin_dir' : 'mux',
+    'enabled': libdvbpsi_dep.found(),
+}
+
+vlc_modules += {
+    'name': 'mux_wav',
+    'sources': files('wav.c'),
+    'plugin_dir' : 'mux',
+}

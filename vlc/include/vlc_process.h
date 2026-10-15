@@ -1,0 +1,142 @@
+// SPDX-License-Identifier: LGPL-2.1-or-later
+/*****************************************************************************
+ * vlc_process.h: vlc_process functions
+ *****************************************************************************
+ * Copyright © 2025 Videolabs, VideoLAN and VLC authors
+ *
+ * Authors: Gabriel Lafond Thenaille <gabriel@videolabs.io>
+ *****************************************************************************/
+
+#ifndef VLC_PROCESS_H
+#define VLC_PROCESS_H
+
+#include <vlc_common.h>
+#include <vlc_tick.h>
+
+/**
+ * @ingroup misc
+ * @file
+ * VLC_PROCESS API
+ * @defgroup process Process API
+ * @{
+ */
+
+/**
+ * Spawn a new process with input and output redirection.
+ *
+ * Creates and starts a new vlc_process for the specified executable path with
+ * the given arguments. Sets up pipes to allow reading from the process's
+ * standard output and writing to its standard input.
+ *
+ * @param [in]  path    Path to the executable to run. Must not be NULL.
+ * @param [in]  argc    Number of arguments passed to the process (must be
+ *                      greater than or equal to 0).
+ * @param [in]  argv    Array of argument strings. May be NULL if argc is 0;
+ *                      otherwise argv[0] must not be NULL.
+ *
+ * @return      A pointer to the newly created vlc_process structure on
+ *              success, or NULL on failure.
+ */
+VLC_API struct vlc_process *
+vlc_process_Spawn(const char *path, int argc, const char *const *argv);
+
+/**
+ * Kill a process and abort its I/O.
+ *
+ * Sends a termination signal to the process and shuts down the communication
+ * channel, so that any in-flight or subsequent I/O on @p process completes
+ * promptly instead of blocking: vlc_process_fd_Read() reports end-of-stream
+ * and vlc_process_fd_Write() fails with EPIPE.
+ *
+ * This does not free @p process: vlc_process_Terminate() must still be called
+ * for that. It can be called multiple times.
+ *
+ * @param [in]  process     Pointer to the vlc_process instance. Must not be
+ *                          NULL.
+ */
+VLC_API void
+vlc_process_Kill(struct vlc_process *process);
+
+/**
+ * Stop a vlc_process and wait for its termination.
+ *
+ * Closes its file descriptors, and waits for it to exit. Optionally sends a
+ * termination signal to the process,
+ *
+ * @warning This must not be called concurrently with vlc_process_fd_Read() or
+ *          vlc_process_fd_Write() on the same @p process. It closes the
+ *          underlying pipe/socket and frees @p process, so the caller must
+ *          ensure that any thread performing I/O has returned first to avoid a
+ *          use-after-free. Use vlc_process_Kill() to unblock such a thread,
+ *          then join it before calling this.
+ *
+ * @param [in]  process        Pointer to the vlc_process instance. Must not
+ *                             be NULL.
+ * @param [in]  kill_process   Whether to forcibly terminate the process
+ *                             before waiting.
+ *
+ * @return      The exit status of the process, or -1 on error.
+ */
+VLC_API int
+vlc_process_Terminate(struct vlc_process *process, bool kill_process);
+
+/**
+ * Read data from the process's standard output with a timeout.
+ *
+ * Attempts to read up to @p size bytes from the process's standard output
+ * into the provided buffer, waiting up to @p timeout_ms milliseconds for data
+ * to become available.
+ *
+ * On POSIX systems, this uses poll to wait for readability. On Windows,
+ * a platform-specific implementation is used due to limitations with poll on
+ * non-socket handles.
+ *
+ * @warning At most one thread may call this function on a given @p process at
+ *          a time. Reading from one thread while another one writes is
+ *          supported, but two concurrent readers are not.
+ *
+ * @param [in]  process     Pointer to the vlc_process instance.
+ * @param [out] buf         Buffer where the read data will be stored.
+ * @param [in]  size        Maximum number of bytes to read.
+ * @param [in]  timeout_ms  Timeout in milliseconds to wait for data.
+ *
+ * @return      The number of bytes read on success,
+ *              -1 on error, and errno is set to indicate the error.
+ */
+VLC_API ssize_t
+vlc_process_fd_Read(struct vlc_process *process, uint8_t *buf, size_t size,
+                    vlc_tick_t timeout_ms);
+
+/**
+ * Write data to the process's standard input with a timeout.
+ *
+ * Attempts to write up to @p size bytes from the provided buffer to the
+ * process's standard input, waiting up to @p timeout_ms milliseconds for the
+ * pipe to become writable.
+ *
+ * On POSIX systems, this uses poll to wait for writability. On Windows,
+ * a platform-specific implementation is used due to limitations with poll on
+ * non-socket handles.
+ *
+ * @warning At most one thread may call this function on a given @p process at
+ *          a time. Writing from one thread while another one reads is
+ *          supported, but two concurrent writers are not.
+ *
+ * @param [in]  process     Pointer to the vlc_process instance.
+ * @param [in]  buf         Buffer containing the data to write.
+ * @param [in]  size        Number of bytes to write.
+ * @param [in]  timeout_ms  Timeout in milliseconds to wait for the pipe to be
+ *                          writable.
+ *
+ * @return      The number of bytes written on success,
+ *              -1 on error, and errno is set to indicate the error.
+ */
+VLC_API ssize_t
+vlc_process_fd_Write(struct vlc_process *process, const uint8_t *buf, size_t size,
+                     vlc_tick_t timeout_ms);
+
+/**
+ * @} process
+ */
+
+#endif /* VLC_PROCESS_H */

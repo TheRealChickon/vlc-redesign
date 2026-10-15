@@ -1,0 +1,276 @@
+/*****************************************************************************
+ * iosvlc.m: iOS specific development main executable for VLC media player
+ *****************************************************************************
+ * Copyright (C) 2020-2026 Videolabs
+ *
+ * Authors: Marvin Scholz <epirat07 at gmail dot com>
+ *          Alexandre Janniaux <ajanni@videolabs.io>
+ *          Felix Paul Kühne <fkuehne # videolabs.io>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+#undef VLC_DYNAMIC_PLUGINS
+
+#define MODULE_NAME ios_interface
+#undef VLC_DYNAMIC_PLUGINS
+
+#import <UIKit/UIKit.h>
+#include <vlc/vlc.h>
+
+#include <vlc_common.h>
+#include <vlc_variables.h>
+#include <vlc_plugin.h>
+
+#include <TargetConditionals.h>
+#include <dispatch/dispatch.h>
+
+#include "../lib/libvlc_internal.h"
+
+@interface AppDelegate : UIResponder <UIApplicationDelegate> {
+    @public
+    libvlc_instance_t *_libvlc;
+    dispatch_queue_t _intfQueue;
+    UIWindow *window;
+    UIView *subview;
+
+#if !TARGET_OS_TV
+    UIPinchGestureRecognizer *_pinchRecognizer;
+#endif
+
+    CGRect _pinchRect;
+    CGPoint _pinchOrigin;
+    CGPoint _pinchPreviousCenter;
+}
+@end
+
+API_AVAILABLE(ios(13.0), tvos(13.0))
+@interface SceneDelegate : UIResponder <UIWindowSceneDelegate>
+@property (strong, nonatomic) UIWindow *window;
+@end
+
+static void vlc_terminate(void *data)
+{
+    AppDelegate *d = (__bridge AppDelegate *)data;
+
+    __block bool quitting = false;
+    static dispatch_once_t quitToken = 0;
+    dispatch_once(&quitToken, ^{
+        quitting = true;
+    });
+
+    if (!quitting)
+        return;
+
+    dispatch_async(d->_intfQueue, ^{
+        libvlc_release(d->_libvlc);
+        d->_libvlc = NULL;
+    });
+}
+
+@implementation AppDelegate
+#if !TARGET_OS_TV
+- (void)pinchRecognized:(UIPinchGestureRecognizer *)pinchRecognizer
+{
+    UIGestureRecognizerState state = [pinchRecognizer state];
+
+    switch (state)
+    {
+        case UIGestureRecognizerStateBegan:
+            _pinchRect = [subview frame];
+            _pinchOrigin = [pinchRecognizer locationInView:nil];
+            _pinchPreviousCenter = [subview center];
+            return;
+        case UIGestureRecognizerStateEnded:
+            return;
+        case UIGestureRecognizerStateChanged:
+            break;
+        default:
+            return;
+    }
+
+    CGFloat scale = pinchRecognizer.scale;
+    CGRect viewBounds = _pinchRect;
+    if (scale >= 1.0 && (viewBounds.size.width == 0 || viewBounds.size.height == 0))
+            viewBounds.size.width = viewBounds.size.height = 1;
+    viewBounds.size.width *= scale;
+    viewBounds.size.height *= scale;
+    subview.frame = viewBounds;
+    CGPoint newPosition = [pinchRecognizer locationInView:nil];
+    subview.center = CGPointMake(
+            _pinchPreviousCenter.x + newPosition.x - _pinchOrigin.x,
+            _pinchPreviousCenter.y + newPosition.y - _pinchOrigin.y);
+}
+#endif
+
+/* Called after application launch */
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    _intfQueue = dispatch_queue_create("org.videolan.vlc.ios.intf",
+                                       DISPATCH_QUEUE_SERIAL);
+
+    /* Defer libVLC initialization until the main run loop is active.
+     * This prevents interfaces created via libvlc_InternalAddIntf from
+     * creating and owning the eventloop themselves at plugin loading
+     * time (which Qt qios platform does). We don't need those plugins
+     * before the interface is ready to load with an eventloop anyway. */
+    CFRunLoopPerformBlock(CFRunLoopGetMain(), kCFRunLoopDefaultMode, ^{
+        /* Store startup arguments to forward them to libvlc */
+        NSArray *arguments = [[NSProcessInfo processInfo] arguments];
+        unsigned vlc_argc = [arguments count] - 1;
+        const char *intf_arg = "--intf=" MODULE_STRING;
+        unsigned vlc_argc_with_args = vlc_argc + 1;
+        const char **vlc_argv = malloc(vlc_argc_with_args * sizeof *vlc_argv);
+        if (vlc_argv == NULL)
+            return;
+
+        vlc_argv[0] = intf_arg;
+        for (unsigned i = 0; i < vlc_argc; i++)
+            vlc_argv[i + 1] = [[arguments objectAtIndex:i + 1] UTF8String];
+
+        /* Initialize libVLC */
+        self->_libvlc = libvlc_new(vlc_argc_with_args, (const char * const*)vlc_argv);
+        free(vlc_argv);
+
+        if (self->_libvlc == NULL) {
+            NSLog(@"Failed to initialize libVLC");
+            return;
+        }
+
+        libvlc_SetExitHandler(self->_libvlc->p_libvlc_int, vlc_terminate,
+                              (__bridge void *)self);
+
+        dispatch_async(self->_intfQueue, ^{
+            @autoreleasepool {
+                libvlc_InternalAddIntf(self->_libvlc->p_libvlc_int, NULL);
+                libvlc_InternalPlay(self->_libvlc->p_libvlc_int);
+            }
+        });
+    });
+    CFRunLoopWakeUp(CFRunLoopGetMain());
+
+    return YES;
+}
+
+- (UISceneConfiguration *)application:(UIApplication *)application
+configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
+                              options:(UISceneConnectionOptions *)options API_AVAILABLE(ios(13.0), tvos(13.0))
+{
+    UISceneConfiguration *configuration = [[UISceneConfiguration alloc] initWithName:nil
+                                                                         sessionRole:connectingSceneSession.role];
+    configuration.delegateClass = [SceneDelegate class];
+    return configuration;
+}
+@end
+
+@implementation SceneDelegate
+- (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session
+      options:(UISceneConnectionOptions *)connectionOptions
+{
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
+    /* The window contents are set up once the glue interface opens */
+    self.window = [[UIWindow alloc] initWithWindowScene:(UIWindowScene *)scene];
+    appDelegate->window = _window;
+}
+@end
+
+int main(int argc, char * argv[]) {
+    @autoreleasepool {
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+    }
+}
+
+/* Glue interface code, define drawable-nsobject for display module */
+static int Open(vlc_object_t *obj)
+{
+    __block AppDelegate *d;
+
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        d = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        if (d == nil || d->subview != nil)
+            return;
+
+#if !TARGET_OS_VISION
+        /* Initialize main window unless the scene delegate provided one */
+        if (d->window == nil)
+            d->window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+#endif
+
+        d->window.rootViewController = [[UIViewController alloc] init];
+        d->window.backgroundColor = [UIColor whiteColor];
+
+        d->subview = d->window.rootViewController.view;
+        d->subview.frame = d->window.bounds;
+        d->subview.backgroundColor = [UIColor clearColor];
+        [d->window makeKeyAndVisible];
+
+#if !TARGET_OS_TV
+        d->_pinchRecognizer = [[UIPinchGestureRecognizer alloc]
+            initWithTarget:d action:@selector(pinchRecognized:)];
+        [d->window addGestureRecognizer:d->_pinchRecognizer];
+#endif
+    } );
+
+    if (d == nil)
+        return VLC_EGENERIC;
+
+    assert(d->subview != nil);
+    var_SetAddress(vlc_object_instance(obj), "drawable-nsobject",
+                   (__bridge void *)d->subview);
+
+    return VLC_SUCCESS;
+}
+
+#include <vlc_stream.h>
+#include <vlc_access.h>
+
+static int OpenAssetDemux(vlc_object_t *obj)
+{
+    stream_t *access = (stream_t *)obj;
+
+    if (access->psz_location == NULL)
+        return VLC_EGENERIC;
+
+    /* Store startup arguments to forward them to libvlc */
+    NSString *bundle_path = [[NSBundle mainBundle] resourcePath];
+    const char *resource_path = [bundle_path UTF8String];
+
+    char *url;
+    if (asprintf(&url, "file://%s/%s", resource_path, access->psz_location) < 0)
+        return VLC_ENOMEM;
+
+    access->psz_url = url;
+
+    return VLC_ACCESS_REDIRECT;
+}
+
+vlc_module_begin()
+    set_capability("interface", 0)
+    set_callback(Open)
+
+    add_submodule()
+    set_capability("access", 1)
+    set_callback(OpenAssetDemux)
+    add_shortcut("asset")
+vlc_module_end()
+
+VLC_EXPORT const vlc_plugin_cb vlc_static_modules[] = {
+    VLC_SYMBOL(vlc_entry),
+    NULL
+};

@@ -1,0 +1,288 @@
+{
+  "updatedUtc": "2026-10-13T15:54:20.740013+00:00",
+  "baselineCommit": "e74f7ada83c4609a72de6176b55ecd2894728aa2",
+  "findingsAddressed": 18,
+  "scope": "Implementation of all 18 reviewed gaps, preserving native feature access",
+  "findings": [
+    {
+      "id": "settings-binding",
+      "title": "Missing settings caused by stale option bindings",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=983s",
+      "status": "implemented",
+      "change": "Current VLC bindings for resume, notifications and geometry, plus notification duration.",
+      "source": {
+        "path": "modules/gui/qt/maininterface/qml/RedesignSettings.qml",
+        "line": 242,
+        "sha256": "3463ae4d2338433acf5a529027ea1c896d4b05beb88aad216835c56ce62ac692"
+      },
+      "evidence": "currentGeometryAndNotificationSettingsPresent"
+    },
+    {
+      "id": "bookmark-button",
+      "title": "Toolbar bookmark button can be disabled for a newly opened file",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=900s",
+      "status": "implemented",
+      "change": "Bookmark button works for an unindexed file at a valid timestamp.",
+      "source": {
+        "path": "modules/gui/qt/player/qml/controlbarcontrols/RedesignActionControl.qml",
+        "line": 32,
+        "sha256": "883f5663ec8f871b5cf184b7f7a28cbfdb43b73912728f0092d9dea420ea765a"
+      },
+      "evidence": "bookmarkFixtureInitiallyUnindexed"
+    },
+    {
+      "id": "settings-organization",
+      "title": "Settings organization is only partly reworked",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=983s",
+      "status": "implemented",
+      "change": "All native preferences regrouped across the 13 categories; Advanced Options and search retain every native key.",
+      "source": {
+        "path": "modules/gui/qt/maininterface/qml/RedesignSettings.qml",
+        "line": 128,
+        "sha256": "3463ae4d2338433acf5a529027ea1c896d4b05beb88aad216835c56ce62ac692"
+      },
+      "evidence": "advancedCategoriesRetainEveryNativeOption"
+    },
+    {
+      "id": "settings-editors",
+      "title": "Friendly setting controls are missing",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=1024s",
+      "status": "implemented",
+      "change": "Percentage/time/speed sliders, relative or pixel font size, meaningful buffers and audio effect switches.",
+      "source": {
+        "path": "modules/gui/qt/maininterface/qml/RedesignSettings.qml",
+        "line": 105,
+        "sha256": "3463ae4d2338433acf5a529027ea1c896d4b05beb88aad216835c56ce62ac692"
+      },
+      "evidence": "globalFontUsesRelativePixelsEditor"
+    },
+    {
+      "id": "subtitle-matching",
+      "title": "Subtitle filename matching is still a number",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=1024s",
+      "status": "implemented",
+      "change": "Five readable filename matching rules.",
+      "source": {
+        "path": "modules/gui/qt/maininterface/qml/RedesignSettings.qml",
+        "line": 124,
+        "sha256": "3463ae4d2338433acf5a529027ea1c896d4b05beb88aad216835c56ce62ac692"
+      },
+      "evidence": "matchingRulesHaveFiveReadableChoices"
+    },
+    {
+      "id": "bookmark-display",
+      "title": "Bookmark timestamps omit the displayed milliseconds",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=908s",
+      "status": "implemented",
+      "change": "Bookmark display includes HH:MM:SS.mmm; native rename, seek, remove and storage retained.",
+      "source": {
+        "path": "modules/gui/qt/medialibrary/mlbookmarkmodel.cpp",
+        "line": 68,
+        "sha256": "8932b8887bb21cbbc4d86733ca59364936ca1767079607ae6519ddc33de28fae"
+      },
+      "evidence": "bookmarkSidebarDisplaysMilliseconds"
+    },
+    {
+      "id": "shortcut-feedback",
+      "title": "Shortcut feedback does not include the pressed key",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=918s",
+      "status": "implemented",
+      "change": "Native OSD preserves the action/value and appends the actual shortcut once; key display and duration are configurable.",
+      "source": {
+        "path": "src/video_output/video_text.c",
+        "line": 140,
+        "sha256": "ae5296300deaddb318430e56a75ba52fd304078202aa459a8afc301e298949ca"
+      },
+      "evidence": "nativeOsdPreservesActionAndAddsActualKey"
+    },
+    {
+      "id": "extensions",
+      "title": "Extensions still open the mixed native manager",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=1105s",
+      "status": "implemented",
+      "change": "Installed add-ons, catalog search, install/remove and package import are in Settings; original native tools remain in Advanced.",
+      "source": {
+        "path": "modules/gui/qt/maininterface/qml/RedesignSettings.qml",
+        "line": 614,
+        "sha256": "3463ae4d2338433acf5a529027ea1c896d4b05beb88aad216835c56ce62ac692"
+      },
+      "evidence": "settings-category-12"
+    },
+    {
+      "id": "open-media",
+      "title": "Separate redesigned stream and media dialogs are missing",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=748s",
+      "status": "implemented",
+      "change": "Separate file, network, disc, capture, convert and stream entry panels; multiline URLs and optional named native playlists; original advanced wizard remains.",
+      "source": {
+        "path": "modules/gui/qt/maininterface/qml/RedesignMediaDialog.qml",
+        "line": 36,
+        "sha256": "cc229f09f7e0e643c7c1cbabd83fd8f76f6c710d5150a0461ab0b1da17c03235"
+      },
+      "evidence": "networkDialogParsesMultipleUrls"
+    },
+    {
+      "id": "dual-library",
+      "title": "Current-folder browsing and queue cannot stay open together",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=680s",
+      "status": "implemented",
+      "change": "Current-folder browsing, breadcrumbs, media selection/drag and queue insertion coexist with the right native queue.",
+      "source": {
+        "path": "modules/gui/qt/player/qml/RedesignFolderPanel.qml",
+        "line": 34,
+        "sha256": "1c0d6b09812e08aedd0f5daff429e228a707c94186449104b2d69de7d03b4f10"
+      },
+      "evidence": "folderAndQueueRemainOpenTogether"
+    },
+    {
+      "id": "subtitle-timeline",
+      "title": "Subtitle timeline is a list rather than draggable seek-bar cues",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=414s",
+      "status": "implemented",
+      "change": "Real text cues appear above the seek bar; click seeks and horizontal drag adjusts the native delay, with cancel support.",
+      "source": {
+        "path": "modules/gui/qt/player/qml/SliderBar.qml",
+        "line": 84,
+        "sha256": "1adb0cc590dc3c9b7578fe671b88a8c07c818dc87f491ff9fbf921fa30ca3e2c"
+      },
+      "evidence": "movingCueChangesLiveDelayAndGeometry"
+    },
+    {
+      "id": "complete-presets",
+      "title": "Saved live presets do not capture every displayed setting",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=466s",
+      "status": "implemented",
+      "change": "Live presets include all displayed options, secondary delay, FPS, native framing/deinterlace and audio device/track choices.",
+      "source": {
+        "path": "modules/gui/qt/player/qml/RedesignPlaybackPanel.qml",
+        "line": 67,
+        "sha256": "e0e67d183205c8fb172c934052a228e3027e1d507ba27b288540a258a49fe40f"
+      },
+      "evidence": "subtitlePresetRestoresFormattingAndTiming"
+    },
+    {
+      "id": "filter-preview",
+      "title": "Friendly filter presets and visual previews are absent",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=524s",
+      "status": "implemented",
+      "change": "Named equalizer and picture cards with visual icons apply actual VLC filters immediately.",
+      "source": {
+        "path": "modules/gui/qt/player/qml/RedesignPlaybackPanel.qml",
+        "line": 424,
+        "sha256": "e0e67d183205c8fb172c934052a228e3027e1d507ba27b288540a258a49fe40f"
+      },
+      "evidence": "video-presets"
+    },
+    {
+      "id": "audio-devices",
+      "title": "Quick audio-output selection is absent from the new Audio tab",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=273s",
+      "status": "implemented",
+      "change": "Quick Audio device choices use the native enumerator and selector; absent saved devices retain the current output.",
+      "source": {
+        "path": "modules/gui/qt/util/audio_device_model.hpp",
+        "line": 42,
+        "sha256": "caeabd5b4eeaba2cc3bdb089452c3a166306e042a3f05e1a843773ee3c46d4af"
+      },
+      "evidence": "audioPresetIncludesStereoAndDevice"
+    },
+    {
+      "id": "display-toggles",
+      "title": "Playback display switches are incomplete",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=547s",
+      "status": "implemented",
+      "change": "Waveform, metadata, thumbnail and cue visibility are working native settings.",
+      "source": {
+        "path": "modules/gui/qt/maininterface/mainctx.cpp",
+        "line": 633,
+        "sha256": "2eae4bfafd5257481fcc5f4e6b02284ceec95898926d0e62a2323baceef3ed21"
+      },
+      "evidence": "metadataToggleDisplaysOverlay"
+    },
+    {
+      "id": "hover",
+      "title": "Controls use a timer rather than the proposed edge-hover behavior",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=225s",
+      "status": "implemented",
+      "change": "Edge hover shows controls; leaving hides them. Locks, keyboard access, fullscreen policy and pinned controls remain.",
+      "source": {
+        "path": "modules/gui/qt/player/qml/PlayerToolbarVisibilityFSM.qml",
+        "line": 53,
+        "sha256": "7af773a07f50a06fb379045763950ca21909b886c53d5e7f49d207369c009d00"
+      },
+      "evidence": "leavingEdgeHidesControls"
+    },
+    {
+      "id": "reverse",
+      "title": "Reverse playback needs codec-specific verification",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=551s",
+      "status": "implemented",
+      "change": "Native reverse remains where supported. Seekable files otherwise have a discrete reverse video preview with audio paused; tested time decreases and new frames decode.",
+      "source": {
+        "path": "modules/gui/qt/player/player_controller.cpp",
+        "line": 1298,
+        "sha256": "b379dbe35bb2e28378d482866a5154a8eae8265e36b4adbe91c9262767018008"
+      },
+      "evidence": "reverseDecodesNewVideoFrames"
+    },
+    {
+      "id": "pip",
+      "title": "Picture-in-picture currently means the embedded library mini-player",
+      "videoUrl": "https://www.youtube.com/watch?v=ERFeOgqk324&t=234s",
+      "status": "implemented",
+      "change": "Floating mode uses the existing native window, stays on top and restores geometry/modes. The separate embedded library mini-player remains available.",
+      "source": {
+        "path": "modules/gui/qt/maininterface/mainctx.cpp",
+        "line": 681,
+        "sha256": "2eae4bfafd5257481fcc5f4e6b02284ceec95898926d0e62a2323baceef3ed21"
+      },
+      "evidence": "floatingVideoRestoresWindowGeometry"
+    }
+  ],
+  "validation": {
+    "settings-profiles": {
+      "case": "v99-settings-profiles-final-fixed",
+      "booleanObservations": 72,
+      "qmlWarnings": 0,
+      "exitCode": 0,
+      "privateDesktop": true
+    },
+    "full-video": {
+      "case": "v100-full-video-final-fixed",
+      "booleanObservations": 66,
+      "qmlWarnings": 0,
+      "exitCode": 0,
+      "privateDesktop": true
+    },
+    "toolbar": {
+      "case": "v101-toolbar-final-fixed",
+      "booleanObservations": 87,
+      "qmlWarnings": 0,
+      "exitCode": 0,
+      "privateDesktop": true
+    },
+    "features": {
+      "case": "v102-feature-parity-final-fixed",
+      "booleanObservations": 49,
+      "qmlWarnings": 0,
+      "exitCode": 0,
+      "privateDesktop": true
+    },
+    "layout": {
+      "case": "v103-layout-final-fixed",
+      "booleanObservations": 41,
+      "qmlWarnings": 0,
+      "exitCode": 0,
+      "privateDesktop": true
+    }
+  },
+  "githubPrivate": true,
+  "publicRelease": false,
+  "computerControlOnUserDesktop": false,
+  "limitations": [
+    "Reverse fallback is discrete video seeking with audio paused; every codec not certified",
+    "Popout transforms the existing native VLC window; embedded library mini-player remains separate",
+    "Device, optical disc, remote protocol, casting and real subtitle-provider account workflows not all exercised",
+    "Private review build; exact dependency-source and specific design-licence evidence still required for public binary distribution"
+  ]
+}
