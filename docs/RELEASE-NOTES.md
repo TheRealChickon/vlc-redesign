@@ -6,6 +6,13 @@ This is a Windows x64 build of VLC 4.0.0-dev (upstream revision `392bc1d0abdb739
 
 ## Getting started
 
+**Easiest: `VLC-Redesign-2026.10.15-rc1-setup.exe`.** Download it and run it.
+- It installs to `%LOCALAPPDATA%\Programs\VLC Redesign` for your account only, with no administrator prompt.
+- It adds a Start menu entry and, if you choose, a desktop shortcut.
+- It never changes an installed VLC or your file associations.
+- You can uninstall it from Windows Settings → Apps. Your settings and library are kept in its `portable\` folder.
+
+**Portable alternative: `VLC-Redesign-2026.10.15-rc1-win64.zip`.**
 1. Extract the whole ZIP.
 2. Open `VLC-Redesign/vlc.exe`. You don't need an installer or administrator rights.
 3. Settings and the library stay in `VLC-Redesign/portable/`. That folder starts empty. Your installed VLC isn't touched.

@@ -8,7 +8,9 @@ This project modifies VLC's native interface and retains the VLC playback engine
 
 ## Try the build
 
-Download the portable Windows x64 build from the [Releases](../../releases) page. Each release includes:
+**Easiest:** download `VLC-Redesign-<version>-setup.exe` from the [Releases](../../releases) page and run it. It installs just for your account, needs no administrator rights, and leaves any existing VLC untouched.
+
+You can also download the portable Windows x64 build from the same page. Each release includes:
 
 - the portable build
 - the matching modified VLC source
