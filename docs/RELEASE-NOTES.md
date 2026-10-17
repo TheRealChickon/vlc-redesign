@@ -33,6 +33,8 @@ Check the download against the `.sha256` file published next to it.
 
 ## Fixes in this release (click-through bug hunt)
 
+- **Seek bar waveform:** the waveform is now one continuous shape, with the played part in the accent colour and the rest in a neutral grey that suits each theme. Before, thin 1 px bars let the dark track show through as dense black stripes, most visibly on steady audio.
+
 - **Settings:**
   - Float options show their real value, so Volume step reads `12.8` instead of `12.800000190734863`.
   - A default audio or subtitle track of `-1` shows as **Auto**, and clearing the field stores Auto again.

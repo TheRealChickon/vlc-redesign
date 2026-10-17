@@ -534,23 +534,25 @@ T.ProgressBar {
             anchors.fill: parent
             visible: control.waveformPeaks.length > 0
             Repeater {
-                model: Math.floor(waveformBars.width / 3)
+                model: Math.floor(waveformBars.width / 2)
                 Rectangle {
                     required property int index
                     readonly property real peak: {
                         const values = control.waveformPeaks
-                        const count = Math.max(1, Math.floor(waveformBars.width / 3))
+                        const count = Math.max(1, Math.floor(waveformBars.width / 2))
                         const begin = Math.floor(index * values.length / count)
                         const end = Math.max(begin + 1, Math.floor((index + 1) * values.length / count))
                         let value = 0
                         for (let sample = begin; sample < end; ++sample) value = Math.max(value, values[sample] ?? 0)
                         return value
                     }
-                    x: index * 3 + 1
-                    width: 1
-                    height: Math.max(1, peak * (waveformBars.height - 6))
+                    // adjacent 2px columns form one continuous waveform shape; spaced 1px
+                    // bars showed the dark track between them as dense black stripes
+                    x: index * 2
+                    width: 2
+                    height: Math.max(2, peak * (waveformBars.height - 8))
                     y: (waveformBars.height - height) / 2
-                    color: x <= control.visualPosition * waveformBars.width ? theme.accent : "#6b6b6b"
+                    color: x <= control.visualPosition * waveformBars.width ? theme.accent : ((theme.palette?.isDark ?? true) ? "#3f3f3f" : "#c4c4c4")
                 }
             }
         }
