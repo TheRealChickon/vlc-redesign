@@ -6,7 +6,15 @@ This is a Windows x64 build of VLC 4.0.0-dev (upstream revision `392bc1d0abdb739
 
 ## Getting started
 
-**Easiest: `VLC-Redesign-2026.10.15-rc1-setup.exe`.** Download it and run it.
+**Easiest: the setup exe** (`VLC-Redesign-setup.exe`, the same file as `VLC-Redesign-2026.10.15-rc1-setup.exe`)
+
+1. Download `VLC-Redesign-setup.exe` from the assets below.
+2. Run it and click through the installer.
+3. Open **VLC Redesign** from the Start menu.
+
+The installer isn't code-signed, so Windows SmartScreen may warn you. Click **More info → Run anyway** to continue.
+
+About the installer:
 - It installs to `%LOCALAPPDATA%\Programs\VLC Redesign` for your account only, with no administrator prompt.
 - It adds a Start menu entry and, if you choose, a desktop shortcut.
 - It never changes an installed VLC or your file associations.

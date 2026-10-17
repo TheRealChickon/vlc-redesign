@@ -1,5 +1,19 @@
 # VLC × Juxtopposed redesign
 
+<p align="center">
+  <a href="https://github.com/TheRealChickon/vlc-redesign/releases/latest/download/VLC-Redesign-setup.exe">
+    <img alt="Download VLC Redesign for Windows" src="https://img.shields.io/badge/Download-VLC%20Redesign%20for%20Windows-ff8800?style=for-the-badge&logo=windows&logoColor=white">
+  </a>
+</p>
+
+**Install in 3 steps**
+
+1. [Download **VLC-Redesign-setup.exe**](https://github.com/TheRealChickon/vlc-redesign/releases/latest/download/VLC-Redesign-setup.exe).
+2. Run it and click through the installer. No administrator rights are needed.
+3. Open **VLC Redesign** from the Start menu.
+
+The installer isn't code-signed, so Windows SmartScreen may warn you. Click **More info → Run anyway** to continue.
+
 A working, unofficial Windows build of the VLC redesign presented by **Juxtopposed** in [the original video](https://www.youtube.com/watch?v=ERFeOgqk324), implemented from [her Figma Community file](https://www.figma.com/community/file/1691465999134370980/vlc-redesign).
 
 This project modifies VLC's native interface and retains the VLC playback engine and existing native menus. It is based on VLC 4.0.0-dev; it is an independent implementation, not a release or endorsement from Juxtopposed or VideoLAN.
